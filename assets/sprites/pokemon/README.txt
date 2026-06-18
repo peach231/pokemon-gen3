@@ -3,8 +3,13 @@ CREATURE SPRITES — drop your Gen 3 sprite image files here.
 
 This game ships with NO creature art. At boot it loads a sprite image for every
 species by its NATIONAL DEX NUMBER, and falls back to a numbered placeholder for
-any file it can't find. So the game is fully playable right now; add files here to
-replace the placeholders with real sprites.
+any image it can't fetch.
+
+BY DEFAULT it loads Gen 3 (Emerald) sprites from a public sprite database (PokeAPI
+via the jsDelivr CDN) at runtime — so the real creatures show up with no files
+here. To use your OWN files instead, drop them in the folders below and either set
+`preferRemote: false` (local first, remote fallback) or `remoteBase: ''` (local
+only) in js/data/sprites_config.js.
 
 NAMING (default — set in js/data/sprites_config.js)
 ---------------------------------------------------
@@ -12,7 +17,8 @@ NAMING (default — set in js/data/sprites_config.js)
   back/<dex>.png    back sprite   (OPTIONAL — if absent, the front is auto-flipped)
   icon/<dex>.png    party/menu icon (OPTIONAL, not required)
 
-<dex> is the national dex number, zero-padded to 3 digits. Examples:
+<dex> is the national dex number (unpadded by default; set `pad: 3` in the config
+to use 001-style names). Examples:
   front/252.png  -> Treecko        front/255.png  -> Torchic
   front/258.png  -> Mudkip         front/384.png  -> Rayquaza
 

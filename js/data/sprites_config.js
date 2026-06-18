@@ -1,47 +1,51 @@
 // pokemon-gen3 — sprites_config.js
-// Configures WHERE the engine loads real creature sprite images from. The game
-// itself ships no copyrighted creature art; you supply the sprite files (or
-// point this at a sprite source you have rights to use) and they are loaded by
-// NATIONAL DEX NUMBER at boot. Anything missing falls back to a numbered
-// placeholder so the game always runs.
+// Configures WHERE the engine loads each creature sprite from, by NATIONAL DEX
+// NUMBER. No art is bundled in this repo. At boot the loader requests an image
+// per species and falls back to a numbered placeholder if it can't be fetched.
 //
-// File-name convention (default):
-//   assets/sprites/pokemon/front/252.png      front, ~64x64, transparent bg
-//   assets/sprites/pokemon/back/252.png        back  (optional; auto-flipped if absent)
-//   assets/sprites/pokemon/icon/252.png        party/menu icon (optional)
-// {dex} is the species' national dex id, zero-padded to `pad` digits (252 -> "252").
+// Two sources, tried in order (preferRemote decides which is first):
+//   - LOCAL : files you drop in assets/sprites/pokemon/ (front/<dex>.png, ...)
+//   - REMOTE: a public sprite database URL (default below)
 //
-// To pull from a remote sprite set instead of local files, set `remoteBase` to a
-// directory URL whose files are named the same way (front/{dex}.png, ...) and set
-// `preferRemote: true`. Sourcing the assets is up to you.
+// DEFAULT remote source: the PokeAPI sprite set (Gen 3 / Emerald front sprites)
+// served via the jsDelivr CDN, keyed by national dex number. These are official,
+// copyrighted creature designs hosted by the community — using them is your
+// choice. To disable remote loading, set `remoteBase: ''` (then it uses your
+// local files, or placeholders).
 
 (function () {
   G.SPRITE_CFG = {
-    localBase:   'assets/sprites/pokemon/',   // root for local sprite files
-    remoteBase:  null,                          // e.g. 'https://example.com/sprites/' (front/{dex}.png ...)
-    preferRemote: false,                        // true => try remoteBase before localBase
+    // --- your own local files (optional) ---
+    localBase:  'assets/sprites/pokemon/',
+    localFront: 'front/{dex}.png',
+    localBack:  'back/{dex}.png',
+    localIcon:  'icon/{dex}.png',
 
-    front: 'front/{dex}.png',
-    back:  'back/{dex}.png',
-    icon:  'icon/{dex}.png',
+    // --- public remote source (Gen 3 Emerald sprites via jsDelivr CDN) ---
+    remoteBase:  'https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/sprites/pokemon/versions/generation-iii/emerald/',
+    remoteFront: '{dex}.png',
+    remoteBack:  'back/{dex}.png',   // not present in this Gen 3 set -> loader auto-flips the front
+    remoteIcon:  '{dex}.png',
 
-    pad: 3,        // zero-pad {dex} to this many digits ("1" -> "001"); 0 = no padding
-    box: 64,       // logical sprite box (Gen 3 battlers are 64x64); all sprites fit here
-    crossOrigin: 'anonymous'  // set on <img> when loading remoteBase (needs CORS-friendly host)
+    preferRemote: true,   // true => try the remote source first, local as fallback
+
+    pad: 0,               // zero-pad {dex} to N digits (PokeAPI uses unpadded ids, so 0)
+    box: 64,              // sprite box; Gen 3 battlers are 64x64
+    crossOrigin: 'anonymous'  // remote host must send CORS headers (jsDelivr does)
   };
 
-  // Resolve a {dex} template against a numeric dex id, honoring `pad`.
+  // Build the ordered list of candidate URLs for a sprite (front|back|icon).
   G.spriteUrl = function (which, dexId) {
     var cfg = G.SPRITE_CFG;
-    var tpl = cfg[which] || cfg.front;
     var dex = String(dexId);
     if (cfg.pad > 0) while (dex.length < cfg.pad) dex = '0' + dex;
-    var rel = tpl.replace('{dex}', dex);
-    var bases = [];
-    if (cfg.preferRemote && cfg.remoteBase) bases.push(cfg.remoteBase);
-    if (cfg.localBase) bases.push(cfg.localBase);
-    if (!cfg.preferRemote && cfg.remoteBase) bases.push(cfg.remoteBase);
-    // primary URL + ordered fallbacks (loader tries each until one loads)
-    return bases.map(function (b) { return b + rel; });
+    var cap = which.charAt(0).toUpperCase() + which.slice(1); // Front | Back | Icon
+    var localTpl = cfg['local' + cap] || cfg.localFront;
+    var remoteTpl = cfg['remote' + cap] || cfg.remoteFront;
+    var urls = [];
+    function add(base, tpl) { if (base && tpl) urls.push(base + tpl.replace('{dex}', dex)); }
+    if (cfg.preferRemote) { add(cfg.remoteBase, remoteTpl); add(cfg.localBase, localTpl); }
+    else { add(cfg.localBase, localTpl); add(cfg.remoteBase, remoteTpl); }
+    return urls;
   };
 })();
