@@ -17,7 +17,7 @@
   });
   tr('rival2', {
     name: 'Brendan', cls: 'Rival', sprite: 'trainer_kai', ai: 'basic', money: 500,
-    party: [{ sp: 'zigzagoon', level: 12 }, { sp: '_starter', level: 14 }],
+    party: [{ sp: 'zigzagoon', level: 10 }, { sp: '_starter', level: 12 }],
     intro: "Perfect timing. I've been itching for a rematch!",
     defeat: 'Argh, so close! Next time for sure.', music: 'battle'
   });
@@ -50,7 +50,7 @@
   // -------------------------------------------------- GYM 1: Roxanne (Rock)
   tr('gym1_bram', {
     name: 'Roxanne', cls: 'leader', sprite: 'trainer_bram', ai: 'smart', money: 1200,
-    party: [{ sp: 'geodude', level: 11 }, { sp: 'nosepass', level: 13 }],
+    party: [{ sp: 'geodude', level: 8 }, { sp: 'nosepass', level: 10 }],
     intro: 'I am Roxanne, the Rustboro Gym Leader. I became a Leader so I might apply what I learned.',
     defeat: 'So... I lost. My rocks crumbled. You are wonderfully strong!',
     reward: { badge: 0, flag: 'badge1', text: 'Roxanne handed over the STONE BADGE!' },

@@ -146,21 +146,42 @@
       return c;
     },
 
-    // Fit src (Image or canvas) into a box-sized canvas, bottom-center anchored,
-    // aspect preserved. No getImageData, so cross-origin art never taints.
+    // Fit src (Image or canvas) into a box-sized canvas: trim transparent
+    // margins so the creature stands ON the platform (no floating), then
+    // bottom-center anchor it. Trimming reads pixels via getImageData; if the
+    // source is a tainted cross-origin image it falls back to the full frame.
     _fitToBox: function (src, box, flip) {
+      var sw = src.width || box, sh = src.height || box;
+      var tmp = makeCanvas(sw, sh);
+      var tctx = tmp.getContext('2d');
+      tctx.drawImage(src, 0, 0);
+      var minX = 0, minY = 0, maxX = sw - 1, maxY = sh - 1;
+      try {
+        var data = tctx.getImageData(0, 0, sw, sh).data;
+        var found = false; minX = sw; minY = sh; maxX = 0; maxY = 0;
+        for (var y = 0; y < sh; y++) {
+          for (var x = 0; x < sw; x++) {
+            if (data[(y * sw + x) * 4 + 3] > 8) {
+              found = true;
+              if (x < minX) minX = x; if (x > maxX) maxX = x;
+              if (y < minY) minY = y; if (y > maxY) maxY = y;
+            }
+          }
+        }
+        if (!found) { minX = 0; minY = 0; maxX = sw - 1; maxY = sh - 1; }
+      } catch (e) { minX = 0; minY = 0; maxX = sw - 1; maxY = sh - 1; }
+      var cw = maxX - minX + 1, ch = maxY - minY + 1;
+      var scale = Math.min(box / cw, box / ch, 1); // fit, never upscale
+      var dw = Math.round(cw * scale), dh = Math.round(ch * scale);
+      var dx = Math.round((box - dw) / 2), dy = box - dh; // bottom-center anchored
       var c = makeCanvas(box, box);
       var ctx = c.getContext('2d');
       ctx.imageSmoothingEnabled = false;
-      var sw = src.width || box, sh = src.height || box;
-      var scale = Math.min(box / sw, box / sh, 1);
-      var dw = Math.round(sw * scale), dh = Math.round(sh * scale);
-      var dx = Math.round((box - dw) / 2), dy = box - dh;
       if (flip) {
         ctx.translate(box, 0); ctx.scale(-1, 1);
-        ctx.drawImage(src, box - dx - dw, dy, dw, dh);
+        ctx.drawImage(tmp, minX, minY, cw, ch, box - dx - dw, dy, dw, dh);
       } else {
-        ctx.drawImage(src, dx, dy, dw, dh);
+        ctx.drawImage(tmp, minX, minY, cw, ch, dx, dy, dw, dh);
       }
       return c;
     },
