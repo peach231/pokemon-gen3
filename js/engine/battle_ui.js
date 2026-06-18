@@ -427,7 +427,8 @@
           var it = G.ITEMS[id];
           if (it.kind === 'orb') {
             if (!battle.wild) { G.pushScene(G.Textbox("You can't catch another trainer's creature!")); return; }
-            if (battle.party.length >= 6) { G.pushScene(G.Textbox('Your party is full!')); return; }
+            // A full party no longer blocks a catch — after the catch you choose
+            // whether it joins the party (swapping one out) or goes to the Lab.
             G.player.bag[id]--;
             startGen(battle.turn({ type: 'orb', id: id }));
           } else {

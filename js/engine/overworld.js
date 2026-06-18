@@ -643,36 +643,37 @@
       var firstCatch = !G.player.dexCaught[mon.sp];
       G.player.dexCaught[mon.sp] = 1;
       var nm = G.monName(mon);
-      // Route the catch: party has a hard cap of 6. With room, let the player
-      // choose party vs Birch's Lab; when full, it goes to the Lab automatically.
-      // (Pushed BEFORE the dex screen so CaughtScene shows first, then the prompt.)
-      if (G.player.party.length < 6) {
-        G.ask(
-          'Add ' + nm + " to your party?   (No sends it to Birch's Lab.)",
-          function () { G.player.party.push(mon); G.pushScene(G.Textbox(nm + ' joined your party!')); },
-          function () { G.player.box.push(mon); G.pushScene(G.Textbox(nm + " was sent to Birch's Lab.")); }
-        );
-      } else {
-        // party full: still let the player decide — keep it (swap one out to the
-        // Lab) or send the new catch to the Lab. Party stays capped at 6.
-        G.ask(
-          'Your party is full. Keep ' + nm + ' anyway?   (No sends it to the Lab.)',
-          function () {
-            G.pushScene(G.PartyScene({
-              pickMode: true, prompt: 'Send which Pokémon to the Lab?',
-              onPick: function (idx) {
-                if (idx < 0) { G.player.box.push(mon); G.pushScene(G.Textbox(nm + " was sent to Birch's Lab.")); return; }
-                var out = G.player.party[idx];
-                G.player.party[idx] = mon;
-                G.player.box.push(out);
-                G.pushScene(G.Textbox(G.monName(out) + " was sent to the Lab, and " + nm + ' joined the party!'));
-              }
-            }));
-          },
-          function () { G.player.box.push(mon); G.pushScene(G.Textbox(nm + " was sent to Birch's Lab.")); }
-        );
-      }
-      if (firstCatch && G.CaughtScene) G.pushScene(G.CaughtScene(mon));
+      // A catch always succeeds, even with a full party. Afterward a screen asks
+      // where it should go: into the party (swapping a member to the Lab if the
+      // party is already 6), or straight to Birch's Lab. Party stays capped at 6.
+      var toLab = function () { G.player.box.push(mon); G.pushScene(G.Textbox(nm + " was sent to Birch's Lab.")); };
+      var toParty = function () {
+        if (G.player.party.length < 6) {
+          G.player.party.push(mon);
+          G.pushScene(G.Textbox(nm + ' joined your party!'));
+        } else {
+          G.pushScene(G.PartyScene({
+            pickMode: true, prompt: 'Party is full — send which one to the Lab?',
+            onPick: function (idx) {
+              if (idx < 0) { askWhere(); return; } // backed out — re-ask
+              var out = G.player.party[idx];
+              G.player.party[idx] = mon;
+              G.player.box.push(out);
+              G.pushScene(G.Textbox(G.monName(out) + " was sent to the Lab, and " + nm + ' joined the party!'));
+            }
+          }));
+        }
+      };
+      var askWhere = function () {
+        G.pushScene(G.Textbox('Where should ' + nm + ' go?', { onDone: function () {
+          G.pushScene(G.Chooser({
+            items: ['Add to party', "Birch's Lab"], cancelIndex: 1,
+            onPick: function (i) { if (i === 0) toParty(); else toLab(); }
+          }));
+        } }));
+      };
+      askWhere();
+      if (firstCatch && G.CaughtScene) G.pushScene(G.CaughtScene(mon)); // shows first
     }
 
     if (result === 'win' && battle.pendingEvolutions.length && G.EvolutionScene) {
