@@ -1316,7 +1316,7 @@
     cliff:   { img: 't_cliff', solid: true },
     rock:    { img: 't_rock', solid: true },
 
-    cavefloor: { img: 't_cavefloor' },
+    cavefloor: { img: 't_cavefloor', cave: true },
     cavewall:  { img: 't_cavewall', solid: true },
     crystal:   { img: 't_crystal', solid: true },
     stairs:    { img: 't_stairs' },

@@ -142,6 +142,7 @@
     encounters: {
       rate: 0.13,
       table: [
+        { sp: 'zubat', min: 14, max: 18 },
         { sp: 'geodude', min: 15, max: 18 },
         { sp: 'machop', min: 15, max: 18 },
         { sp: 'aron', min: 15, max: 18 },
@@ -194,6 +195,8 @@
     encounters: {
       rate: 0.13,
       table: [
+        { sp: 'golbat', min: 18, max: 21 },
+        { sp: 'onix', min: 17, max: 20 },
         { sp: 'graveler', min: 16, max: 19 },
         { sp: 'duskull', min: 16, max: 19 },
         { sp: 'aron', min: 17, max: 20 },

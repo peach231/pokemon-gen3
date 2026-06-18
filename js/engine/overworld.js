@@ -63,6 +63,22 @@
     map.deco = deco.map(function (r) { return r.join(''); });
   };
 
+  // A bobbing yellow arrow drawn over map-edge exit warps so the way to the next
+  // route/town is unmistakable. Points outward (toward the map edge).
+  function drawExitArrow(ctx, cx, cy, dir) {
+    var d = G.DIRS[dir];
+    var bob = Math.round(Math.sin(G.frame * 0.16) * 2);
+    var ox = Math.round(cx + d.dx * (5 + bob)), oy = Math.round(cy + d.dy * (5 + bob));
+    var s = 5, px = -d.dy, py = d.dx; // perpendicular
+    var tipx = ox + d.dx * s, tipy = oy + d.dy * s;
+    var b1x = ox + px * s - d.dx * s, b1y = oy + py * s - d.dy * s;
+    var b2x = ox - px * s - d.dx * s, b2y = oy - py * s - d.dy * s;
+    ctx.beginPath();
+    ctx.moveTo(tipx, tipy); ctx.lineTo(b1x, b1y); ctx.lineTo(b2x, b2y); ctx.closePath();
+    ctx.lineWidth = 3; ctx.lineJoin = 'round'; ctx.strokeStyle = G.C.ink || '#1a1c2c'; ctx.stroke();
+    ctx.fillStyle = '#f8e878'; ctx.fill();
+  }
+
   G.world = {
     mapId: null, map: null,
     player: makeActor('player', 0, 0, 'down'),
@@ -293,7 +309,8 @@
       if (this._trainerScan()) return;
 
       var def = w.tileDefAt(p.x, p.y);
-      if (def && def.grass && G.hooks.grassStep) {
+      // tall grass rustles AND cave floors both roll wild encounters
+      if (def && (def.grass || def.cave) && G.hooks.grassStep) {
         if (G.hooks.grassStep(w.map)) return;
       }
       if (G.hooks.stepDone) G.hooks.stepDone(p.x, p.y);
@@ -449,6 +466,19 @@
       for (var i = 0; i < ents.length; i++) self._drawActor(ctx, ents[i], cam);
 
       this._drawLayer(ctx, 'over', x0, y0, x1, y1, cam);
+
+      // exit arrows over map-edge warps (route/town entrances), so the way
+      // onward is obvious. Building doors are interior, so they're skipped.
+      var warps = map.warps || [], seenW = {};
+      for (var wi = 0; wi < warps.length; wi++) {
+        var wp = warps[wi];
+        var onEdge = wp.x === 0 || wp.y === 0 || wp.x === map.w - 1 || wp.y === map.h - 1;
+        if (!onEdge) continue;
+        var wk = wp.x + ',' + wp.y;
+        if (seenW[wk]) continue; seenW[wk] = 1;
+        var outDir = wp.x === 0 ? 'left' : wp.x === map.w - 1 ? 'right' : wp.y === 0 ? 'up' : 'down';
+        drawExitArrow(ctx, wp.x * TILE - cam.x + 8, wp.y * TILE - cam.y + 8, outDir);
+      }
 
       // controls hint, bottom-left
       ctx.fillStyle = 'rgba(26,28,44,0.72)';
