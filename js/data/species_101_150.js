@@ -142,7 +142,7 @@
     { growth: SL, catchRate: 45 });
 
   // 24. Shelgon
-  sp(372, 'shelgon', 'Shelgon', ['dragon'], 'rare', [65, 95, 100, 60, 50, 50], 'salamence', 50,
+  sp(372, 'shelgon', 'Shelgon', ['dragon'], 'rare', [65, 95, 100, 60, 50, 50], 'salamence', 47,
     [[1, 'leer'], [1, 'tackle'], [12, 'ember'], [21, 'headbutt'], [30, 'dragonbreath'], [42, 'crunch'], [50, 'dragonclaw']],
     'Sealed inside its heavy shell, it neither eats nor moves while its body quietly reforges itself.',
     { mid: true, growth: SL, catchRate: 45 });

@@ -208,13 +208,13 @@
       draw: function (ctx) {
         ctx.fillStyle = '#2a3040';
         ctx.fillRect(0, 0, W, H);
-        G.text(ctx, opts.pickMode ? 'Use on which creature?' : 'PARTY', 10, 6, G.C.white, '#1a1c2c');
+        G.text(ctx, opts.prompt || (opts.pickMode ? 'Use on which creature?' : 'PARTY'), 10, 6, G.C.white, '#1a1c2c');
         var party = G.player.party;
         for (var i = 0; i < party.length; i++) {
           var mon = party[i];
           var y = 20 + i * 22;
           panel(ctx, 8, y, 136, 22);
-          G.text(ctx, G.monName(mon), 16, y + 7, G.UI.text, G.UI.textShadow);
+          G.text(ctx, (mon.shiny ? '★' : '') + G.monName(mon), 16, y + 7, G.UI.text, G.UI.textShadow);
           G.text(ctx, 'Lv' + mon.level, 78, y + 7, G.UI.text, G.UI.textShadow);
           var stats = G.monStats(mon);
           hpBar(ctx, 104, y + 10, 32, mon.curHp / stats.hp);
@@ -257,7 +257,7 @@
         panel(ctx, 6, 6, 96, 104);
         var img = G.IMG['mon_' + mon.sp];
         if (img) ctx.drawImage(img, 54 - img.width / 2, 72 - img.height);
-        G.text(ctx, G.monName(mon), 14, 12, G.UI.text, G.UI.textShadow);
+        G.text(ctx, (mon.shiny ? '★' : '') + G.monName(mon), 14, 12, G.UI.text, G.UI.textShadow);
         G.text(ctx, 'Lv' + mon.level, 74, 12, G.UI.text, G.UI.textShadow);
         for (var t = 0; t < sp.types.length; t++) {
           ctx.fillStyle = G.TYPE_COLORS[sp.types[t]];

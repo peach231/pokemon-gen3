@@ -104,28 +104,68 @@
     music: 'gym'
   });
 
+  // ----------------------------------------------- routes 117-124 trainers
+  tr('r5_a', { name: 'Cooltrainer Bex', sprite: 'trainer_ace', ai: 'smart', money: 720, party: [{ sp: 'machoke', level: 31 }, { sp: 'kadabra', level: 32 }], intro: 'Past the fourth badge, everyone gets serious.', defeat: 'Serious enough for me!', music: 'battle' });
+  tr('r5_b', { name: 'Picnicker Wren', sprite: 'trainer_lass', ai: 'smart', money: 700, party: [{ sp: 'linoone', level: 32 }, { sp: 'manectric', level: 33 }], intro: 'Keep your team evolving and you might keep up!', defeat: 'You sure did.', music: 'battle' });
+  tr('r6_a', { name: 'Bird Keeper Sol', sprite: 'trainer_ace', ai: 'smart', money: 760, party: [{ sp: 'pelipper', level: 36 }, { sp: 'vibrava', level: 37 }], intro: 'The rain never stops on Route 119!', defeat: 'Soaked AND beaten.', music: 'battle' });
+  tr('r6_b', { name: 'Ranger Tam', sprite: 'trainer_hiker', ai: 'smart', money: 800, party: [{ sp: 'tropius', level: 37 }, { sp: 'altaria', level: 38 }], intro: 'Fortree lives in the treetops. Mind the step.', defeat: 'Climb on up.', music: 'battle' });
+  tr('r7_a', { name: 'Psychic Mara', sprite: 'trainer_ace', ai: 'smart', money: 840, party: [{ sp: 'kadabra', level: 40 }, { sp: 'grumpig', level: 41 }], intro: 'I foresaw this battle. I forget who wins.', defeat: 'Oh. That is how it ends.', music: 'battle' });
+  tr('r7_b', { name: 'Hex Maniac Io', sprite: 'trainer_lass', ai: 'smart', money: 820, party: [{ sp: 'xatu', level: 40 }, { sp: 'kirlia', level: 41 }], intro: 'The twins of Mossdeep are unbeatable. Almost.', defeat: 'Almost!', music: 'battle' });
+  tr('r8_a', { name: 'Swimmer Dale', sprite: 'trainer_ace', ai: 'smart', money: 900, party: [{ sp: 'sharpedo', level: 44 }, { sp: 'sealeo', level: 45 }], intro: 'These are deep waters, challenger.', defeat: 'Deep and cold.', music: 'battle' });
+  tr('r8_b', { name: 'Sailor Cobb', sprite: 'trainer_hiker', ai: 'smart', money: 940, party: [{ sp: 'gyarados', level: 45 }, { sp: 'wailord', level: 46 }], intro: 'Sootopolis hides inside a crater wall!', defeat: 'Wallace is waiting in there.', music: 'battle' });
+
+  // ----------------------------------------------------- GYMS 5-8 (Hoenn)
+  tr('gym5_norman', {
+    name: 'Norman', cls: 'leader', sprite: 'trainer_aldric', ai: 'smart', money: 5000,
+    party: [{ sp: 'vigoroth', level: 34 }, { sp: 'linoone', level: 34 }, { sp: 'slaking', level: 37 }],
+    intro: "I'm Norman, the Petalburg Leader. I won't hold back — not even a little.",
+    defeat: 'I... lost? With my full strength? You are remarkable.',
+    reward: { badge: 4, flag: 'badge5', text: 'Norman handed over the STAMINA BADGE!' }, music: 'gym'
+  });
+  tr('gym6_winona', {
+    name: 'Winona', cls: 'leader', sprite: 'trainer_maris', ai: 'smart', money: 5600,
+    party: [{ sp: 'pelipper', level: 38 }, { sp: 'swellow', level: 38 }, { sp: 'skarmory', level: 40 }, { sp: 'altaria', level: 42 }],
+    intro: 'I am Winona. I have become one with all flying Pokémon. Let us soar!',
+    defeat: 'Never have I seen a Trainer fly so true. Take this.',
+    reward: { badge: 5, flag: 'badge6', text: 'Winona handed over the FEATHER BADGE!' }, music: 'gym'
+  });
+  tr('gym7_tate', {
+    name: 'Tate & Liza', cls: 'leader', sprite: 'trainer_vesper', ai: 'smart', money: 6200,
+    party: [{ sp: 'lunatone', level: 42 }, { sp: 'solrock', level: 42 }, { sp: 'xatu', level: 44 }, { sp: 'gardevoir', level: 44 }],
+    intro: 'We are Tate and Liza! Two Leaders, one mind — can you keep up with both?',
+    defeat: 'Our thoughts... were read. Impossible, and yet here you stand.',
+    reward: { badge: 6, flag: 'badge7', text: 'The twins handed over the MIND BADGE!' }, music: 'gym'
+  });
+  tr('gym8_wallace', {
+    name: 'Wallace', cls: 'leader', sprite: 'trainer_aldric', ai: 'smart', money: 7000,
+    party: [{ sp: 'whiscash', level: 44 }, { sp: 'sealeo', level: 44 }, { sp: 'gyarados', level: 46 }, { sp: 'milotic', level: 48 }],
+    intro: 'I am Wallace, the final Gym Leader. Witness the artistry of water!',
+    defeat: 'Beautiful. Your bond outshone even my Milotic. Go to the League!',
+    reward: { badge: 7, flag: 'badge8', text: 'Wallace handed over the RAIN BADGE!' }, music: 'gym'
+  });
+
   // --------------------------------------- ELITE FOUR (the Summit gauntlet)
   tr('sp_rex', {
     name: 'Sidney', cls: 'Elite Four', sprite: 'trainer_ace', ai: 'smart', money: 5600,
-    party: [{ sp: 'mightyena', level: 42 }, { sp: 'cacturne', level: 42 }, { sp: 'sharpedo', level: 43 }, { sp: 'crawdaunt', level: 44 }, { sp: 'absol', level: 46 }],
+    party: [{ sp: 'mightyena', level: 50 }, { sp: 'cacturne', level: 50 }, { sp: 'sharpedo', level: 51 }, { sp: 'crawdaunt', level: 52 }, { sp: 'absol', level: 54 }],
     intro: "I'm Sidney of the Elite Four. I like that look you're giving me. Let's go!",
     defeat: 'Well, listen to what the loser has to say. You won fair and square.', music: 'champion'
   });
   tr('sp_isa', {
     name: 'Phoebe', cls: 'Elite Four', sprite: 'trainer_ace', ai: 'smart', money: 5800,
-    party: [{ sp: 'duskull', level: 43 }, { sp: 'banette', level: 44 }, { sp: 'sableye', level: 45 }, { sp: 'dusclops', level: 46 }],
+    party: [{ sp: 'sableye', level: 51 }, { sp: 'banette', level: 53 }, { sp: 'dusclops', level: 54 }, { sp: 'gengar', level: 55 }],
     intro: "I'm Phoebe of the Elite Four. My ghosts and I trained on Mt. Pyre. Ready?",
     defeat: 'Oh, darn. I lost. There must be a reason you grew so strong.', music: 'champion'
   });
   tr('sp_olm', {
     name: 'Glacia', cls: 'Elite Four', sprite: 'trainer_hiker', ai: 'smart', money: 6000,
-    party: [{ sp: 'snorunt', level: 44 }, { sp: 'sealeo', level: 45 }, { sp: 'glalie', level: 46 }, { sp: 'walrein', level: 48 }],
+    party: [{ sp: 'sealeo', level: 52 }, { sp: 'glalie', level: 53 }, { sp: 'lapras', level: 54 }, { sp: 'walrein', level: 56 }],
     intro: "I am Glacia of the Elite Four. Show me — burn through my icy cold with your passion!",
     defeat: 'You and your creatures... how hot your spirits burn! Wonderful.', music: 'champion'
   });
   tr('sp_ada', {
     name: 'Drake', cls: 'Elite Four', sprite: 'trainer_ace', ai: 'smart', money: 6400,
-    party: [{ sp: 'shelgon', level: 46 }, { sp: 'altaria', level: 47 }, { sp: 'flygon', level: 48 }, { sp: 'salamence', level: 50 }],
+    party: [{ sp: 'altaria', level: 53 }, { sp: 'flygon', level: 55 }, { sp: 'kingdra', level: 55 }, { sp: 'salamence', level: 57 }],
     intro: 'I am Drake of the Elite Four! Do you have what it takes to command dragons? Show me!',
     defeat: 'Superb! You deserve to face the Champion now.', music: 'champion'
   });
@@ -134,9 +174,9 @@
   tr('champion', {
     name: 'Champion Steven', cls: 'champion', sprite: 'trainer_aldric', ai: 'smart', money: 12000,
     party: [
-      { sp: 'claydol', level: 47 }, { sp: 'cradily', level: 48 },
-      { sp: 'armaldo', level: 48 }, { sp: 'golem', level: 49 },
-      { sp: 'aggron', level: 50 }, { sp: 'metagross', level: 52 }
+      { sp: 'claydol', level: 55 }, { sp: 'cradily', level: 56 },
+      { sp: 'armaldo', level: 56 }, { sp: 'golem', level: 57 },
+      { sp: 'aggron', level: 58 }, { sp: 'metagross', level: 60 }
     ],
     intro: "I'm Steven, the Champion. I collect rare stones... and challengers worth remembering. Come!",
     defeat: 'I, the Champion, fall in defeat... That was an excellent battle. A new Champion is born!',

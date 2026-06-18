@@ -64,7 +64,11 @@
         { sp: 'zigzagoon', min: 2, max: 4 },
         { sp: 'poochyena', min: 2, max: 4 },
         { sp: 'wurmple', min: 3, max: 4 },
-        { sp: 'taillow', min: 3, max: 5 }
+        { sp: 'taillow', min: 3, max: 5 },
+        { sp: 'seedot', min: 2, max: 4 },
+        { sp: 'lotad', min: 2, max: 4 },
+        { sp: 'shroomish', min: 3, max: 5 },
+        { sp: 'wingull', min: 3, max: 5 }
       ]
     },
     scripts: [
@@ -325,8 +329,8 @@
     ], 20, 30, '#'),
     deco: blankDeco(20, 30),
     warps: [
-      { x: 0, y: 26, to: 'aurelune', tx: 21, ty: 8, dir: 'left' },
-      { x: 0, y: 27, to: 'aurelune', tx: 21, ty: 9, dir: 'left' },
+      { x: 0, y: 26, to: 'sootopolis', tx: 18, ty: 8, dir: 'left' },
+      { x: 0, y: 27, to: 'sootopolis', tx: 18, ty: 8, dir: 'left' },
       { x: 10, y: 0, to: 'crownsummit', tx: 9, ty: 16, dir: 'up' },
       { x: 11, y: 0, to: 'crownsummit', tx: 10, ty: 16, dir: 'up' }
     ],
@@ -334,7 +338,7 @@
       { x: 12, y: 25, text: 'SUMMIT PATH — Champions only beyond this point.' }
     ],
     npcs: [
-      { x: 10, y: 24, sprite: 'prof', dir: 'down', unlessFlag: 'badge4', dialog: ['Halt! The summit demands all four badges of Solyn.', 'Bedrock. Tide. Dynamo. Lucid. Return when you carry them all.'] }
+      { x: 10, y: 24, sprite: 'prof', dir: 'down', unlessFlag: 'badge8', dialog: ['Halt! Victory Road opens only to holders of all EIGHT Gym Badges.', 'Return when every Leader from Rustboro to Sootopolis has been bested.'] }
     ],
     trainers: [
       { id: 'sp_rex', trainer: 'sp_rex', x: 6, y: 20, sprite: 'boy', dir: 'right', sight: 4, after: 'Two more aces above me. Breathe between fights.' },

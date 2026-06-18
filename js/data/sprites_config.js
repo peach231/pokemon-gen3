@@ -20,12 +20,14 @@
     localFront: 'front/{dex}.png',
     localBack:  'back/{dex}.png',
     localIcon:  'icon/{dex}.png',
+    localShiny: 'shiny/{dex}.png',
 
     // --- public remote source (Gen 3 Emerald sprites via jsDelivr CDN) ---
     remoteBase:  'https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/sprites/pokemon/versions/generation-iii/emerald/',
     remoteFront: '{dex}.png',
     remoteBack:  'back/{dex}.png',   // not present in this Gen 3 set -> loader auto-flips the front
     remoteIcon:  '{dex}.png',
+    remoteShiny: 'shiny/{dex}.png',  // shiny variant (lazy-loaded on demand)
 
     preferRemote: true,   // true => try the remote source first, local as fallback
 

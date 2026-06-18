@@ -11,7 +11,7 @@
       party: [],
       box: [],            // Birch's Lab storage (overflow beyond the party of 6)
       bag: { potion: 2, tameorb: 5 },
-      badges: [false, false, false, false],
+      badges: [false, false, false, false, false, false, false, false],
       dexSeen: {}, dexCaught: {},
       visited: {},        // mapId -> 1 once entered (region map shading)
       repelSteps: 0,

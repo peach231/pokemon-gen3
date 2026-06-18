@@ -1,0 +1,184 @@
+// pokemon-gen3 — maps_expansion.js
+// Second half of the journey: 4 more gym towns (Petalburg/Norman, Fortree/Winona,
+// Mossdeep/Tate&Liza, Sootopolis/Wallace) and the routes between them, slotted
+// after Lavaridge (gym 4) and before Victory Road. Uses small factories so all
+// four towns/routes share one validated layout. Wild levels rise each route so
+// the curve keeps climbing; by these gyms every line can be fully evolved.
+
+(function () {
+  G.MAPS = G.MAPS || {};
+  var pad = G.padRows;
+  function blank(w, h) { return pad([], w, h); }
+
+  // standard 20x18 gym town: gym (NW), heal (NE), shop (SW), house (SE, locked),
+  // west+east road exits. cfg: { name, music, bg, gymId, healId, shopId,
+  // west:{to,tx,ty}, east:{to,tx,ty}, gymSign, npcs:[], extraSigns:[] }
+  function town(id, cfg) {
+    G.MAPS[id] = {
+      id: id, name: cfg.name, w: 20, h: 18,
+      music: cfg.music || 'town', battleBg: cfg.bg || 'meadow', base: 'grass', legend: G.LEG_EXT,
+      ground: pad([
+        'tutututututututututu',
+        'vxvxvxvxvxvxvxvxvxvx',
+        'tu................tu',
+        'vxAB&BBC....7!89..vx',
+        'tuabbbbc....dmmh..tu',
+        'vxLMYYML....W+DW..vx',
+        'tu................tu',
+        'vx................vx',
+        'pppppppppppppppppppp',
+        'vx................vx',
+        'tu................tu',
+        'vxq@rz......1223..vx',
+        'tuijjk......4556..tu',
+        'vxW$DW......WNDW..vx',
+        'tu................tu',
+        'vx................vx',
+        'tutututututututututu',
+        'vxvxvxvxvxvxvxvxvxvx'
+      ], 20, 18),
+      deco: blank(20, 18),
+      warps: [
+        { x: 4, y: 5, to: cfg.gymId, tx: 5, ty: 11, dir: 'up' },
+        { x: 5, y: 5, to: cfg.gymId, tx: 5, ty: 11, dir: 'up' },
+        { x: 14, y: 5, to: cfg.healId, tx: 4, ty: 7, dir: 'up' },
+        { x: 4, y: 13, to: cfg.shopId, tx: 4, ty: 7, dir: 'up' },
+        { x: 0, y: 8, to: cfg.west.to, tx: cfg.west.tx, ty: cfg.west.ty, dir: 'left' },
+        { x: 19, y: 8, to: cfg.east.to, tx: cfg.east.tx, ty: cfg.east.ty, dir: 'right' }
+      ],
+      signs: [
+        { x: 5, y: 6, text: cfg.name + ' GYM — ' + cfg.gymSign },
+        { x: 14, y: 13, text: "It's locked. A resident waves from the window." }
+      ].concat(cfg.extraSigns || []),
+      npcs: cfg.npcs || [],
+      scripts: []
+    };
+  }
+
+  // standard 24x12 horizontal route. cfg: { name, bg, weather, west, east,
+  // encounters, trainers:[], items:[], signs:[] }
+  function route(id, cfg) {
+    G.MAPS[id] = {
+      id: id, name: cfg.name, w: 24, h: 12,
+      music: 'route', battleBg: cfg.bg || 'meadow', base: 'grass', legend: G.LEG_EXT,
+      weather: cfg.weather,
+      ground: pad([
+        'tutututututututututututu',
+        'vxvxvxvxvxvxvxvxvxvxvxvx',
+        'tu..gggg......gggg....tu',
+        'vx..gggg......gggg....vx',
+        'tu....................tu',
+        'pppppppppppppppppppppppp',
+        'pppppppppppppppppppppppp',
+        'vx.....gggg.....gggg..vx',
+        'tu.....gggg.....gggg..tu',
+        'vx....................vx',
+        'tutututututututututututu',
+        'vxvxvxvxvxvxvxvxvxvxvxvx'
+      ], 24, 12),
+      deco: blank(24, 12),
+      warps: [
+        { x: 0, y: 5, to: cfg.west.to, tx: cfg.west.tx, ty: cfg.west.ty, dir: 'left' },
+        { x: 0, y: 6, to: cfg.west.to, tx: cfg.west.tx, ty: cfg.west.ty, dir: 'left' },
+        { x: 23, y: 5, to: cfg.east.to, tx: cfg.east.tx, ty: cfg.east.ty, dir: 'right' },
+        { x: 23, y: 6, to: cfg.east.to, tx: cfg.east.tx, ty: cfg.east.ty, dir: 'right' }
+      ],
+      signs: cfg.signs || [],
+      npcs: [],
+      trainers: cfg.trainers || [],
+      items: cfg.items || [],
+      encounters: cfg.encounters
+    };
+  }
+
+  function tr(id, x, y, sprite, dir, after) { return { id: id, trainer: id, x: x, y: y, sprite: sprite, dir: dir, sight: 4, after: after }; }
+
+  // ===== Route 5: Lavaridge -> Petalburg =================================
+  route('route5', {
+    name: 'Route 117', bg: 'meadow',
+    west: { to: 'aurelune', tx: 21, ty: 8 },
+    east: { to: 'petalburg', tx: 1, ty: 8 },
+    trainers: [tr('r5_a', 7, 3, 'boy', 'down', 'The towns ahead don\'t go easy on you.'), tr('r5_b', 16, 8, 'mom', 'left', 'Keep your team evolving!')],
+    items: [{ x: 20, y: 2, item: 'hyperpotion', qty: 1, flag: 'itm_r5_hp' }],
+    encounters: { rate: 0.12, table: [
+      { sp: 'linoone', min: 30, max: 33 }, { sp: 'manectric', min: 30, max: 33 },
+      { sp: 'breloom', min: 31, max: 34 }, { sp: 'kadabra', min: 30, max: 33 },
+      { sp: 'graveler', min: 31, max: 34 }, { sp: 'swellow', min: 30, max: 33 }
+    ] }
+  });
+
+  town('petalburg', {
+    name: 'Petalburg City', bg: 'meadow', gymId: 'gym5', healId: 'heal_petalburg', shopId: 'shop_petalburg',
+    gymSign: "Leader Norman. 'Raw, balanced strength.'",
+    west: { to: 'route5', tx: 22, ty: 5 }, east: { to: 'route6', tx: 1, ty: 5 },
+    npcs: [{ x: 9, y: 9, sprite: 'boy', dir: 'down', dialog: ['Norman trains pure Normal-types — nothing fancy, just power.', 'Fighting moves are the classic answer.'] }]
+  });
+
+  // ===== Route 6: Petalburg -> Fortree ==================================
+  route('route6', {
+    name: 'Route 119', bg: 'forest', weather: 'rain',
+    west: { to: 'petalburg', tx: 18, ty: 8 },
+    east: { to: 'fortree', tx: 1, ty: 8 },
+    trainers: [tr('r6_a', 8, 2, 'prof', 'down', 'Rain keeps the Water-types happy.'), tr('r6_b', 17, 7, 'boy', 'left', 'Fortree is up in the trees!')],
+    items: [{ x: 4, y: 9, item: 'greatorb', qty: 2, flag: 'itm_r6_orbs' }],
+    encounters: { rate: 0.12, table: [
+      { sp: 'tropius', min: 34, max: 37 }, { sp: 'noctowl', min: 34, max: 37 },
+      { sp: 'altaria', min: 35, max: 38 }, { sp: 'pelipper', min: 34, max: 37 },
+      { sp: 'fearow', min: 34, max: 37 }, { sp: 'vibrava', min: 35, max: 38 }
+    ] }
+  });
+
+  town('fortree', {
+    name: 'Fortree City', bg: 'forest', gymId: 'gym6', healId: 'heal_fortree', shopId: 'shop_fortree',
+    gymSign: "Leader Winona. 'Grace on the wind.'",
+    west: { to: 'route6', tx: 22, ty: 5 }, east: { to: 'route7', tx: 1, ty: 5 },
+    npcs: [{ x: 10, y: 10, sprite: 'mom', dir: 'down', dialog: ['Winona flies high — Electric, Ice and Rock moves clip her wings.'] }]
+  });
+
+  // ===== Route 7: Fortree -> Mossdeep ===================================
+  route('route7', {
+    name: 'Route 121', bg: 'meadow',
+    west: { to: 'fortree', tx: 18, ty: 8 },
+    east: { to: 'mossdeep', tx: 1, ty: 8 },
+    trainers: [tr('r7_a', 7, 8, 'boy', 'right', 'My team reads minds. Allegedly.'), tr('r7_b', 16, 2, 'mom', 'down', 'Mossdeep twins battle as one!')],
+    items: [{ x: 20, y: 9, item: 'hyperpotion', qty: 2, flag: 'itm_r7_hp' }],
+    encounters: { rate: 0.12, table: [
+      { sp: 'grumpig', min: 38, max: 41 }, { sp: 'xatu', min: 38, max: 41 },
+      { sp: 'kadabra', min: 38, max: 41 }, { sp: 'kirlia', min: 38, max: 41 },
+      { sp: 'lunatone', min: 39, max: 42 }, { sp: 'solrock', min: 39, max: 42 }
+    ] }
+  });
+
+  town('mossdeep', {
+    name: 'Mossdeep City', bg: 'water', gymId: 'gym7', healId: 'heal_mossdeep', shopId: 'shop_mossdeep',
+    gymSign: "Leaders Tate & Liza. 'Two minds, one will.'",
+    west: { to: 'route7', tx: 22, ty: 5 }, east: { to: 'route8', tx: 1, ty: 5 },
+    npcs: [{ x: 9, y: 9, sprite: 'prof', dir: 'down', dialog: ['Tate and Liza share one mind. Dark and Ghost moves rattle Psychics.'] }]
+  });
+
+  // ===== Route 8: Mossdeep -> Sootopolis ================================
+  route('route8', {
+    name: 'Route 124', bg: 'water', weather: 'rain',
+    west: { to: 'mossdeep', tx: 18, ty: 8 },
+    east: { to: 'sootopolis', tx: 1, ty: 8 },
+    trainers: [tr('r8_a', 8, 3, 'mom', 'down', 'The sea gets deep out here.'), tr('r8_b', 16, 8, 'boy', 'left', 'Sootopolis sits inside a crater!')],
+    items: [{ x: 4, y: 2, item: 'revivedust', qty: 1, flag: 'itm_r8_rev' }],
+    encounters: { rate: 0.12, table: [
+      { sp: 'sharpedo', min: 42, max: 45 }, { sp: 'wailmer', min: 42, max: 45 },
+      { sp: 'sealeo', min: 42, max: 45 }, { sp: 'pelipper', min: 42, max: 45 },
+      { sp: 'gyarados', min: 43, max: 46 }, { sp: 'kingdra', min: 43, max: 46 }
+    ] }
+  });
+
+  town('sootopolis', {
+    name: 'Sootopolis City', bg: 'water', gymId: 'gym8', healId: 'heal_sootopolis', shopId: 'shop_sootopolis',
+    gymSign: "Leader Wallace. 'The art of water.'",
+    west: { to: 'route8', tx: 22, ty: 5 }, east: { to: 'summitpath', tx: 1, ty: 26 },
+    npcs: [
+      { x: 10, y: 10, sprite: 'prof', dir: 'down', dialog: ['Beyond Wallace lies Victory Road, then the League itself.', 'Grass and Electric moves wash out his Water-types.'] },
+      // box legendaries: only spawn once all 8 badges are earned
+      { x: 5, y: 7, sprite: 'mon_groudon', obj: true, ifFlag: 'badge8', event: 'meetGroudon' },
+      { x: 14, y: 7, sprite: 'mon_kyogre', obj: true, ifFlag: 'badge8', event: 'meetKyogre' }
+    ]
+  });
+})();

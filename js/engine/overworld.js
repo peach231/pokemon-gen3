@@ -205,7 +205,9 @@
       }
 
       if (p.moving) {
-        p.step += (G.input.held.run ? 2 : 1); // hold Shift to run
+        // base 1; +1 holding Shift (run); +1 if carrying Skates (auto-fast)
+        var spd = 1 + (G.input.held.run ? 1 : 0) + ((G.player && G.player.bag && G.player.bag.skates) ? 1 : 0);
+        p.step += spd;
         if (p.step >= 16) {
           p.moving = false;
           p.step = 0;
@@ -412,6 +414,12 @@
         G.pushScene(G.Textbox(sign.text));
         return;
       }
+
+      // fishing: face water with the rod in the bag
+      if (G.player.bag && G.player.bag.fishingrod) {
+        var ft = w.tileNameAt('deco', fx, fy) || w.tileNameAt('ground', fx, fy);
+        if (ft === 'water') { G.fish(w.map); return; }
+      }
     },
 
     draw: function (ctx) {
@@ -561,6 +569,41 @@
     return true;
   };
 
+  // Fishing: face water with the Fishing Rod to reel up a water-type wild. The
+  // water pool is filtered to whatever's in the dex, so it scales as the dex grows.
+  var WATER_POOL = ['magikarp', 'tentacool', 'wingull', 'marill', 'lotad', 'barboach', 'carvanha', 'wailmer',
+    'corphish', 'goldeen', 'poliwag', 'horsea', 'staryu', 'remoraid', 'chinchou', 'psyduck', 'krabby',
+    'shellder', 'qwilfish', 'wooper', 'slowpoke', 'tentacruel', 'seaking'];
+  var WATER_RARE = ['gyarados', 'sharpedo', 'lanturn', 'huntail', 'gorebyss', 'kingdra', 'lapras', 'milotic'];
+
+  G.fish = function (map) {
+    if (!G.player.party.length) { G.pushScene(G.Textbox('You need a Pokémon with you to fish.')); return; }
+    G.audio.sfx('confirm');
+    if (!G.chance(0.72)) { G.pushScene(G.Textbox('... Not even a nibble.')); return; }
+    var pool = WATER_POOL.filter(function (k) { return G.SPECIES[k]; });
+    var rare = WATER_RARE.filter(function (k) { return G.SPECIES[k]; });
+    if (!pool.length) { G.pushScene(G.Textbox('... Not even a nibble.')); return; }
+    var key = (rare.length && G.chance(0.06)) ? G.pick(rare) : G.pick(pool);
+    var lv;
+    var t = map.encounters && map.encounters.table;
+    if (t && t.length) {
+      var lo = Math.min.apply(null, t.map(function (e) { return e.min; }));
+      var hi = Math.max.apply(null, t.map(function (e) { return e.max; }));
+      lv = G.irandIn(lo, hi);
+    } else {
+      var b = (G.player.badges || []).filter(Boolean).length;
+      lv = G.irandIn(5 + b * 4, 9 + b * 4);
+    }
+    var wild = G.makeMon(key, lv);
+    G.player.dexSeen[key] = 1;
+    G.pushScene(G.Textbox('Oh! A bite!', { onDone: function () {
+      G.startBattle(
+        { party: G.player.party, foes: [wild], wild: true, weather: map.weather || null },
+        { bg: 'water', onEnd: G.afterBattle }
+      );
+    } }));
+  };
+
   // shared post-battle handling (wild + trainer)
   G.afterBattle = function (result, battle) {
     if (G.world.map && G.world.map.music) G.audio.playMusic(G.world.map.music);
@@ -580,8 +623,24 @@
           function () { G.player.box.push(mon); G.pushScene(G.Textbox(nm + " was sent to Birch's Lab.")); }
         );
       } else {
-        G.player.box.push(mon);
-        G.pushScene(G.Textbox('Your party is full, so ' + nm + " was sent to Birch's Lab!"));
+        // party full: still let the player decide — keep it (swap one out to the
+        // Lab) or send the new catch to the Lab. Party stays capped at 6.
+        G.ask(
+          'Your party is full. Keep ' + nm + ' anyway?   (No sends it to the Lab.)',
+          function () {
+            G.pushScene(G.PartyScene({
+              pickMode: true, prompt: 'Send which Pokémon to the Lab?',
+              onPick: function (idx) {
+                if (idx < 0) { G.player.box.push(mon); G.pushScene(G.Textbox(nm + " was sent to Birch's Lab.")); return; }
+                var out = G.player.party[idx];
+                G.player.party[idx] = mon;
+                G.player.box.push(out);
+                G.pushScene(G.Textbox(G.monName(out) + " was sent to the Lab, and " + nm + ' joined the party!'));
+              }
+            }));
+          },
+          function () { G.player.box.push(mon); G.pushScene(G.Textbox(nm + " was sent to Birch's Lab.")); }
+        );
       }
       if (firstCatch && G.CaughtScene) G.pushScene(G.CaughtScene(mon));
     }

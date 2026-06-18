@@ -712,7 +712,7 @@
     var foe = this.active('f');
     if (this.wild) {
       yield { t: 'sendOut', side: 'f', mon: foe };
-      yield { t: 'text', s: 'Wild ' + G.monName(foe) + ' appeared!' };
+      yield { t: 'text', s: (foe.shiny ? 'A shiny ' + G.monName(foe) + ' appeared! ★' : 'Wild ' + G.monName(foe) + ' appeared!') };
     } else {
       yield { t: 'text', s: this.trainer.name + ' wants to battle!' };
       yield { t: 'sendOut', side: 'f', mon: foe };

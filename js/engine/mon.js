@@ -69,6 +69,7 @@
       level: level,
       exp: G.expForLevel(level, (G.SPECIES[spKey] || {}).growth),
       ivs: opts.ivs || rollIvs(),
+      shiny: opts.shiny !== undefined ? opts.shiny : (G.rand() < 1 / 600), // 1-in-600, no quota
       status: null,
       slpTurns: 0,
       curHp: 0,

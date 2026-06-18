@@ -188,6 +188,7 @@
           break;
         case 'sendOut':
           if (step.side === 'f') trainerShown = false; // portrait steps aside
+          if (step.mon.shiny && G.gfx.ensureShiny) G.gfx.ensureShiny(step.mon.sp, G.SPECIES[step.mon.sp].id);
           sprites[step.side].mon = step.mon;
           sprites[step.side].visible = true;
           sprites[step.side].scale = 0;
@@ -519,7 +520,8 @@
         s.flicker--;
         if ((s.flicker >> 1) % 2 === 0) return;
       }
-      var img = side === 'f' ? G.IMG['mon_' + s.mon.sp] : G.IMG['mon_' + s.mon.sp + '_back'];
+      var base = 'mon_' + s.mon.sp + (s.mon.shiny && G.IMG['mon_' + s.mon.sp + '_shiny'] ? '_shiny' : '');
+      var img = side === 'f' ? G.IMG[base] : G.IMG[base + '_back'];
       if (!img) return;
       var anchor = side === 'f' ? FOE : PLY;
       var w = img.width * s.scale, h = img.height * s.scale;

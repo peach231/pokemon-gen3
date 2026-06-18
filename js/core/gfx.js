@@ -186,6 +186,35 @@
       return c;
     },
 
+    // Lazily fetch a shiny sprite the first time a shiny creature appears
+    // (shinies are 1/600, so loading all of them up front would be wasteful).
+    // Falls back to the normal sprite if the shiny variant can't be fetched.
+    ensureShiny: function (key, dexId) {
+      var reqKey = 'mon_' + key + '_shiny';
+      if (G.IMG[reqKey] || G.gfx._shinyReq[key]) return;
+      G.gfx._shinyReq[key] = true;
+      var box = (G.SPRITE_CFG && G.SPRITE_CFG.box) || 64;
+      var urls = G.spriteUrl('shiny', dexId);
+      (function attempt(i) {
+        if (i >= urls.length) { // give up -> show the normal sprite
+          if (G.IMG['mon_' + key]) {
+            G.IMG[reqKey] = G.IMG['mon_' + key];
+            G.IMG[reqKey + '_back'] = G.IMG['mon_' + key + '_back'];
+          }
+          return;
+        }
+        var img = new Image();
+        if (G.SPRITE_CFG.remoteBase && G.SPRITE_CFG.crossOrigin) img.crossOrigin = G.SPRITE_CFG.crossOrigin;
+        img.onload = function () {
+          G.IMG[reqKey] = G.gfx._fitToBox(img, box, false);
+          G.IMG[reqKey + '_back'] = G.gfx._fitToBox(img, box, true);
+        };
+        img.onerror = function () { attempt(i + 1); };
+        img.src = urls[i];
+      })(0);
+    },
+    _shinyReq: {},
+
     // Load front (+ optional dedicated back) for every species; calls onDone
     // once all requests settle. Robust to missing files and slow networks.
     loadMonSprites: function (onProgress, onDone) {

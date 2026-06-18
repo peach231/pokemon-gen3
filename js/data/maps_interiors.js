@@ -106,6 +106,10 @@
   healCenter('heal_coilgate', 'Coilgate', { map: 'coilgate', x: 19, y: 6 });
   healCenter('heal_aurelune', 'Aurelune', { map: 'aurelune', x: 6, y: 6 });
   healCenter('heal_summit', 'Crown Summit', { map: 'crownsummit', x: 5, y: 13 });
+  healCenter('heal_petalburg', 'Petalburg', { map: 'petalburg', x: 14, y: 6 });
+  healCenter('heal_fortree', 'Fortree', { map: 'fortree', x: 14, y: 6 });
+  healCenter('heal_mossdeep', 'Mossdeep', { map: 'mossdeep', x: 14, y: 6 });
+  healCenter('heal_sootopolis', 'Sootopolis', { map: 'sootopolis', x: 14, y: 6 });
 
   function shop(id, exit, inventory) {
     G.MAPS[id] = {
@@ -131,10 +135,14 @@
     };
   }
   shop('shop_cobblemarch', { map: 'cobblemarch', x: 19, y: 7 }, ['potion', 'tameorb', 'cureall', 'snackbar']);
-  shop('shop_brinehollow', { map: 'brinehollow', x: 15, y: 5 }, ['potion', 'superpotion', 'tameorb', 'greatorb', 'cureall', 'repelmist']);
+  shop('shop_brinehollow', { map: 'brinehollow', x: 15, y: 5 }, ['potion', 'superpotion', 'tameorb', 'greatorb', 'cureall', 'repelmist', 'fishingrod', 'skates']);
   shop('shop_coilgate', { map: 'coilgate', x: 7, y: 13 }, ['superpotion', 'tameorb', 'greatorb', 'cureall', 'repelmist', 'revivedust']);
   shop('shop_aurelune', { map: 'aurelune', x: 6, y: 13 }, ['superpotion', 'hyperpotion', 'greatorb', 'cureall', 'repelmist', 'revivedust']);
   shop('shop_summit', { map: 'crownsummit', x: 15, y: 13 }, ['hyperpotion', 'greatorb', 'cureall', 'revivedust', 'repelmist']);
+  shop('shop_petalburg', { map: 'petalburg', x: 4, y: 14 }, ['superpotion', 'hyperpotion', 'greatorb', 'cureall', 'revivedust', 'fishingrod', 'skates']);
+  shop('shop_fortree', { map: 'fortree', x: 4, y: 14 }, ['hyperpotion', 'greatorb', 'cureall', 'revivedust', 'repelmist', 'fishingrod', 'skates']);
+  shop('shop_mossdeep', { map: 'mossdeep', x: 4, y: 14 }, ['hyperpotion', 'greatorb', 'cureall', 'revivedust', 'fishingrod', 'skates']);
+  shop('shop_sootopolis', { map: 'sootopolis', x: 4, y: 14 }, ['hyperpotion', 'greatorb', 'cureall', 'revivedust', 'fishingrod', 'skates']);
 
   // ------------------------------------------------------------------------
   // GYMS — one leader each, waiting at the far end of the hall.
@@ -173,6 +181,10 @@
   gym('gym2', { map: 'brinehollow', x: 5, y: 12 }, 'gym2_maris', 'mom', 'TIDE BADGE holders: Maris respects those who flow around trouble.');
   gym('gym3', { map: 'coilgate', x: 5, y: 6 }, 'gym3_tess', 'boy', 'DYNAMO BADGE holders: Tess respects speed above all.');
   gym('gym4', { map: 'aurelune', x: 14, y: 6 }, 'gym4_vesper', 'mom', 'LUCID BADGE holders: Vesper already knows your next move.');
+  gym('gym5', { map: 'petalburg', x: 5, y: 6 }, 'gym5_norman', 'prof', 'STAMINA BADGE holders: Norman respects raw, even strength.');
+  gym('gym6', { map: 'fortree', x: 5, y: 6 }, 'gym6_winona', 'mom', 'FEATHER BADGE holders: Winona owns the open sky.');
+  gym('gym7', { map: 'mossdeep', x: 5, y: 6 }, 'gym7_tate', 'boy', 'MIND BADGE holders: Tate & Liza think as one.');
+  gym('gym8', { map: 'sootopolis', x: 5, y: 6 }, 'gym8_wallace', 'prof', 'RAIN BADGE holders: Wallace dances with water.');
 
   // ------------------------------------------------------------------------
   // CHAMPION HALL
@@ -410,8 +422,8 @@
     };
   };
 
-  // legendary encounters (post-champion)
-  function legendEvent(key, flag, introLines) {
+  // legendary encounters (deep/post-champion). Optional level (default 50).
+  function legendEvent(key, flag, introLines, level) {
     return function* () {
       if (G.flags[flag]) {
         yield { t: 'text', s: 'The air still hums where ' + G.SPECIES[key].name + ' appeared.' };
@@ -424,7 +436,7 @@
         fn: function () {
           G.flags[flag] = 1;
           G.player.dexSeen[key] = 1;
-          var wild = G.makeMon(key, 50);
+          var wild = G.makeMon(key, level || 50);
           G.startBattle(
             { party: G.player.party, foes: [wild], wild: true },
             { bg: 'cave', music: 'champion', onEnd: function (r, b) { G.afterBattle(r, b); G.world.loadMap(G.world.mapId, G.world.player.x, G.world.player.y, G.world.player.dir); } }
@@ -441,6 +453,15 @@
     'The glade brightens, gently, like a wish coming true out of turn.',
     'JIRACHI, the wish maker, has been waiting for you.'
   ]);
+  // box legendaries — only appear once all 8 badges are in hand (gated on the map)
+  G.EVENTS.meetKyogre = legendEvent('kyogre', 'ev_kyogre', [
+    'The crater sea heaves and a downpour begins from a clear sky.',
+    'A vast blue leviathan surfaces — KYOGRE, the sea basin Pokémon.'
+  ], 60);
+  G.EVENTS.meetGroudon = legendEvent('groudon', 'ev_groudon', [
+    'The ground splits and glows with deep magma light.',
+    'A continent-shaped colossus rises — GROUDON, the land it stands on trembling.'
+  ], 60);
 })();
 
 

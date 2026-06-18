@@ -292,8 +292,8 @@
     warps: [
       { x: 10, y: 19, to: 'route4', tx: 9, ty: 1, dir: 'down' },
       { x: 11, y: 19, to: 'route4', tx: 10, ty: 1, dir: 'down' },
-      { x: 23, y: 8, to: 'summitpath', tx: 1, ty: 26, dir: 'right' },
-      { x: 23, y: 9, to: 'summitpath', tx: 1, ty: 27, dir: 'right' },
+      { x: 23, y: 8, to: 'route5', tx: 1, ty: 5, dir: 'right' },
+      { x: 23, y: 9, to: 'route5', tx: 1, ty: 6, dir: 'right' },
       { x: 14, y: 5, to: 'gym4', tx: 5, ty: 10, dir: 'up' },
       { x: 15, y: 5, to: 'gym4', tx: 5, ty: 10, dir: 'up' },
       { x: 6, y: 5, to: 'heal_aurelune', tx: 4, ty: 7, dir: 'up' },
