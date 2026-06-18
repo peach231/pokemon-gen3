@@ -25,6 +25,44 @@
     };
   }
 
+  // -------------------------------------------------------------------------
+  // Procedural scenery: scatter non-colliding decorations (flowers, tufts,
+  // pebbles, bushes) over PLAIN grass so outdoor maps read as designed places
+  // rather than bare fields. Deterministic per map (seeded by id) and run once.
+  // Skips paths, tall grass (keeps encounters), solids, and any gameplay tile
+  // (warps/signs/items/npcs/trainers) so it can never block or hide anything.
+  // -------------------------------------------------------------------------
+  function strHash(s) { var h = 2166136261; for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
+  function mulberry32(a) { return function () { a |= 0; a = (a + 0x6D2B79F5) | 0; var t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+
+  G.decorateMap = function (map) {
+    if (!map || map._decorated) return;
+    map._decorated = true;
+    if (map.legend !== G.LEG_EXT || !map.deco || !map.ground) return; // outdoor only
+    var avoid = {};
+    function mark(a) { (a || []).forEach(function (o) { avoid[o.x + ',' + o.y] = 1; }); }
+    mark(map.warps); mark(map.signs); mark(map.items); mark(map.npcs); mark(map.trainers);
+    // biome flavor by battle background
+    var bg = map.battleBg || 'meadow';
+    var palette = bg === 'water' ? [['o', 0.10], ['Q', 0.05], [',', 0.10], ['f', 0.04]]
+      : bg === 'cave' ? [['o', 0.10], ['Q', 0.04]]
+      : bg === 'indoor' ? [['f', 0.10], ['y', 0.07], [',', 0.10], ['Q', 0.04]]
+      : [['f', 0.10], ['y', 0.08], [',', 0.10], ['Q', 0.05], ['o', 0.04]]; // meadow/forest
+    var rng = mulberry32(strHash(map.id));
+    var deco = map.deco.map(function (r) { return r.split(''); });
+    for (var y = 0; y < map.h; y++) {
+      for (var x = 0; x < map.w; x++) {
+        if (avoid[x + ',' + y]) continue;
+        if ((deco[y][x] || '.') !== '.') continue;               // keep authored deco
+        if (map.legend[map.ground[y][x]] !== 'grass') continue;  // only plain grass
+        var r = rng(), acc = 0, ch = null;
+        for (var p = 0; p < palette.length; p++) { acc += palette[p][1]; if (r < acc) { ch = palette[p][0]; break; } }
+        if (ch) deco[y][x] = ch;
+      }
+    }
+    map.deco = deco.map(function (r) { return r.join(''); });
+  };
+
   G.world = {
     mapId: null, map: null,
     player: makeActor('player', 0, 0, 'down'),
@@ -32,8 +70,13 @@
 
     loadMap: function (id, x, y, dir) {
       var map = G.MAPS[id];
+      G.decorateMap(map);   // lazily scatter scenery (once per map)
       this.mapId = id;
       this.map = map;
+      if (G.player) { // region-map exploration tracking
+        if (!G.player.visited) G.player.visited = {};
+        G.player.visited[id] = 1;
+      }
       this.player.x = x; this.player.y = y;
       this.player.dir = dir || this.player.dir;
       this.player.moving = false; this.player.step = 0; this.player.hop = 0;
@@ -523,10 +566,24 @@
     if (G.world.map && G.world.map.music) G.audio.playMusic(G.world.map.music);
 
     if (result === 'caught' && battle.caughtMon) {
-      var firstCatch = !G.player.dexCaught[battle.caughtMon.sp];
-      G.player.dexCaught[battle.caughtMon.sp] = 1;
-      if (G.player.party.length < 6) G.player.party.push(battle.caughtMon);
-      if (firstCatch && G.CaughtScene) G.pushScene(G.CaughtScene(battle.caughtMon));
+      var mon = battle.caughtMon;
+      var firstCatch = !G.player.dexCaught[mon.sp];
+      G.player.dexCaught[mon.sp] = 1;
+      var nm = G.monName(mon);
+      // Route the catch: party has a hard cap of 6. With room, let the player
+      // choose party vs Birch's Lab; when full, it goes to the Lab automatically.
+      // (Pushed BEFORE the dex screen so CaughtScene shows first, then the prompt.)
+      if (G.player.party.length < 6) {
+        G.ask(
+          'Add ' + nm + " to your party?   (No sends it to Birch's Lab.)",
+          function () { G.player.party.push(mon); G.pushScene(G.Textbox(nm + ' joined your party!')); },
+          function () { G.player.box.push(mon); G.pushScene(G.Textbox(nm + " was sent to Birch's Lab.")); }
+        );
+      } else {
+        G.player.box.push(mon);
+        G.pushScene(G.Textbox('Your party is full, so ' + nm + " was sent to Birch's Lab!"));
+      }
+      if (firstCatch && G.CaughtScene) G.pushScene(G.CaughtScene(mon));
     }
 
     if (result === 'win' && battle.pendingEvolutions.length && G.EvolutionScene) {

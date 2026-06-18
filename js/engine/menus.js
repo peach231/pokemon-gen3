@@ -131,7 +131,7 @@
 
   // ------------------------------------------------------------ start menu --
   G.StartMenu = function () {
-    var items = ['DEX', 'PARTY', 'BAG', 'SAVE', 'EXIT'];
+    var items = ['DEX', 'MAP', 'PARTY', 'BAG', 'SAVE', 'EXIT'];
     return {
       opaque: false,
       sel: 0,
@@ -144,6 +144,7 @@
           var pick = items[this.sel];
           if (pick === 'EXIT') { G.popScene(); return; }
           if (pick === 'DEX') G.pushScene(G.DexScene());
+          if (pick === 'MAP') G.pushScene(G.RegionMapScene());
           if (pick === 'PARTY') G.pushScene(G.PartyScene());
           if (pick === 'BAG') G.pushScene(G.BagScene());
           if (pick === 'SAVE') {
@@ -380,6 +381,102 @@
     };
   };
 
+  // --------------------------------------------------- Birch's Lab storage PC --
+  // Two columns: PARTY (left, max 6) and LAB box (right, scrollable). Z transfers
+  // the highlighted creature across; the party can never drop below 1 or exceed 6.
+  G.PCScene = function () {
+    var VIS = 7; // visible box rows
+    return {
+      opaque: true,
+      col: 0,        // 0 = party, 1 = box
+      pSel: 0, bSel: 0, bTop: 0,
+      msg: 'Move creatures between your party and the Lab.',
+      _list: function () { return this.col === 0 ? G.player.party : G.player.box; },
+      _sel: function () { return this.col === 0 ? this.pSel : this.bSel; },
+      _setSel: function (v) { if (this.col === 0) this.pSel = v; else this.bSel = v; },
+      update: function () {
+        var party = G.player.party, box = G.player.box;
+        if (G.input.justPressed('B')) { G.audio.sfx('cancel'); G.popScene(); return; }
+        if (G.input.justPressed('left') && this.col !== 0) { this.col = 0; G.audio.sfx('menuMove'); }
+        if (G.input.justPressed('right') && box.length) { this.col = 1; this.bSel = Math.min(this.bSel, box.length - 1); G.audio.sfx('menuMove'); }
+        var n = this._list().length;
+        if (n) {
+          if (G.input.repeat('up')) { this._setSel((this._sel() + n - 1) % n); G.audio.sfx('menuMove'); }
+          if (G.input.repeat('down')) { this._setSel((this._sel() + 1) % n); G.audio.sfx('menuMove'); }
+        }
+        // keep box scroll window around the selection
+        if (this.bSel < this.bTop) this.bTop = this.bSel;
+        if (this.bSel >= this.bTop + VIS) this.bTop = this.bSel - VIS + 1;
+        if (G.input.justPressed('A')) {
+          if (this.col === 0) {
+            if (!party.length) return;
+            if (party.length <= 1) { this.msg = "You can't store your last creature!"; G.audio.sfx('cancel'); return; }
+            var m = party.splice(this.pSel, 1)[0];
+            box.push(m);
+            this.pSel = Math.min(this.pSel, party.length - 1);
+            this.msg = G.monName(m) + ' was stored in the Lab.';
+            G.audio.sfx('confirm');
+          } else {
+            if (!box.length) return;
+            if (party.length >= 6) { this.msg = 'Your party is full (6).'; G.audio.sfx('cancel'); return; }
+            var m2 = box.splice(this.bSel, 1)[0];
+            party.push(m2);
+            if (this.bSel >= box.length) this.bSel = Math.max(0, box.length - 1);
+            if (!box.length) this.col = 0;
+            this.msg = G.monName(m2) + ' was added to your party!';
+            G.audio.sfx('confirm');
+          }
+        }
+      },
+      draw: function (ctx) {
+        ctx.fillStyle = '#2a3040'; ctx.fillRect(0, 0, W, H);
+        var party = G.player.party, box = G.player.box;
+        G.text(ctx, "BIRCH'S LAB  —  STORAGE PC", 10, 4, G.C.white, '#1a1c2c');
+
+        // PARTY column
+        G.text(ctx, 'PARTY ' + party.length + '/6', 12, 16, this.col === 0 ? '#f8e878' : G.C.lgry, '#1a1c2c');
+        for (var i = 0; i < 6; i++) {
+          var y = 26 + i * 16;
+          panel(ctx, 8, y, 104, 15);
+          var mon = party[i];
+          if (mon) {
+            G.text(ctx, G.monName(mon), 16, y + 4, G.UI.text, G.UI.textShadow);
+            G.text(ctx, 'Lv' + mon.level, 82, y + 4, G.UI.text, G.UI.textShadow);
+          } else {
+            G.text(ctx, '—', 16, y + 4, G.C.gry);
+          }
+          if (this.col === 0 && i === this.pSel) ctx.drawImage(G.IMG.ui_cursor, 1, y + 4);
+        }
+
+        // LAB box column (scrollable)
+        G.text(ctx, 'LAB ' + box.length, 126, 16, this.col === 1 ? '#f8e878' : G.C.lgry, '#1a1c2c');
+        panel(ctx, 120, 24, 116, VIS * 13 + 8);
+        if (!box.length) {
+          G.text(ctx, 'Empty.', 128, 30, G.C.gry);
+        } else {
+          for (var b = this.bTop; b < Math.min(box.length, this.bTop + VIS); b++) {
+            var by = 30 + (b - this.bTop) * 13;
+            var bm = box[b];
+            G.text(ctx, G.monName(bm), 134, by, G.UI.text, G.UI.textShadow);
+            G.text(ctx, 'Lv' + bm.level, 204, by, G.UI.text, G.UI.textShadow);
+            if (this.col === 1 && b === this.bSel) ctx.drawImage(G.IMG.ui_cursor, 124, by);
+          }
+        }
+
+        // selected creature preview
+        var cur = this._list()[this._sel()];
+        if (cur) {
+          var img = G.IMG['mon_' + cur.sp];
+          if (img) ctx.drawImage(img, 178 - img.width / 2, 150 - img.height);
+        }
+        panel(ctx, 2, H - 26, 170, 22);
+        var ml = G.textWrap(this.msg, 158);
+        G.text(ctx, ml[0] || '', 8, H - 21, G.UI.text, G.UI.textShadow);
+        G.text(ctx, 'Z: move   <>: switch   X: exit', 8, H - 11, G.C.lgry);
+      }
+    };
+  };
+
   // -------------------------------------------------------------- dex screen --
   G.DexScene = function () {
     var RARITY_STARS = { common: '★', uncommon: '★★', rare: '★★★', elusive: '★★★★', legendary: '★★★★★' };
@@ -446,6 +543,85 @@
           G.text(ctx, 'Unknown', 132, 22, G.UI.text, G.UI.textShadow);
         }
         G.text(ctx, 'X: back', 10, H - 12, G.C.lgry);
+      }
+    };
+  };
+
+  // ------------------------------------------------------------ region map --
+  // Hoenn (western/southern half) overworld map. Areas the player has entered
+  // light up; unexplored areas stay dim. Cursor inspects each; current area is
+  // ringed. Node ids are the internal map ids so visited[] lines up directly.
+  G.RegionMapScene = function () {
+    var NODES = [
+      { id: 'hearthvale',    label: 'Littleroot Town',  x: 30,  y: 124 },
+      { id: 'route1',        label: 'Route 101',        x: 30,  y: 98  },
+      { id: 'cobblemarch',   label: 'Rustboro City',    x: 30,  y: 70  },
+      { id: 'route2',        label: 'Route 102',        x: 54,  y: 52  },
+      { id: 'verdantforest', label: 'Petalburg Woods',  x: 84,  y: 40  },
+      { id: 'brinehollow',   label: 'Dewford Town',     x: 114, y: 52  },
+      { id: 'route3',        label: 'Route 109',        x: 114, y: 80  },
+      { id: 'hollowdeep1',   label: 'Granite Cave',     x: 140, y: 96  },
+      { id: 'coilgate',      label: 'Mauville City',    x: 166, y: 74  },
+      { id: 'route4',        label: 'Route 111',        x: 166, y: 46  },
+      { id: 'aurelune',      label: 'Lavaridge Town',   x: 194, y: 34  },
+      { id: 'summitpath',    label: 'Victory Road',     x: 214, y: 60  },
+      { id: 'crownsummit',   label: 'Pokémon League',   x: 214, y: 90  }
+    ];
+    var visited = G.player.visited || {};
+    function isSeen(id) { return !!visited[id]; }
+    var mid = (G.world && G.world.mapId) || '';
+    var cur = -1;
+    for (var i = 0; i < NODES.length; i++) {
+      if (NODES[i].id === mid || mid.indexOf(NODES[i].id) !== -1) { cur = i; break; }
+    }
+    var seenCount = 0;
+    for (var v = 0; v < NODES.length; v++) if (isSeen(NODES[v].id)) seenCount++;
+
+    return {
+      opaque: true,
+      sel: cur >= 0 ? cur : 0,
+      update: function () {
+        if (G.input.justPressed('B') || G.input.justPressed('start')) { G.audio.sfx('cancel'); G.popScene(); return; }
+        if (G.input.repeat('right') || G.input.repeat('down')) { this.sel = (this.sel + 1) % NODES.length; G.audio.sfx('menuMove'); }
+        if (G.input.repeat('left') || G.input.repeat('up')) { this.sel = (this.sel + NODES.length - 1) % NODES.length; G.audio.sfx('menuMove'); }
+      },
+      draw: function (ctx) {
+        // sea + a soft landmass so it reads like a map
+        ctx.fillStyle = '#1f3550'; ctx.fillRect(0, 0, W, H);
+        ctx.fillStyle = '#2a4a64';
+        for (var s = 0; s < H; s += 4) { ctx.fillRect(0, s, W, 1); } // gentle sea banding
+        ctx.fillStyle = '#3c6b40';
+        ctx.beginPath(); ctx.ellipse(120, 78, 116, 56, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#4f7e4a';
+        ctx.beginPath(); ctx.ellipse(96, 70, 72, 34, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.ellipse(180, 60, 44, 26, 0, 0, Math.PI * 2); ctx.fill();
+
+        G.text(ctx, 'HOENN — REGION MAP', 8, 5, G.C.white, '#1a1c2c');
+
+        // routes between areas
+        ctx.strokeStyle = '#d8cf9a'; ctx.lineWidth = 2;
+        ctx.beginPath();
+        for (var e = 0; e < NODES.length - 1; e++) { ctx.moveTo(NODES[e].x, NODES[e].y); ctx.lineTo(NODES[e + 1].x, NODES[e + 1].y); }
+        ctx.stroke();
+
+        // nodes
+        for (var i = 0; i < NODES.length; i++) {
+          var n = NODES[i], seen = isSeen(n.id), here = (i === cur);
+          if (here) { ctx.strokeStyle = '#f8e878'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(n.x, n.y, 7 + (G.frame >> 3) % 2, 0, Math.PI * 2); ctx.stroke(); }
+          ctx.fillStyle = seen ? (i === this.sel ? '#f8e878' : '#f4f4f4') : '#33425e';
+          ctx.beginPath(); ctx.arc(n.x, n.y, 4, 0, Math.PI * 2); ctx.fill();
+          ctx.fillStyle = seen ? '#c23a3a' : '#26314a';
+          ctx.beginPath(); ctx.arc(n.x, n.y, 2, 0, Math.PI * 2); ctx.fill();
+          if (i === this.sel) { ctx.strokeStyle = '#f8e878'; ctx.lineWidth = 1; ctx.strokeRect(n.x - 6, n.y - 6, 13, 13); }
+        }
+
+        // footer: selected area name + explored count
+        panel(ctx, 2, H - 28, W - 4, 24);
+        var sNode = NODES[this.sel], seenSel = isSeen(sNode.id);
+        G.text(ctx, seenSel ? sNode.label : '? ? ? (unexplored)', 8, H - 23, seenSel ? G.UI.text : G.C.gry, G.UI.textShadow);
+        if (this.sel === cur) G.text(ctx, 'You are here.', 150, H - 23, G.UI.hpGreen, G.UI.textShadow);
+        G.text(ctx, 'Explored ' + seenCount + '/' + NODES.length, 8, H - 12, G.C.lgry);
+        G.text(ctx, '<>: move   X: back', W - 110, H - 12, G.C.lgry);
       }
     };
   };

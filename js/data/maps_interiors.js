@@ -90,10 +90,14 @@
         '....m....'
       ], 9, 8),
       warps: [{ x: 4, y: 7, to: exit.map, tx: exit.x, ty: exit.y, dir: 'down' }],
-      signs: [{ x: 1, y: 1, text: 'The heal machine chimes a soft, ready note.' }],
+      signs: [
+        { x: 1, y: 1, text: 'The heal machine chimes a soft, ready note.' },
+        { x: 6, y: 1, text: "BIRCH'S LAB PC — store and retrieve your Pokémon." }
+      ],
       respawnPoint: { mapId: id, x: 4, y: 5 },
       npcs: [
-        { x: 3, y: 1, sprite: 'mom', dir: 'down', event: 'nurseHeal' }
+        { x: 3, y: 1, sprite: 'mom', dir: 'down', event: 'nurseHeal' },
+        { x: 6, y: 1, sprite: 'prof', dir: 'down', event: 'birchPC' }
       ]
     };
   }
@@ -304,6 +308,12 @@
     };
     yield { t: 'wait', frames: 30 };
     yield { t: 'text', s: 'All patched up! We hope to see you again. Wait — no. You know what I mean.' };
+  };
+
+  // Birch's Lab storage PC: deposit/withdraw between party and the Lab box
+  G.EVENTS.birchPC = function* () {
+    yield { t: 'text', s: "Aide: This terminal links to Prof. Birch's Lab. Store or withdraw your Pokémon here." };
+    yield { t: 'fn', fn: function () { if (G.PCScene) G.pushScene(G.PCScene()); } };
   };
 
   // generic shop clerk: buy from map.shopInventory

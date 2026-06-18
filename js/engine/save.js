@@ -9,9 +9,11 @@
       name: name || 'RAM',
       money: 1500,
       party: [],
+      box: [],            // Birch's Lab storage (overflow beyond the party of 6)
       bag: { potion: 2, tameorb: 5 },
       badges: [false, false, false, false],
       dexSeen: {}, dexCaught: {},
+      visited: {},        // mapId -> 1 once entered (region map shading)
       repelSteps: 0,
       playSeconds: 0,
       respawn: { mapId: 'playerhome', x: 4, y: 4 }
@@ -49,6 +51,8 @@
     try { data = JSON.parse(raw); } catch (e) { return false; }
     if (data.ver !== 1) return false; // future: migrate(data)
     G.player = data.player;
+    if (!G.player.box) G.player.box = [];          // back-compat for older saves
+    if (!G.player.visited) G.player.visited = {};  // explored-map tracking
     G.flags = data.flags || {};
     if (data.muted && !G.audio.muted) G.audio.toggleMute();
     G.world.loadMap(data.pos.mapId, data.pos.x, data.pos.y, data.pos.dir);

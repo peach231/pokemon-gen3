@@ -133,6 +133,22 @@ for (const id in (G.MAPS || {})) {
       if (!G.SPECIES[e.sp]) errors.push(`MAP ${id}: encounter species '${e.sp}' not in roster`);
     }
   }
+  // soft-lock guard: trainers/items shouldn't sit on solid tiles, and warps
+  // shouldn't drop the player onto one.
+  const solidAt = (map, x, y) => {
+    const nm = (layer) => {
+      const r = map[layer]; if (!r || y < 0 || y >= map.h) return null;
+      const row = r[y] || ''; if (x < 0 || x >= row.length) return null;
+      const ch = row[x]; if (ch === '.' && layer !== 'ground') return null;
+      return map.legend[ch] || null;
+    };
+    const name = nm('deco') || nm('ground');
+    const t = (name && G.TILES) ? G.TILES[name] : null;
+    return !!(t && t.solid);
+  };
+  for (const tr of (m.trainers || [])) if (solidAt(m, tr.x, tr.y)) warn.push(`MAP ${id}: trainer at (${tr.x},${tr.y}) on a solid tile`);
+  for (const it of (m.items || [])) if (solidAt(m, it.x, it.y)) warn.push(`MAP ${id}: item at (${it.x},${it.y}) on a solid tile`);
+  for (const wp of (m.warps || [])) { const dest = G.MAPS[wp.to]; if (dest && solidAt(dest, wp.tx, wp.ty)) warn.push(`MAP ${id}: warp to ${wp.to} arrives on a solid tile (${wp.tx},${wp.ty})`); }
 }
 
 // --- tile lint (tile imgs exist) ---

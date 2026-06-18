@@ -8,6 +8,7 @@
   // shared exterior legend
   G.LEG_EXT = {
     '.': 'grass', ',': 'grass2', 'f': 'flower', 'g': 'tallgrass',
+    'y': 'deco_flowerY', 'o': 'deco_pebble', 'Q': 'deco_bush',
     'p': 'path', 'n': 'path_n', 's': 'path_s', 'e': 'path_e', 'w': 'path_w',
     't': 'tree_tl', 'u': 'tree_tr', 'v': 'tree_bl', 'x': 'tree_br',
     'F': 'fence', 'S': 'sign', 'l': 'ledge',
