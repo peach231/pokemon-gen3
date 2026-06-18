@@ -1,0 +1,17 @@
+# dev screenshot artifacts from the headless review loop
+tools/*.png
+tools/shots/
+
+# tooling
+node_modules/
+.vercel/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.log
+
+# user-supplied creature sprites are NOT committed (copyrighted; bring your own)
+assets/sprites/pokemon/front/*.png
+assets/sprites/pokemon/back/*.png
+assets/sprites/pokemon/icon/*.png
