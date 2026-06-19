@@ -186,7 +186,8 @@
       { x: 4, y: 7, text: 'ROUTE 3 — West: Hollowdeep Cave. East: Brinehollow Port.' }
     ],
     npcs: [
-      { x: 16, y: 6, sprite: 'mon_spinda', obj: true, unlessFlag: 'ev_slumbear', event: 'wakeSlumbear' }
+      { x: 16, y: 6, sprite: 'mon_spinda', obj: true, unlessFlag: 'ev_slumbear', event: 'wakeSlumbear' },
+      { x: 8, y: 15, sprite: 'fx_boat', obj: true, event: 'boardBoat' }
     ],
     trainers: [
       { id: 'r3_lou', trainer: 'r3_lou', x: 8, y: 12, sprite: 'mom', dir: 'right', sight: 3, after: 'The sea is nice this time of year. Less nice for my pride.' },
@@ -217,7 +218,7 @@
   // ROUTE 4 — Coilgate (south) to Aurelune (north). Badge 3 gate.
   // ------------------------------------------------------------------------
   G.MAPS.route4 = {
-    id: 'route4', name: 'Route 111', w: 20, h: 28, weather: 'sand',
+    id: 'route4', name: 'Route 111', w: 20, h: 28, weather: 'sand', volcano: true,
     music: 'route', battleBg: 'meadow', base: 'grass',
     legend: G.LEG_EXT,
     ground: pad([

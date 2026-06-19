@@ -42,9 +42,10 @@
     var avoid = {};
     function mark(a) { (a || []).forEach(function (o) { avoid[o.x + ',' + o.y] = 1; }); }
     mark(map.warps); mark(map.signs); mark(map.items); mark(map.npcs); mark(map.trainers);
-    // biome flavor by battle background
+    // biome flavor: coastal maps get palms + shells, volcano maps get cinders
     var bg = map.battleBg || 'meadow';
-    var palette = bg === 'water' ? [['o', 0.10], ['Q', 0.05], [',', 0.10], ['f', 0.04]]
+    var palette = map.volcano ? [['Z', 0.09], ['o', 0.08], ['Q', 0.03]]
+      : bg === 'water' ? [['P', 0.05], ['H', 0.05], ['Q', 0.05], [',', 0.08], ['o', 0.05]]
       : bg === 'cave' ? [['o', 0.10], ['Q', 0.04]]
       : bg === 'indoor' ? [['f', 0.10], ['y', 0.07], [',', 0.10], ['Q', 0.04]]
       : [['f', 0.10], ['y', 0.08], [',', 0.10], ['Q', 0.05], ['o', 0.04]]; // meadow/forest
@@ -96,6 +97,7 @@
       this.player.x = x; this.player.y = y;
       this.player.dir = dir || this.player.dir;
       this.player.moving = false; this.player.step = 0; this.player.hop = 0;
+      this.player.vehicle = null; // never start a new map mid-swim
       this.npcs = [];
       var defs = (map.npcs || []).concat(map.trainers || []);
       for (var i = 0; i < defs.length; i++) {
@@ -265,7 +267,14 @@
         return;
       }
 
-      if (w.isBlocked(nx, ny)) {
+      // water: on land you can't walk in (press Z to swim — a hint is shown);
+      // while swimming/sailing, water is passable and reaching land disembarks.
+      var destWater = !!(destDef && destDef.water);
+      if (destWater && !p.vehicle) return;
+      var blocked = (p.vehicle && destWater)
+        ? ((nx < 0 || ny < 0 || nx >= w.map.w || ny >= w.map.h) || !!w.npcAt(nx, ny) || !!w.itemAt(nx, ny))
+        : w.isBlocked(nx, ny);
+      if (blocked) {
         if (!p.bumpCool) {
           G.audio.sfx('bump');
           p.bumpCool = 16;
@@ -282,6 +291,12 @@
 
     _stepDone: function () {
       var w = G.world, p = w.player;
+
+      // swimming/sailing: stepping onto solid ground gets you out of the water
+      if (p.vehicle) {
+        var hd = w.tileDefAt(p.x, p.y);
+        if (!(hd && hd.water)) p.vehicle = null;
+      }
 
       // repel ticks on every step, like the real thing
       if (G.player.repelSteps > 0) {
@@ -312,6 +327,10 @@
       // tall grass rustles AND cave floors both roll wild encounters
       if (def && (def.grass || def.cave) && G.hooks.grassStep) {
         if (G.hooks.grassStep(w.map)) return;
+      }
+      // swimming through deep water can turn up water-types
+      if (p.vehicle && def && def.water && G.hooks.waterStep) {
+        if (G.hooks.waterStep(w.map)) return;
       }
       if (G.hooks.stepDone) G.hooks.stepDone(p.x, p.y);
     },
@@ -432,10 +451,30 @@
         return;
       }
 
-      // fishing: face water with the rod in the bag
-      if (G.player.bag && G.player.bag.fishingrod) {
-        var ft = w.tileNameAt('deco', fx, fy) || w.tileNameAt('ground', fx, fy);
-        if (ft === 'water') { G.fish(w.map); return; }
+      // water: dive in to swim across it, or fish if you have a rod
+      var fdef = w.tileDefAt(fx, fy);
+      if (fdef && fdef.water) {
+        var rod = G.player.bag && G.player.bag.fishingrod;
+        if (p.vehicle) { // already on the water
+          if (rod) G.fish(w.map);
+          else G.pushScene(G.Textbox('Open water all around. A Fishing Rod would let you cast here.'));
+          return;
+        }
+        var dive = function () {
+          p.vehicle = 'swim';
+          p.fromX = p.x; p.fromY = p.y; p.x = fx; p.y = fy;
+          p.moving = true; p.step = 0; p.stride = !p.stride;
+          G.audio.sfx('confirm');
+        };
+        if (rod) {
+          G.pushScene(G.Chooser({
+            items: ['Swim', 'Fish', 'Cancel'], cancelIndex: 2,
+            onPick: function (i) { if (i === 0) dive(); else if (i === 1) G.fish(w.map); }
+          }));
+        } else {
+          dive();
+        }
+        return;
       }
     },
 
@@ -478,6 +517,22 @@
         if (seenW[wk]) continue; seenW[wk] = 1;
         var outDir = wp.x === 0 ? 'left' : wp.x === map.w - 1 ? 'right' : wp.y === 0 ? 'up' : 'down';
         drawExitArrow(ctx, wp.x * TILE - cam.x + 8, wp.y * TILE - cam.y + 8, outDir);
+      }
+
+      // swim hint: standing on land, facing deep water
+      var pl = w.player;
+      if (!pl.vehicle && !pl.moving) {
+        var pd = G.DIRS[pl.dir];
+        var wfx = pl.x + pd.dx, wfy = pl.y + pd.dy;
+        var wfd = w.tileDefAt(wfx, wfy);
+        if (wfd && wfd.water) {
+          var label = (G.player.bag && G.player.bag.fishingrod) ? 'Z: Swim / Fish' : 'Z: Swim';
+          var lw = G.textWidth(label) + 6;
+          var lx = Math.round(wfx * TILE - cam.x + 8 - lw / 2);
+          var ly = wfy * TILE - cam.y - 11;
+          ctx.fillStyle = 'rgba(26,28,44,0.82)'; ctx.fillRect(lx, ly, lw, 11);
+          G.text(ctx, label, lx + 3, ly + 2, '#7fdfff');
+        }
       }
 
       // controls hint, bottom-left
@@ -529,7 +584,21 @@
       }
 
       img = this._actorImage(a);
-      if (img) ctx.drawImage(img, sx, sy - 8); // 8px head overhang
+      var yoff = -8; // 8px head overhang
+      if (a === w.player && a.vehicle) {
+        var bob = Math.round(Math.sin(G.frame * 0.22));
+        if (a.vehicle === 'boat') {
+          if (G.IMG.fx_boat) ctx.drawImage(G.IMG.fx_boat, sx, sy + bob);
+          yoff = -8 + bob;           // sit in the boat
+        } else {
+          var rt = (G.frame % 28) / 28; // expanding swim ripple
+          ctx.strokeStyle = 'rgba(240,248,255,' + (0.55 * (1 - rt)).toFixed(2) + ')';
+          ctx.lineWidth = 1;
+          ctx.beginPath(); ctx.ellipse(sx + 8, sy + 13, 4 + rt * 5, 2 + rt * 2, 0, 0, Math.PI * 2); ctx.stroke();
+          yoff = -4 + bob;           // ride low — half-submerged
+        }
+      }
+      if (img) ctx.drawImage(img, sx, sy + yoff);
 
       // grass rustle over feet
       var def = w.tileDefAt(a.x, a.y);
@@ -632,6 +701,34 @@
         { bg: 'water', onEnd: G.afterBattle }
       );
     } }));
+  };
+
+  // Swimming through deep water can turn up water-types (like surfing). Uses the
+  // same water pool as fishing, scaled to the area's level band.
+  G.hooks.waterStep = function (map) {
+    if (!G.player.party.length || G.player.repelSteps > 0) return false;
+    if (!G.chance(0.09)) return false;
+    var pool = WATER_POOL.filter(function (k) { return G.SPECIES[k]; });
+    var rare = WATER_RARE.filter(function (k) { return G.SPECIES[k]; });
+    if (!pool.length) return false;
+    var key = (rare.length && G.chance(0.05)) ? G.pick(rare) : G.pick(pool);
+    var lv;
+    var t = map.encounters && map.encounters.table;
+    if (t && t.length) {
+      var lo = Math.min.apply(null, t.map(function (e) { return e.min; }));
+      var hi = Math.max.apply(null, t.map(function (e) { return e.max; }));
+      lv = G.irandIn(lo, hi);
+    } else {
+      var b = (G.player.badges || []).filter(Boolean).length;
+      lv = G.irandIn(5 + b * 4, 9 + b * 4);
+    }
+    var wild = G.makeMon(key, lv);
+    G.player.dexSeen[key] = 1;
+    G.startBattle(
+      { party: G.player.party, foes: [wild], wild: true, weather: map.weather || null },
+      { bg: 'water', onEnd: G.afterBattle }
+    );
+    return true;
   };
 
   // shared post-battle handling (wild + trainer)

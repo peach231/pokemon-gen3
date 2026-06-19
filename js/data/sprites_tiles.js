@@ -164,6 +164,81 @@
     '................'
   ]);
 
+  // island + volcano overlay decorations (transparent bg)
+  T('t_deco_palm', { b: C.leaf2, c: C.leaf3, t: C.brn2 }, [
+    '................',
+    '................',
+    '.....bbb........',
+    '...bbcbcbb......',
+    '..bc..t..cb.....',
+    '......t.........',
+    '......t.........',
+    '......t.........',
+    '......t.........',
+    '......t.........',
+    '.....ttt........',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................'
+  ]);
+  T('t_deco_shell', { o: C.org2, p: C.white }, [
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '......oo........',
+    '.....opppo......',
+    '.....opppo......',
+    '......oo........',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................'
+  ]);
+  T('t_deco_cinder', { r: C.red2, y: C.yel1, o: C.org2 }, [
+    '................',
+    '................',
+    '....y...........',
+    '...yoy.....y....',
+    '....y.....yoy...',
+    '..........y.....',
+    '................',
+    '................',
+    '................',
+    '......y.........',
+    '.....yoy........',
+    '......y.........',
+    '................',
+    '...........y....',
+    '..........yoy...',
+    '...........y....'
+  ]);
+  // small boat drawn under the player while sailing (see overworld _drawActor)
+  T('fx_boat', { w: C.brn2, d: C.brn3, l: C.tan0 }, [
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '...wwwwwwwwww...',
+    '..wllllllllllw..',
+    '..wllllllllllw..',
+    '...dwwwwwwwwd...',
+    '....dddddddd....'
+  ]);
+
   // ----------------------------------------------------------------- path --
   var PA = { d: C.tan0, e: C.brn3, f: C.tan1 };
   T('t_path', PA, [
@@ -1271,6 +1346,9 @@
     deco_flowerY: { img: 't_deco_flowerY' },
     deco_pebble:  { img: 't_deco_pebble' },
     deco_bush:    { img: 't_deco_bush' },
+    deco_palm:    { img: 't_deco_palm' },
+    deco_shell:   { img: 't_deco_shell' },
+    deco_cinder:  { img: 't_deco_cinder' },
     path:      { img: 't_path' },
     path_n:    { img: 't_path_n' },
     path_s:    { img: 't_path_s' },
@@ -1307,11 +1385,12 @@
     iplant: { img: 't_iplant', solid: true },
     istool: { img: 't_istool', solid: true },
 
-    water:   { anim: ['t_water1', 't_water2', 't_water3', 't_water4'], animSpeed: 24, solid: true },
-    shore_n: { img: 't_shore_n', solid: true },
-    shore_s: { img: 't_shore_s', solid: true },
-    shore_w: { img: 't_shore_w', solid: true },
-    shore_e: { img: 't_shore_e', solid: true },
+    water:   { anim: ['t_water1', 't_water2', 't_water3', 't_water4'], animSpeed: 24, solid: true, water: true },
+    // beaches are walkable so you can wade from the sand into the sea and swim
+    shore_n: { img: 't_shore_n' },
+    shore_s: { img: 't_shore_s' },
+    shore_w: { img: 't_shore_w' },
+    shore_e: { img: 't_shore_e' },
     sand:    { img: 't_sand' },
     cliff:   { img: 't_cliff', solid: true },
     rock:    { img: 't_rock', solid: true },

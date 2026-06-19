@@ -322,6 +322,24 @@
     yield { t: 'text', s: 'All patched up! We hope to see you again. Wait — no. You know what I mean.' };
   };
 
+  // Board a docked boat and set sail onto the adjacent water (cross + fish).
+  G.EVENTS.boardBoat = function* () {
+    yield { t: 'text', s: 'A small boat bobs at the dock. Climb aboard and set sail?' };
+    yield { t: 'fn', fn: function () {
+      var w = G.world, p = w.player, dirs = ['down', 'up', 'left', 'right'];
+      for (var i = 0; i < dirs.length; i++) {
+        var dd = G.DIRS[dirs[i]], tx = p.x + dd.dx, ty = p.y + dd.dy, td = w.tileDefAt(tx, ty);
+        if (td && td.water && !w.npcAt(tx, ty)) {
+          p.vehicle = 'boat'; p.dir = dirs[i];
+          p.fromX = p.x; p.fromY = p.y; p.x = tx; p.y = ty; p.moving = true; p.step = 0;
+          G.audio.sfx('confirm');
+          return;
+        }
+      }
+      G.pushScene(G.Textbox('There’s no open water to launch into from here.'));
+    } };
+  };
+
   // Birch's Lab storage PC: deposit/withdraw between party and the Lab box
   G.EVENTS.birchPC = function* () {
     yield { t: 'text', s: "Aide: This terminal links to Prof. Birch's Lab. Store or withdraw your Pokémon here." };

@@ -9,6 +9,7 @@
   G.LEG_EXT = {
     '.': 'grass', ',': 'grass2', 'f': 'flower', 'g': 'tallgrass',
     'y': 'deco_flowerY', 'o': 'deco_pebble', 'Q': 'deco_bush',
+    'P': 'deco_palm', 'H': 'deco_shell', 'Z': 'deco_cinder',
     'p': 'path', 'n': 'path_n', 's': 'path_s', 'e': 'path_e', 'w': 'path_w',
     't': 'tree_tl', 'u': 'tree_tr', 'v': 'tree_bl', 'x': 'tree_br',
     'F': 'fence', 'S': 'sign', 'l': 'ledge',
@@ -198,7 +199,8 @@
     ],
     npcs: [
       { x: 6, y: 8, sprite: 'prof', dir: 'down', dialog: ['Old sailor wisdom: Water creatures fear Electric and Grass moves.', 'Maris herself? Swears by raw power. Bring bandages.'] },
-      { x: 20, y: 9, sprite: 'boy', dir: 'down', dialog: ['I saw a ghost ship figurehead drift past the pier last night!', 'Nobody believes me. You believe me, right?'] }
+      { x: 20, y: 9, sprite: 'boy', dir: 'down', dialog: ['I saw a ghost ship figurehead drift past the pier last night!', 'Nobody believes me. You believe me, right?'] },
+      { x: 12, y: 17, sprite: 'fx_boat', obj: true, event: 'boardBoat' }
     ],
     scripts: []
   };
@@ -263,7 +265,7 @@
   // AURELUNE CITY — psychic gym. Route 4 south, Summit Path east.
   // ------------------------------------------------------------------------
   G.MAPS.aurelune = {
-    id: 'aurelune', name: 'Lavaridge Town', w: 24, h: 20,
+    id: 'aurelune', name: 'Lavaridge Town', w: 24, h: 20, volcano: true,
     music: 'town', battleBg: 'indoor', base: 'grass',
     legend: G.LEG_EXT,
     ground: pad([
