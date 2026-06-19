@@ -552,20 +552,32 @@
   // light up; unexplored areas stay dim. Cursor inspects each; current area is
   // ringed. Node ids are the internal map ids so visited[] lines up directly.
   G.RegionMapScene = function () {
+    // full western/southern Hoenn route, 8 gym towns, laid out as a serpentine
     var NODES = [
-      { id: 'hearthvale',    label: 'Littleroot Town',  x: 30,  y: 124 },
-      { id: 'route1',        label: 'Route 101',        x: 30,  y: 98  },
-      { id: 'cobblemarch',   label: 'Rustboro City',    x: 30,  y: 70  },
-      { id: 'route2',        label: 'Route 102',        x: 54,  y: 52  },
-      { id: 'verdantforest', label: 'Petalburg Woods',  x: 84,  y: 40  },
-      { id: 'brinehollow',   label: 'Dewford Town',     x: 114, y: 52  },
-      { id: 'route3',        label: 'Route 109',        x: 114, y: 80  },
-      { id: 'hollowdeep1',   label: 'Granite Cave',     x: 140, y: 96  },
-      { id: 'coilgate',      label: 'Mauville City',    x: 166, y: 74  },
-      { id: 'route4',        label: 'Route 111',        x: 166, y: 46  },
-      { id: 'aurelune',      label: 'Lavaridge Town',   x: 194, y: 34  },
-      { id: 'summitpath',    label: 'Victory Road',     x: 214, y: 60  },
-      { id: 'crownsummit',   label: 'Pokémon League',   x: 214, y: 90  }
+      // band 1 (left -> right)
+      { id: 'hearthvale',    label: 'Littleroot Town',  x: 24,  y: 34 },
+      { id: 'route1',        label: 'Route 101',        x: 56,  y: 34 },
+      { id: 'cobblemarch',   label: 'Rustboro City',    x: 88,  y: 34 },
+      { id: 'route2',        label: 'Route 102',        x: 120, y: 34 },
+      { id: 'verdantforest', label: 'Petalburg Woods',  x: 152, y: 34 },
+      { id: 'brinehollow',   label: 'Dewford Town',     x: 184, y: 34 },
+      { id: 'route3',        label: 'Route 109',        x: 216, y: 34 },
+      // band 2 (right -> left)
+      { id: 'hollowdeep1',   label: 'Granite Cave',     x: 216, y: 74 },
+      { id: 'coilgate',      label: 'Mauville City',    x: 184, y: 74 },
+      { id: 'route4',        label: 'Route 111',        x: 152, y: 74 },
+      { id: 'aurelune',      label: 'Lavaridge Town',   x: 120, y: 74 },
+      { id: 'route5',        label: 'Route 117',        x: 88,  y: 74 },
+      { id: 'petalburg',     label: 'Petalburg City',   x: 56,  y: 74 },
+      { id: 'route6',        label: 'Route 119',        x: 24,  y: 74 },
+      // band 3 (left -> right)
+      { id: 'fortree',       label: 'Fortree City',     x: 24,  y: 112 },
+      { id: 'route7',        label: 'Route 121',        x: 56,  y: 112 },
+      { id: 'mossdeep',      label: 'Mossdeep City',    x: 88,  y: 112 },
+      { id: 'route8',        label: 'Route 124',        x: 120, y: 112 },
+      { id: 'sootopolis',    label: 'Sootopolis City',  x: 152, y: 112 },
+      { id: 'summitpath',    label: 'Victory Road',     x: 184, y: 112 },
+      { id: 'crownsummit',   label: 'Pokémon League',   x: 216, y: 112 }
     ];
     var visited = G.player.visited || {};
     function isSeen(id) { return !!visited[id]; }

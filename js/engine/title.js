@@ -74,14 +74,16 @@
           ctx.fillStyle = (i + (G.frame >> 5)) % 5 === 0 ? '#f8e878' : '#8a8aa4';
           ctx.fillRect(sx, sy, 1, 1);
         }
-        // the sky dragon coils across the sky
-        var drax = G.IMG.mon_rayquaza;
-        if (drax) ctx.drawImage(drax, 158, 8);
-        // starters on the ridge (native resolution, crisp)
+        // the weather trio: Rayquaza in the sky, Groudon & Kyogre at the horizon
+        var ray = G.IMG.mon_rayquaza, gro = G.IMG.mon_groudon, kyo = G.IMG.mon_kyogre;
+        if (ray) ctx.drawImage(ray, 150, 6);
+        if (gro) ctx.drawImage(gro, 2, 78, 52, 52);
+        if (kyo) ctx.drawImage(kyo, 186, 78, 52, 52);
+        // starters on the ridge, between the two giants
         var starters = ['mon_treecko', 'mon_torchic', 'mon_mudkip'];
         for (var s = 0; s < starters.length; s++) {
           var img = G.IMG[starters[s]];
-          if (img) ctx.drawImage(img, 26 + s * 64, 126 - img.height);
+          if (img) ctx.drawImage(img, 62 + s * 42, 84, 40, 40);
         }
         // logo at 3x
         if (logo) {
