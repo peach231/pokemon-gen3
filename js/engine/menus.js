@@ -553,31 +553,34 @@
   // ringed. Node ids are the internal map ids so visited[] lines up directly.
   G.RegionMapScene = function () {
     // full western/southern Hoenn route, 8 gym towns, laid out as a serpentine
+    // an archipelago: a big mainland (west+center), the south Dewford island,
+    // and the eastern isles — sea routes (109/121/124) run over open water.
     var NODES = [
-      // band 1 (left -> right)
-      { id: 'hearthvale',    label: 'Littleroot Town',  x: 24,  y: 34 },
-      { id: 'route1',        label: 'Route 101',        x: 56,  y: 34 },
-      { id: 'cobblemarch',   label: 'Rustboro City',    x: 88,  y: 34 },
-      { id: 'route2',        label: 'Route 102',        x: 120, y: 34 },
-      { id: 'verdantforest', label: 'Petalburg Woods',  x: 152, y: 34 },
-      { id: 'brinehollow',   label: 'Dewford Town',     x: 184, y: 34 },
-      { id: 'route3',        label: 'Route 109',        x: 216, y: 34 },
-      // band 2 (right -> left)
-      { id: 'hollowdeep1',   label: 'Granite Cave',     x: 216, y: 74 },
-      { id: 'coilgate',      label: 'Mauville City',    x: 184, y: 74 },
-      { id: 'route4',        label: 'Route 111',        x: 152, y: 74 },
-      { id: 'aurelune',      label: 'Lavaridge Town',   x: 120, y: 74 },
-      { id: 'route5',        label: 'Route 117',        x: 88,  y: 74 },
-      { id: 'petalburg',     label: 'Petalburg City',   x: 56,  y: 74 },
-      { id: 'route6',        label: 'Route 119',        x: 24,  y: 74 },
-      // band 3 (left -> right)
-      { id: 'fortree',       label: 'Fortree City',     x: 24,  y: 112 },
-      { id: 'route7',        label: 'Route 121',        x: 56,  y: 112 },
-      { id: 'mossdeep',      label: 'Mossdeep City',    x: 88,  y: 112 },
-      { id: 'route8',        label: 'Route 124',        x: 120, y: 112 },
-      { id: 'sootopolis',    label: 'Sootopolis City',  x: 152, y: 112 },
-      { id: 'summitpath',    label: 'Victory Road',     x: 184, y: 112 },
-      { id: 'crownsummit',   label: 'Pokémon League',   x: 216, y: 112 }
+      // --- mainland, NW arm ---
+      { id: 'hearthvale',    label: 'Littleroot Town',  x: 22,  y: 96 },
+      { id: 'route1',        label: 'Route 101',        x: 22,  y: 76 },
+      { id: 'cobblemarch',   label: 'Rustboro City',    x: 22,  y: 54 },
+      { id: 'route2',        label: 'Route 102',        x: 42,  y: 40 },
+      { id: 'verdantforest', label: 'Petalburg Woods',  x: 64,  y: 32 },
+      // --- Dewford island (south) ---
+      { id: 'brinehollow',   label: 'Dewford Town',     x: 36,  y: 122 },
+      { id: 'route3',        label: 'Route 109',        x: 66,  y: 118 },
+      // --- mainland, center ---
+      { id: 'hollowdeep1',   label: 'Granite Cave',     x: 92,  y: 34 },
+      { id: 'coilgate',      label: 'Mauville City',    x: 120, y: 42 },
+      { id: 'route4',        label: 'Route 111',        x: 122, y: 64 },
+      { id: 'aurelune',      label: 'Lavaridge Town',   x: 98,  y: 60 },
+      { id: 'route5',        label: 'Route 117',        x: 76,  y: 70 },
+      { id: 'petalburg',     label: 'Petalburg City',   x: 54,  y: 80 },
+      { id: 'route6',        label: 'Route 119',        x: 82,  y: 96 },
+      { id: 'fortree',       label: 'Fortree City',     x: 116, y: 90 },
+      // --- eastern isles ---
+      { id: 'route7',        label: 'Route 121',        x: 148, y: 84 },
+      { id: 'mossdeep',      label: 'Mossdeep City',    x: 172, y: 70 },
+      { id: 'route8',        label: 'Route 124',        x: 194, y: 82 },
+      { id: 'sootopolis',    label: 'Sootopolis City',  x: 214, y: 66 },
+      { id: 'summitpath',    label: 'Victory Road',     x: 214, y: 44 },
+      { id: 'crownsummit',   label: 'Pokémon League',   x: 214, y: 24 }
     ];
     var visited = G.player.visited || {};
     function isSeen(id) { return !!visited[id]; }
@@ -598,15 +601,32 @@
         if (G.input.repeat('left') || G.input.repeat('up')) { this.sel = (this.sel + NODES.length - 1) % NODES.length; G.audio.sfx('menuMove'); }
       },
       draw: function (ctx) {
-        // sea + a soft landmass so it reads like a map
-        ctx.fillStyle = '#1f3550'; ctx.fillRect(0, 0, W, H);
-        ctx.fillStyle = '#2a4a64';
-        for (var s = 0; s < H; s += 4) { ctx.fillRect(0, s, W, 1); } // gentle sea banding
-        ctx.fillStyle = '#3c6b40';
-        ctx.beginPath(); ctx.ellipse(120, 78, 116, 56, 0, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = '#4f7e4a';
-        ctx.beginPath(); ctx.ellipse(96, 70, 72, 34, 0, 0, Math.PI * 2); ctx.fill();
-        ctx.beginPath(); ctx.ellipse(180, 60, 44, 26, 0, 0, Math.PI * 2); ctx.fill();
+        // tropical sea with gentle banding
+        ctx.fillStyle = '#2a73b8'; ctx.fillRect(0, 0, W, H);
+        ctx.fillStyle = '#3a86c8';
+        for (var s = 2; s < H; s += 5) { ctx.fillRect(0, s, W, 2); }
+
+        // islands: a sand rim, then green land. (cx,cy,rx,ry)
+        var ISLES = [
+          [70, 58, 74, 46],   // main landmass (NW + center arm)
+          [44, 84, 30, 22],   // its southern peninsula
+          [112, 80, 30, 24],  // its eastern lobe (Fortree)
+          [50, 120, 34, 16],  // Dewford island (south)
+          [172, 70, 24, 18],  // Mossdeep island
+          [214, 60, 24, 30],  // Sootopolis crater island
+          [214, 26, 20, 16]   // Ever Grande / League island
+        ];
+        ctx.fillStyle = '#e7d9a6'; // beach/sand rim
+        for (var a = 0; a < ISLES.length; a++) { var I = ISLES[a]; ctx.beginPath(); ctx.ellipse(I[0], I[1], I[2] + 4, I[3] + 4, 0, 0, Math.PI * 2); ctx.fill(); }
+        ctx.fillStyle = '#3f8a3f'; // green land
+        for (var g = 0; g < ISLES.length; g++) { var J = ISLES[g]; ctx.beginPath(); ctx.ellipse(J[0], J[1], J[2], J[3], 0, 0, Math.PI * 2); ctx.fill(); }
+        ctx.fillStyle = '#56a356'; // brighter inland highlight
+        ctx.beginPath(); ctx.ellipse(64, 52, 44, 26, 0, 0, Math.PI * 2); ctx.fill();
+        // volcano marker at Lavaridge (node index 10)
+        var volc = NODES[10];
+        ctx.fillStyle = '#7a3b2a';
+        ctx.beginPath(); ctx.moveTo(volc.x - 7, volc.y + 6); ctx.lineTo(volc.x, volc.y - 7); ctx.lineTo(volc.x + 7, volc.y + 6); ctx.closePath(); ctx.fill();
+        ctx.fillStyle = '#e0682c'; ctx.fillRect(volc.x - 2, volc.y - 7, 4, 3);
 
         G.text(ctx, 'HOENN — REGION MAP', 8, 5, G.C.white, '#1a1c2c');
 

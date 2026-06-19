@@ -42,13 +42,13 @@
     var avoid = {};
     function mark(a) { (a || []).forEach(function (o) { avoid[o.x + ',' + o.y] = 1; }); }
     mark(map.warps); mark(map.signs); mark(map.items); mark(map.npcs); mark(map.trainers);
-    // biome flavor: coastal maps get palms + shells, volcano maps get cinders
+    // tropical region: palms everywhere, heavier on the coast; cinders at the volcano
     var bg = map.battleBg || 'meadow';
-    var palette = map.volcano ? [['Z', 0.09], ['o', 0.08], ['Q', 0.03]]
-      : bg === 'water' ? [['P', 0.05], ['H', 0.05], ['Q', 0.05], [',', 0.08], ['o', 0.05]]
+    var palette = map.volcano ? [['Z', 0.09], ['P', 0.03], ['o', 0.07], ['Q', 0.03]]
+      : bg === 'water' ? [['P', 0.09], ['H', 0.06], ['Q', 0.05], [',', 0.07], ['o', 0.04]]
       : bg === 'cave' ? [['o', 0.10], ['Q', 0.04]]
       : bg === 'indoor' ? [['f', 0.10], ['y', 0.07], [',', 0.10], ['Q', 0.04]]
-      : [['f', 0.10], ['y', 0.08], [',', 0.10], ['Q', 0.05], ['o', 0.04]]; // meadow/forest
+      : [['P', 0.05], ['f', 0.09], ['y', 0.06], [',', 0.08], ['Q', 0.05], ['o', 0.03]]; // meadow/forest -> tropical
     var rng = mulberry32(strHash(map.id));
     var deco = map.deco.map(function (r) { return r.split(''); });
     for (var y = 0; y < map.h; y++) {
@@ -78,6 +78,25 @@
     ctx.moveTo(tipx, tipy); ctx.lineTo(b1x, b1y); ctx.lineTo(b2x, b2y); ctx.closePath();
     ctx.lineWidth = 3; ctx.lineJoin = 'round'; ctx.strokeStyle = G.C.ink || '#1a1c2c'; ctx.stroke();
     ctx.fillStyle = '#f8e878'; ctx.fill();
+  }
+
+  // A type-colored gym badge: a colored disc (with a highlight + dark rim) that
+  // marks a gym by its specialty type. Small floating ones sit over town gym
+  // doors; a big one with the type name sits on the gym's battle floor.
+  function drawTypeBadge(ctx, cx, cy, type, big) {
+    var col = (G.TYPE_COLORS && G.TYPE_COLORS[type]) || '#cccccc';
+    var r = big ? 15 : 7;
+    ctx.fillStyle = G.C.ink || '#1a1c2c';
+    ctx.beginPath(); ctx.arc(cx, cy, r + 2, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = col;
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+    ctx.beginPath(); ctx.arc(cx - r * 0.32, cy - r * 0.32, r * 0.42, 0, Math.PI * 2); ctx.fill();
+    if (big) {
+      var lbl = type.toUpperCase();
+      var lw = G.textWidth(lbl);
+      G.text(ctx, lbl, Math.round(cx - lw / 2), Math.round(cy + r + 4), G.C.white, G.C.ink);
+    }
   }
 
   G.world = {
@@ -491,6 +510,14 @@
       this._drawLayer(ctx, 'ground', x0, y0, x1, y1, cam);
       this._drawLayer(ctx, 'deco', x0, y0, x1, y1, cam);
 
+      // gym interiors are tinted their specialty type's color
+      if (map.gymTint) {
+        ctx.globalAlpha = 0.16;
+        ctx.fillStyle = map.gymTint;
+        ctx.fillRect(0, 0, G.SCREEN_W, G.SCREEN_H);
+        ctx.globalAlpha = 1;
+      }
+
       // ground items (capture orbs lying around)
       var items = w.map.items || [];
       for (var ii = 0; ii < items.length; ii++) {
@@ -517,6 +544,13 @@
         if (seenW[wk]) continue; seenW[wk] = 1;
         var outDir = wp.x === 0 ? 'left' : wp.x === map.w - 1 ? 'right' : wp.y === 0 ? 'up' : 'down';
         drawExitArrow(ctx, wp.x * TILE - cam.x + 8, wp.y * TILE - cam.y + 8, outDir);
+      }
+
+      // gym type badge (over a town gym door, or big on the gym battle floor)
+      if (map.gymEmblem) {
+        var ge = map.gymEmblem;
+        var gbob = ge.big ? 0 : Math.round(Math.sin(G.frame * 0.14) * 1);
+        drawTypeBadge(ctx, ge.x * TILE - cam.x + 8, ge.y * TILE - cam.y + 8 + gbob, ge.type, ge.big);
       }
 
       // swim hint: standing on land, facing deep water

@@ -147,11 +147,13 @@
   // ------------------------------------------------------------------------
   // GYMS — one leader each, waiting at the far end of the hall.
   // ------------------------------------------------------------------------
-  function gym(id, exit, leaderId, leaderSprite, statueText) {
+  function gym(id, exit, leaderId, leaderSprite, statueText, type) {
     G.MAPS[id] = {
       id: id, name: 'Gym', w: 11, h: 12,
       music: 'gym', battleBg: 'indoor', base: 'gfloor',
       legend: G.LEG_INT,
+      gymTint: type ? G.TYPE_COLORS[type] : null,         // type-colored floor
+      gymEmblem: type ? { x: 5, y: 6, type: type, big: true } : null,
       ground: pad([
         'IIIIIIIIIII',
         'GGGGGGGGGGG',
@@ -177,14 +179,14 @@
       ]
     };
   }
-  gym('gym1', { map: 'cobblemarch', x: 5, y: 6 }, 'gym1_bram', 'prof', 'BEDROCK BADGE holders: Bram respects patience and stone.');
-  gym('gym2', { map: 'brinehollow', x: 5, y: 12 }, 'gym2_maris', 'mom', 'TIDE BADGE holders: Maris respects those who flow around trouble.');
-  gym('gym3', { map: 'coilgate', x: 5, y: 6 }, 'gym3_tess', 'boy', 'DYNAMO BADGE holders: Tess respects speed above all.');
-  gym('gym4', { map: 'aurelune', x: 14, y: 6 }, 'gym4_vesper', 'mom', 'LUCID BADGE holders: Vesper already knows your next move.');
-  gym('gym5', { map: 'petalburg', x: 5, y: 6 }, 'gym5_norman', 'prof', 'STAMINA BADGE holders: Norman respects raw, even strength.');
-  gym('gym6', { map: 'fortree', x: 5, y: 6 }, 'gym6_winona', 'mom', 'FEATHER BADGE holders: Winona owns the open sky.');
-  gym('gym7', { map: 'mossdeep', x: 5, y: 6 }, 'gym7_tate', 'boy', 'MIND BADGE holders: Tate & Liza think as one.');
-  gym('gym8', { map: 'sootopolis', x: 5, y: 6 }, 'gym8_wallace', 'prof', 'RAIN BADGE holders: Wallace dances with water.');
+  gym('gym1', { map: 'cobblemarch', x: 5, y: 6 }, 'gym1_bram', 'prof', 'STONE BADGE — Roxanne, the Rock-type Leader.', 'rock');
+  gym('gym2', { map: 'brinehollow', x: 5, y: 12 }, 'gym2_maris', 'mom', 'KNUCKLE BADGE — Brawly, the Fighting-type Leader.', 'fighting');
+  gym('gym3', { map: 'coilgate', x: 5, y: 6 }, 'gym3_tess', 'boy', 'DYNAMO BADGE — Wattson, the Electric-type Leader.', 'electric');
+  gym('gym4', { map: 'aurelune', x: 14, y: 6 }, 'gym4_vesper', 'mom', 'HEAT BADGE — Flannery, the Fire-type Leader.', 'fire');
+  gym('gym5', { map: 'petalburg', x: 5, y: 6 }, 'gym5_norman', 'prof', 'STAMINA BADGE — Norman, the Normal-type Leader.', 'normal');
+  gym('gym6', { map: 'fortree', x: 5, y: 6 }, 'gym6_winona', 'mom', 'FEATHER BADGE — Winona, the Flying-type Leader.', 'flying');
+  gym('gym7', { map: 'mossdeep', x: 5, y: 6 }, 'gym7_tate', 'boy', 'MIND BADGE — Tate & Liza, the Psychic-type Leaders.', 'psychic');
+  gym('gym8', { map: 'sootopolis', x: 5, y: 6 }, 'gym8_wallace', 'prof', 'RAIN BADGE — Wallace, the Water-type Leader.', 'water');
 
   // ------------------------------------------------------------------------
   // CHAMPION HALL

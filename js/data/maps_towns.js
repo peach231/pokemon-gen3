@@ -104,7 +104,7 @@
   // Route 2 east (gate guard until badge 1).
   // ------------------------------------------------------------------------
   G.MAPS.cobblemarch = {
-    id: 'cobblemarch', name: 'Rustboro City', w: 24, h: 20,
+    id: 'cobblemarch', name: 'Rustboro City', w: 24, h: 20, gymEmblem: { x: 5, y: 4, type: 'rock' },
     music: 'town', battleBg: 'meadow', base: 'grass',
     legend: G.LEG_EXT,
     ground: pad([
@@ -156,7 +156,7 @@
   // BRINEHOLLOW PORT — water gym. Forest east, Route 3 west, sea south.
   // ------------------------------------------------------------------------
   G.MAPS.brinehollow = {
-    id: 'brinehollow', name: 'Dewford Town', w: 26, h: 20,
+    id: 'brinehollow', name: 'Dewford Town', w: 26, h: 20, gymEmblem: { x: 5, y: 10, type: 'fighting' },
     music: 'town', battleBg: 'water', base: 'grass',
     legend: G.LEG_EXT,
     ground: pad([
@@ -209,7 +209,7 @@
   // COILGATE CITY — electric gym. Cave east, Route 4 north (badge 3 gate).
   // ------------------------------------------------------------------------
   G.MAPS.coilgate = {
-    id: 'coilgate', name: 'Mauville City', w: 26, h: 20,
+    id: 'coilgate', name: 'Mauville City', w: 26, h: 20, gymEmblem: { x: 5, y: 4, type: 'electric' },
     music: 'town', battleBg: 'indoor', base: 'grass',
     legend: G.LEG_EXT,
     ground: pad([
@@ -265,7 +265,7 @@
   // AURELUNE CITY — psychic gym. Route 4 south, Summit Path east.
   // ------------------------------------------------------------------------
   G.MAPS.aurelune = {
-    id: 'aurelune', name: 'Lavaridge Town', w: 24, h: 20, volcano: true,
+    id: 'aurelune', name: 'Lavaridge Town', w: 24, h: 20, volcano: true, gymEmblem: { x: 14, y: 4, type: 'fire' },
     music: 'town', battleBg: 'indoor', base: 'grass',
     legend: G.LEG_EXT,
     ground: pad([

@@ -17,6 +17,7 @@
     G.MAPS[id] = {
       id: id, name: cfg.name, w: 20, h: 18,
       music: cfg.music || 'town', battleBg: cfg.bg || 'meadow', base: 'grass', legend: G.LEG_EXT,
+      gymEmblem: cfg.gymType ? { x: 5, y: 4, type: cfg.gymType } : null,
       ground: pad([
         'tutututututututututu',
         'vxvxvxvxvxvxvxvxvxvx',
@@ -93,6 +94,43 @@
 
   function tr(id, x, y, sprite, dir, after) { return { id: id, trainer: id, x: x, y: y, sprite: sprite, dir: dir, sight: 4, after: after }; }
 
+  // A true sea crossing: sand docks at each edge, open water between. You swim or
+  // board the docked boat to cross; water-types turn up mid-channel.
+  function seaRoute(id, cfg) {
+    G.MAPS[id] = {
+      id: id, name: cfg.name, w: 24, h: 12,
+      music: 'route', battleBg: 'water', base: 'water', legend: G.LEG_EXT, weather: cfg.weather,
+      ground: pad([
+        '~~~~~~~~~~~~~~~~~~~~~~~~',
+        '~~~~~~~~~~~~~~~~~~~~~~~~',
+        '%%%~~~~~~~~~~~~~~~~~~%%%',
+        '%%%~~~~~~~~~~~~~~~~~~%%%',
+        '%%%~~~~~~~~~~~~~~~~~~%%%',
+        '%%%~~~~~~~~~~~~~~~~~~%%%',
+        '%%%~~~~~~~~~~~~~~~~~~%%%',
+        '%%%~~~~~~~~~~~~~~~~~~%%%',
+        '%%%~~~~~~~~~~~~~~~~~~%%%',
+        '~~~~~~~~~~~~~~~~~~~~~~~~',
+        '~~~~~~~~~~~~~~~~~~~~~~~~',
+        '~~~~~~~~~~~~~~~~~~~~~~~~'
+      ], 24, 12),
+      deco: blank(24, 12),
+      warps: [
+        { x: 0, y: 5, to: cfg.west.to, tx: cfg.west.tx, ty: cfg.west.ty, dir: 'left' },
+        { x: 0, y: 6, to: cfg.west.to, tx: cfg.west.tx, ty: cfg.west.ty, dir: 'left' },
+        { x: 23, y: 5, to: cfg.east.to, tx: cfg.east.tx, ty: cfg.east.ty, dir: 'right' },
+        { x: 23, y: 6, to: cfg.east.to, tx: cfg.east.tx, ty: cfg.east.ty, dir: 'right' }
+      ],
+      signs: [{ x: 1, y: 4, text: cfg.name + ' — open sea. Swim across, or board the boat.' }],
+      npcs: [
+        { x: 2, y: 4, sprite: 'fx_boat', obj: true, event: 'boardBoat' },
+        { x: 21, y: 7, sprite: 'fx_boat', obj: true, event: 'boardBoat' }
+      ],
+      items: cfg.items || [],
+      encounters: cfg.encounters
+    };
+  }
+
   // ===== Route 5: Lavaridge -> Petalburg =================================
   route('route5', {
     name: 'Route 117', bg: 'meadow',
@@ -108,7 +146,7 @@
   });
 
   town('petalburg', {
-    name: 'Petalburg City', bg: 'meadow', gymId: 'gym5', healId: 'heal_petalburg', shopId: 'shop_petalburg',
+    name: 'Petalburg City', bg: 'meadow', gymId: 'gym5', healId: 'heal_petalburg', shopId: 'shop_petalburg', gymType: 'normal',
     gymSign: "Leader Norman. 'Raw, balanced strength.'",
     west: { to: 'route5', tx: 22, ty: 5 }, east: { to: 'route6', tx: 1, ty: 5 },
     npcs: [{ x: 9, y: 9, sprite: 'boy', dir: 'down', dialog: ['Norman trains pure Normal-types — nothing fancy, just power.', 'Fighting moves are the classic answer.'] }]
@@ -129,49 +167,41 @@
   });
 
   town('fortree', {
-    name: 'Fortree City', bg: 'forest', gymId: 'gym6', healId: 'heal_fortree', shopId: 'shop_fortree',
+    name: 'Fortree City', bg: 'forest', gymId: 'gym6', healId: 'heal_fortree', shopId: 'shop_fortree', gymType: 'flying',
     gymSign: "Leader Winona. 'Grace on the wind.'",
     west: { to: 'route6', tx: 22, ty: 5 }, east: { to: 'route7', tx: 1, ty: 5 },
     npcs: [{ x: 10, y: 10, sprite: 'mom', dir: 'down', dialog: ['Winona flies high — Electric, Ice and Rock moves clip her wings.'] }]
   });
 
-  // ===== Route 7: Fortree -> Mossdeep ===================================
-  route('route7', {
-    name: 'Route 121', bg: 'meadow',
+  // ===== Route 121: Fortree -> Mossdeep (SEA crossing) ==================
+  seaRoute('route7', {
+    name: 'Route 121',
     west: { to: 'fortree', tx: 18, ty: 8 },
     east: { to: 'mossdeep', tx: 1, ty: 8 },
-    trainers: [tr('r7_a', 7, 8, 'boy', 'right', 'My team reads minds. Allegedly.'), tr('r7_b', 16, 2, 'mom', 'down', 'Mossdeep twins battle as one!')],
-    items: [{ x: 20, y: 9, item: 'hyperpotion', qty: 2, flag: 'itm_r7_hp' }],
     encounters: { rate: 0.12, table: [
-      { sp: 'grumpig', min: 38, max: 41 }, { sp: 'xatu', min: 38, max: 41 },
-      { sp: 'kadabra', min: 38, max: 41 }, { sp: 'kirlia', min: 38, max: 41 },
-      { sp: 'lunatone', min: 39, max: 42 }, { sp: 'solrock', min: 39, max: 42 }
+      { sp: 'tentacruel', min: 38, max: 41 }, { sp: 'wingull', min: 38, max: 41 }, { sp: 'pelipper', min: 39, max: 42 }
     ] }
   });
 
   town('mossdeep', {
-    name: 'Mossdeep City', bg: 'water', gymId: 'gym7', healId: 'heal_mossdeep', shopId: 'shop_mossdeep',
+    name: 'Mossdeep City', bg: 'water', gymId: 'gym7', healId: 'heal_mossdeep', shopId: 'shop_mossdeep', gymType: 'psychic',
     gymSign: "Leaders Tate & Liza. 'Two minds, one will.'",
     west: { to: 'route7', tx: 22, ty: 5 }, east: { to: 'route8', tx: 1, ty: 5 },
     npcs: [{ x: 9, y: 9, sprite: 'prof', dir: 'down', dialog: ['Tate and Liza share one mind. Dark and Ghost moves rattle Psychics.'] }]
   });
 
-  // ===== Route 8: Mossdeep -> Sootopolis ================================
-  route('route8', {
-    name: 'Route 124', bg: 'water', weather: 'rain',
+  // ===== Route 124: Mossdeep -> Sootopolis (SEA crossing) ===============
+  seaRoute('route8', {
+    name: 'Route 124', weather: 'rain',
     west: { to: 'mossdeep', tx: 18, ty: 8 },
     east: { to: 'sootopolis', tx: 1, ty: 8 },
-    trainers: [tr('r8_a', 8, 3, 'mom', 'down', 'The sea gets deep out here.'), tr('r8_b', 16, 8, 'boy', 'left', 'Sootopolis sits inside a crater!')],
-    items: [{ x: 4, y: 2, item: 'revivedust', qty: 1, flag: 'itm_r8_rev' }],
     encounters: { rate: 0.12, table: [
-      { sp: 'sharpedo', min: 42, max: 45 }, { sp: 'wailmer', min: 42, max: 45 },
-      { sp: 'sealeo', min: 42, max: 45 }, { sp: 'pelipper', min: 42, max: 45 },
-      { sp: 'gyarados', min: 43, max: 46 }, { sp: 'kingdra', min: 43, max: 46 }
+      { sp: 'sharpedo', min: 42, max: 45 }, { sp: 'wailmer', min: 43, max: 46 }, { sp: 'gyarados', min: 43, max: 46 }
     ] }
   });
 
   town('sootopolis', {
-    name: 'Sootopolis City', bg: 'water', gymId: 'gym8', healId: 'heal_sootopolis', shopId: 'shop_sootopolis',
+    name: 'Sootopolis City', bg: 'water', gymId: 'gym8', healId: 'heal_sootopolis', shopId: 'shop_sootopolis', gymType: 'water',
     gymSign: "Leader Wallace. 'The art of water.'",
     west: { to: 'route8', tx: 22, ty: 5 }, east: { to: 'summitpath', tx: 1, ty: 26 },
     npcs: [
