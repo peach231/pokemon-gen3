@@ -556,31 +556,31 @@
     // an archipelago: a big mainland (west+center), the south Dewford island,
     // and the eastern isles — sea routes (109/121/124) run over open water.
     var NODES = [
-      // --- mainland, NW arm ---
-      { id: 'hearthvale',    label: 'Littleroot Town',  x: 22,  y: 96 },
-      { id: 'route1',        label: 'Route 101',        x: 22,  y: 76 },
-      { id: 'cobblemarch',   label: 'Rustboro City',    x: 22,  y: 54 },
-      { id: 'route2',        label: 'Route 102',        x: 42,  y: 40 },
-      { id: 'verdantforest', label: 'Petalburg Woods',  x: 64,  y: 32 },
+      // --- mainland (the big volcano landmass) ---
+      { id: 'hearthvale',    label: 'Littleroot Town',  kind: 'town',   x: 30,  y: 96 },
+      { id: 'route1',        label: 'Route 101',        kind: 'route',  x: 30,  y: 78 },
+      { id: 'cobblemarch',   label: 'Rustboro City',    kind: 'gym', type: 'rock',     x: 26, y: 56 },
+      { id: 'route2',        label: 'Route 102',        kind: 'route',  x: 48,  y: 42 },
+      { id: 'verdantforest', label: 'Petalburg Woods',  kind: 'forest', x: 72,  y: 36 },
       // --- Dewford island (south) ---
-      { id: 'brinehollow',   label: 'Dewford Town',     x: 36,  y: 122 },
-      { id: 'route3',        label: 'Route 109',        x: 66,  y: 118 },
-      // --- mainland, center ---
-      { id: 'hollowdeep1',   label: 'Granite Cave',     x: 92,  y: 34 },
-      { id: 'coilgate',      label: 'Mauville City',    x: 120, y: 42 },
-      { id: 'route4',        label: 'Route 111',        x: 122, y: 64 },
-      { id: 'aurelune',      label: 'Lavaridge Town',   x: 98,  y: 60 },
-      { id: 'route5',        label: 'Route 117',        x: 76,  y: 70 },
-      { id: 'petalburg',     label: 'Petalburg City',   x: 54,  y: 80 },
-      { id: 'route6',        label: 'Route 119',        x: 82,  y: 96 },
-      { id: 'fortree',       label: 'Fortree City',     x: 116, y: 90 },
+      { id: 'brinehollow',   label: 'Dewford Town',     kind: 'gym', type: 'fighting', x: 32, y: 119 },
+      { id: 'route3',        label: 'Route 109',        kind: 'route',  x: 56,  y: 122 },
+      { id: 'hollowdeep1',   label: 'Granite Cave',     kind: 'cave',   x: 80,  y: 119 },
+      // --- mainland (center / volcano) ---
+      { id: 'coilgate',      label: 'Mauville City',    kind: 'gym', type: 'electric', x: 124, y: 48 },
+      { id: 'route4',        label: 'Route 111',        kind: 'route',  x: 126, y: 70 },
+      { id: 'aurelune',      label: 'Lavaridge Town',   kind: 'gym', type: 'fire',     x: 102, y: 64 },
+      { id: 'route5',        label: 'Route 117',        kind: 'route',  x: 82,  y: 74 },
+      { id: 'petalburg',     label: 'Petalburg City',   kind: 'gym', type: 'normal',   x: 58, y: 84 },
+      { id: 'route6',        label: 'Route 119',        kind: 'route',  x: 90,  y: 96 },
+      { id: 'fortree',       label: 'Fortree City',     kind: 'gym', type: 'flying',    x: 122, y: 92 },
       // --- eastern isles ---
-      { id: 'route7',        label: 'Route 121',        x: 148, y: 84 },
-      { id: 'mossdeep',      label: 'Mossdeep City',    x: 172, y: 70 },
-      { id: 'route8',        label: 'Route 124',        x: 194, y: 82 },
-      { id: 'sootopolis',    label: 'Sootopolis City',  x: 214, y: 66 },
-      { id: 'summitpath',    label: 'Victory Road',     x: 214, y: 44 },
-      { id: 'crownsummit',   label: 'Pokémon League',   x: 214, y: 24 }
+      { id: 'route7',        label: 'Route 121',        kind: 'route',  x: 144, y: 80 },
+      { id: 'mossdeep',      label: 'Mossdeep City',    kind: 'gym', type: 'psychic',  x: 164, y: 70 },
+      { id: 'route8',        label: 'Route 124',        kind: 'route',  x: 186, y: 72 },
+      { id: 'sootopolis',    label: 'Sootopolis City',  kind: 'gym', type: 'water',    x: 208, y: 74 },
+      { id: 'summitpath',    label: 'Victory Road',     kind: 'cave',   x: 214, y: 48 },
+      { id: 'crownsummit',   label: 'Pokémon League',   kind: 'league', x: 214, y: 28 }
     ];
     var visited = G.player.visited || {};
     function isSeen(id) { return !!visited[id]; }
@@ -601,50 +601,81 @@
         if (G.input.repeat('left') || G.input.repeat('up')) { this.sel = (this.sel + NODES.length - 1) % NODES.length; G.audio.sfx('menuMove'); }
       },
       draw: function (ctx) {
-        // tropical sea with gentle banding
+        // ---- pixel-art helpers (crisp fillRect blocks, no anti-aliasing) ----
+        var CELL = 3;
+        function pxHash(gx, gy) { var h = (gx * 374761 ^ gy * 668265) >>> 0; h = (h ^ (h >>> 13)) >>> 0; return (h % 1000) / 1000; }
+        function blob(cx, cy, rx, ry, color) {            // grid-quantized island w/ jagged coast
+          ctx.fillStyle = color;
+          var x0 = Math.floor((cx - rx) / CELL) * CELL, x1 = Math.ceil((cx + rx) / CELL) * CELL;
+          var y0 = Math.floor((cy - ry) / CELL) * CELL, y1 = Math.ceil((cy + ry) / CELL) * CELL;
+          for (var gy = y0; gy < y1; gy += CELL) {
+            for (var gx = x0; gx < x1; gx += CELL) {
+              var dx = (gx + 1.5 - cx) / rx, dy = (gy + 1.5 - cy) / ry;
+              if (dx * dx + dy * dy <= 0.84 + (pxHash(gx, gy) - 0.5) * 0.5) ctx.fillRect(gx, gy, CELL, CELL);
+            }
+          }
+        }
+        function isle(cx, cy, rx, ry) { blob(cx, cy, rx + 3, ry + 3, '#e3d39a'); blob(cx, cy, rx, ry, '#3f8a3f'); }
+        function trail(x0, y0, x1, y1) {                  // dotted route path
+          ctx.fillStyle = '#efe3b0';
+          var dx = x1 - x0, dy = y1 - y0, len = Math.max(1, Math.sqrt(dx * dx + dy * dy));
+          for (var t = 0; t <= len; t += 3) ctx.fillRect(Math.round(x0 + dx * t / len) - 1, Math.round(y0 + dy * t / len) - 1, 2, 2);
+        }
+
+        // pixel sea + wave dashes
         ctx.fillStyle = '#2a73b8'; ctx.fillRect(0, 0, W, H);
         ctx.fillStyle = '#3a86c8';
-        for (var s = 2; s < H; s += 5) { ctx.fillRect(0, s, W, 2); }
+        for (var wy = 5; wy < H; wy += 7) for (var wx = (wy & 8) ? 0 : 8; wx < W; wx += 16) ctx.fillRect(wx, wy, 5, 2);
 
-        // islands: a sand rim, then green land. (cx,cy,rx,ry)
-        var ISLES = [
-          [70, 58, 74, 46],   // main landmass (NW + center arm)
-          [44, 84, 30, 22],   // its southern peninsula
-          [112, 80, 30, 24],  // its eastern lobe (Fortree)
-          [50, 120, 34, 16],  // Dewford island (south)
-          [172, 70, 24, 18],  // Mossdeep island
-          [214, 60, 24, 30],  // Sootopolis crater island
-          [214, 26, 20, 16]   // Ever Grande / League island
-        ];
-        ctx.fillStyle = '#e7d9a6'; // beach/sand rim
-        for (var a = 0; a < ISLES.length; a++) { var I = ISLES[a]; ctx.beginPath(); ctx.ellipse(I[0], I[1], I[2] + 4, I[3] + 4, 0, 0, Math.PI * 2); ctx.fill(); }
-        ctx.fillStyle = '#3f8a3f'; // green land
-        for (var g = 0; g < ISLES.length; g++) { var J = ISLES[g]; ctx.beginPath(); ctx.ellipse(J[0], J[1], J[2], J[3], 0, 0, Math.PI * 2); ctx.fill(); }
-        ctx.fillStyle = '#56a356'; // brighter inland highlight
-        ctx.beginPath(); ctx.ellipse(64, 52, 44, 26, 0, 0, Math.PI * 2); ctx.fill();
-        // volcano marker at Lavaridge (node index 10)
+        // BIG MAINLAND (volcano landmass): sand under all lobes, then green over all
+        blob(70, 60, 63, 41, '#e3d39a'); blob(112, 82, 33, 27, '#e3d39a'); blob(32, 84, 27, 27, '#e3d39a');
+        blob(70, 60, 60, 38, '#3f8a3f'); blob(112, 82, 30, 24, '#3f8a3f'); blob(32, 84, 24, 24, '#3f8a3f');
+        blob(66, 54, 40, 22, '#54a354'); // inland highlight
+        // separate islands
+        isle(54, 121, 36, 10);                 // Dewford
+        isle(164, 70, 18, 15);                 // Mossdeep
+        isle(208, 74, 18, 15); blob(208, 74, 8, 5, '#7fd0e0'); // Sootopolis + crater lake
+        isle(214, 36, 17, 20);                 // Ever Grande / League
+
+        // volcano on the mainland (Lavaridge)
         var volc = NODES[10];
-        ctx.fillStyle = '#7a3b2a';
-        ctx.beginPath(); ctx.moveTo(volc.x - 7, volc.y + 6); ctx.lineTo(volc.x, volc.y - 7); ctx.lineTo(volc.x + 7, volc.y + 6); ctx.closePath(); ctx.fill();
-        ctx.fillStyle = '#e0682c'; ctx.fillRect(volc.x - 2, volc.y - 7, 4, 3);
+        blob(volc.x, volc.y + 2, 10, 7, '#9a5538');
+        ctx.fillStyle = '#5a2e20'; ctx.fillRect(volc.x - 2, volc.y - 6, 5, 7);
+        ctx.fillStyle = '#e0682c'; ctx.fillRect(volc.x - 1, volc.y - 7, 3, 2);
+        ctx.fillStyle = '#d8d8d8'; ctx.fillRect(volc.x, volc.y - 12, 2, 5); // smoke
 
         G.text(ctx, 'HOENN — REGION MAP', 8, 5, G.C.white, '#1a1c2c');
 
-        // routes between areas
-        ctx.strokeStyle = '#d8cf9a'; ctx.lineWidth = 2;
-        ctx.beginPath();
-        for (var e = 0; e < NODES.length - 1; e++) { ctx.moveTo(NODES[e].x, NODES[e].y); ctx.lineTo(NODES[e + 1].x, NODES[e + 1].y); }
-        ctx.stroke();
+        // route trails (sea segments look the same — they cross open water)
+        for (var e = 0; e < NODES.length - 1; e++) trail(NODES[e].x, NODES[e].y, NODES[e + 1].x, NODES[e + 1].y);
 
-        // nodes
+        // detailed per-area markers
         for (var i = 0; i < NODES.length; i++) {
-          var n = NODES[i], seen = isSeen(n.id), here = (i === cur);
-          if (here) { ctx.strokeStyle = '#f8e878'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(n.x, n.y, 7 + (G.frame >> 3) % 2, 0, Math.PI * 2); ctx.stroke(); }
-          ctx.fillStyle = seen ? (i === this.sel ? '#f8e878' : '#f4f4f4') : '#33425e';
-          ctx.beginPath(); ctx.arc(n.x, n.y, 4, 0, Math.PI * 2); ctx.fill();
-          ctx.fillStyle = seen ? '#c23a3a' : '#26314a';
-          ctx.beginPath(); ctx.arc(n.x, n.y, 2, 0, Math.PI * 2); ctx.fill();
-          if (i === this.sel) { ctx.strokeStyle = '#f8e878'; ctx.lineWidth = 1; ctx.strokeRect(n.x - 6, n.y - 6, 13, 13); }
+          var n = NODES[i], seen = isSeen(n.id), here = (i === cur), x = n.x, y = n.y;
+          if (here) { ctx.fillStyle = '#f8e878'; var rr = 7 + (G.frame >> 3) % 2; ctx.fillRect(x - rr, y - 1, rr * 2, 2); ctx.fillRect(x - 1, y - rr, 2, rr * 2); }
+          if (!seen) {
+            ctx.fillStyle = '#34465f'; ctx.fillRect(x - 2, y - 2, 4, 4);
+            ctx.fillStyle = '#26354c'; ctx.fillRect(x - 1, y - 1, 2, 2);
+          } else {
+            var px = function (a, b, c, d, col) { ctx.fillStyle = col; ctx.fillRect(x + a, y + b, c, d); };
+            if (n.kind === 'gym') {
+              var gc = (G.TYPE_COLORS && G.TYPE_COLORS[n.type]) || '#cccccc';
+              px(-4, -4, 8, 8, G.C.ink); px(-3, -3, 6, 6, gc); px(-3, -3, 2, 2, '#ffffff');
+            } else if (n.kind === 'town') {
+              px(-4, -2, 8, 1, '#b83a3a'); px(-3, -3, 6, 1, '#b83a3a'); px(-2, -4, 4, 1, '#b83a3a'); // roof
+              px(-3, -1, 6, 4, '#ece6d4'); px(-1, 0, 2, 3, '#7a5230');                                // wall + door
+            } else if (n.kind === 'forest') {
+              px(-1, 1, 2, 3, '#6b4a2a'); px(-3, -4, 6, 5, '#2f7a35'); px(-2, -6, 4, 2, '#2f7a35');
+            } else if (n.kind === 'cave') {
+              px(-4, -3, 8, 6, '#6d6b78'); px(-2, 0, 4, 3, '#15171f');
+            } else if (n.kind === 'league') {
+              px(-4, -2, 8, 5, '#9a7cc0'); px(-4, -4, 2, 2, '#9a7cc0'); px(-1, -4, 2, 2, '#9a7cc0'); px(2, -4, 2, 2, '#9a7cc0');
+              px(3, -8, 1, 4, '#7a4a3a'); px(4, -8, 3, 2, '#e0682c'); // flagpole + flag
+            } else { // route
+              px(-2, -2, 4, 4, '#efe6bf'); px(-1, -1, 2, 2, '#c8b97a');
+            }
+          }
+          if (i === this.sel) { ctx.fillStyle = '#f8e878'; var b = 7; ctx.fillRect(x - b, y - b, b * 2, 1); ctx.fillRect(x - b, y + b - 1, b * 2, 1); ctx.fillRect(x - b, y - b, 1, b * 2); ctx.fillRect(x + b - 1, y - b, 1, b * 2); }
         }
 
         // footer: selected area name + explored count

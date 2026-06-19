@@ -67,6 +67,12 @@
       G.pushScene(G.debug.GalleryScene());
     } else if (hashIs('sheet') && G.debug && G.debug.SheetScene) {
       G.pushScene(G.debug.SheetScene());
+    } else if (hashIs('regionmap') && G.RegionMapScene) {
+      G.player.party = [G.makeMon('treecko', 5)];
+      ['hearthvale', 'route1', 'cobblemarch', 'route2', 'verdantforest', 'brinehollow', 'route3', 'hollowdeep1', 'coilgate', 'route4', 'aurelune', 'route5', 'petalburg', 'route6', 'fortree', 'route7', 'mossdeep', 'route8', 'sootopolis', 'summitpath', 'crownsummit'].forEach(function (m) { G.player.visited[m] = 1; });
+      G.world.loadMap('hearthvale', 5, 6, 'down');
+      G.pushScene(G.overworldScene);
+      G.pushScene(G.RegionMapScene());
     } else if (hashIs('battle') || hashIs('wild')) {
       // battle-UI test harness
       G.player.party = [G.makeMon('mudkip', 10), G.makeMon('torchic', 8)];
