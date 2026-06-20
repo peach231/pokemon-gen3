@@ -97,8 +97,8 @@
       respawnPoint: { mapId: id, x: 4, y: 5 },
       npcs: [
         { x: 3, y: 1, sprite: 'mom', dir: 'down', event: 'nurseHeal' },
-        { x: 6, y: 1, sprite: 'prof', dir: 'down', event: 'birchPC' },
-        { x: 5, y: 3, sprite: 'egglady', dir: 'down', event: 'nursery' }
+        { x: 5, y: 1, sprite: 'egglady', dir: 'down', event: 'nursery' },
+        { x: 6, y: 1, sprite: 'prof', dir: 'down', event: 'birchPC' }
       ]
     };
   }
@@ -350,25 +350,35 @@
       yield { t: 'text', s: 'Nursery Helper: Your Egg is still warming up. Walk around some more and check back!' };
       return;
     }
+    // Only a couple of (spread-out) nurseries hand out Eggs, so getting one
+    // stays special; every other nursery just incubates an Egg you bring.
+    var GIVERS = { heal_cobblemarch: 1, heal_mossdeep: 1 };
+    var isGiver = !!GIVERS[(G.world && G.world.mapId)];
+    yield { t: 'text', s: isGiver
+      ? 'Nursery Helper: Welcome! Would you like an Egg of your own, or shall I hatch one for you?'
+      : 'Nursery Helper: I hatch Eggs for travelers here. Leave one with me and it will warm as you walk!' };
     var done = { v: false };
     while (!done.v) {
       yield { t: 'custom', run: function (resume) {
+        var items = isGiver ? ['Receive an Egg', 'Leave an Egg', 'Done'] : ['Leave an Egg', 'Done'];
         G.pushScene(G.Chooser({
-          items: ['Receive an Egg', 'Leave an Egg', 'Done'], x: 24, y: 10, cancelIndex: 2,
+          items: items, x: 24, y: 10, cancelIndex: items.length - 1,
           onPick: function (i) {
-            if (i === 2) { done.v = true; resume(); return; }
-            if (i === 0) {
+            var label = items[i];
+            if (label === 'Done') { done.v = true; resume(); return; }
+            if (label === 'Receive an Egg') {
               if (G.player.party.some(function (m) { return m.egg; })) { G.pushScene(G.Textbox('You already have an Egg to care for!', { onDone: resume })); return; }
+              if (G.player.daycare) { G.pushScene(G.Textbox("Let's hatch the Egg you already left first!", { onDone: resume })); return; }
               if (G.player.party.length >= 6) { G.pushScene(G.Textbox('Your team is full — no room for an Egg.', { onDone: resume })); return; }
               G.player.party.push(G.makeEgg());
               G.audio.sfx('money');
               G.pushScene(G.Textbox(['You received an EGG!', 'Keep it in your team and it will hatch as you walk.'], { onDone: resume }));
               return;
             }
-            // Leave an egg to incubate
+            // Leave an Egg to incubate
             var idx = -1;
             for (var k = 0; k < G.player.party.length; k++) if (G.player.party[k].egg) { idx = k; break; }
-            if (idx < 0) { G.pushScene(G.Textbox('You have no Egg to leave with me.', { onDone: resume })); return; }
+            if (idx < 0) { G.pushScene(G.Textbox(isGiver ? 'You have no Egg to leave with me.' : 'You have no Egg yet — the Nurseries in Cobblemarch and Mossdeep hand them out!', { onDone: resume })); return; }
             var egg = G.player.party[idx];
             G.player.daycare = { sp: egg.sp, hatch: egg.hatch };
             G.player.party.splice(idx, 1);
