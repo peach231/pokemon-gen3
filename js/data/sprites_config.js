@@ -96,13 +96,23 @@
   G.OVERWORLD_CFG = {
     remoteBase: 'https://cdn.jsdelivr.net/gh/pret/pokeemerald@master/graphics/object_events/pics/people/',
     sheets: {
-      player: 'brendan/walking',  // the player character
-      boy:    'youngster',        // youngster / bug-catcher class + boy NPCs
-      mom:    'woman_1',          // lass / picnicker class + adult-woman NPCs
-      prof:   'man_1'             // hiker class + older-man NPCs / Birch
+      player: 'brendan/walking',          // the player character
+      boy:    'youngster',                // youngster / bug-catcher class + boy NPCs
+      mom:    'woman_1',                   // lass / picnicker class + adult-woman NPCs
+      prof:   'man_1',                     // hiker class + older-man NPCs / Birch
+      aqua:   'team_aqua/aqua_member_m'    // Team Aqua grunts / admin
     },
     frameW: 16, frameH: 32,       // source frame size on the sheet
     boxW: 16, boxH: 24,           // fit into the engine's 16x24 overworld slot
+    crossOrigin: 'anonymous'
+  };
+
+  // The player's BATTLE back sprite (shown sending out the lead Pokémon). Source
+  // is a back-pic sheet (64x256 = four 64x64 throw frames); we use frame 0. Baked
+  // art stays the fallback if it can't be fetched.
+  G.PLAYER_BACK_CFG = {
+    url: 'https://cdn.jsdelivr.net/gh/pret/pokeemerald@master/graphics/trainers/back_pics/brendan.png',
+    frameW: 64, frameH: 64,
     crossOrigin: 'anonymous'
   };
 

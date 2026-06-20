@@ -43,6 +43,8 @@
     if (G.gfx.loadTrainerSprites) G.gfx.loadTrainerSprites();
     // Optional real overworld walking sprites (sliced from animation sheets).
     if (G.gfx.loadOverworldSprites) G.gfx.loadOverworldSprites();
+    // Optional real player battle back-sprite.
+    if (G.gfx.loadPlayerBack) G.gfx.loadPlayerBack();
   }
 
   function drawLoading(info) {

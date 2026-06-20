@@ -312,9 +312,10 @@
       var cfg = G.OVERWORLD_CFG;
       if (!cfg || !cfg.remoteBase) return;
       var fw = cfg.frameW || 16, fh = cfg.frameH || 32, bw = cfg.boxW || 16, bh = cfg.boxH || 24;
-      // engine frame key -> sheet frame index
-      var FRAMES = { d0: 0, u0: 1, s0: 2, d1: 3, u1: 4, s1: 5 };
-      var FLIP = ['d1', 'u1', 's0', 's1']; // mirrored variants the engine asks for
+      // engine frame key -> sheet frame index. 0-2 = idle (down/up/left),
+      // 3-5 = first stride, 6-8 = second stride (for a true 3-pose walk).
+      var FRAMES = { d0: 0, u0: 1, s0: 2, d1: 3, u1: 4, s1: 5, d2: 6, u2: 7, s2: 8 };
+      var FLIP = ['d1', 'u1', 's0', 's1', 's2']; // mirrored variants the engine asks for
 
       function flipCanvas(src) {
         var c = makeCanvas(src.width, src.height), x = c.getContext('2d');
@@ -384,6 +385,43 @@
         img.onerror = function () {}; // keep baked art
         img.src = cfg.remoteBase + cfg.sheets[sprName] + '.png';
       });
+    },
+
+    // Optional: the player's real BATTLE back sprite. Source is a back-pic sheet
+    // (vertical strip of throw frames); we take frame 0, color-key the background,
+    // and overlay G.IMG.trainer_player_back. Baked art stays the fallback.
+    loadPlayerBack: function () {
+      var cfg = G.PLAYER_BACK_CFG;
+      if (!cfg || !cfg.url) return;
+      var fw = cfg.frameW || 64, fh = cfg.frameH || 64;
+      var img = new Image();
+      if (cfg.crossOrigin) img.crossOrigin = cfg.crossOrigin;
+      img.onload = function () {
+        var sw = img.width;
+        var off = makeCanvas(sw, img.height), octx = off.getContext('2d');
+        octx.drawImage(img, 0, 0);
+        var data;
+        try { data = octx.getImageData(0, 0, sw, img.height).data; }
+        catch (e) { return; } // tainted -> keep baked art
+        var bgKeyed = data[3] >= 8, bgR = data[0], bgG = data[1], bgB = data[2];
+        function isBg(i) {
+          if (data[i + 3] < 8) return true;
+          return bgKeyed && Math.abs(data[i] - bgR) < 10 && Math.abs(data[i + 1] - bgG) < 10 && Math.abs(data[i + 2] - bgB) < 10;
+        }
+        var c = makeCanvas(fw, fh), cx = c.getContext('2d');
+        var id = cx.createImageData(fw, fh);
+        for (var y = 0; y < fh; y++) {
+          for (var x = 0; x < fw; x++) {
+            var si = (y * sw + x) * 4, di = (y * fw + x) * 4;
+            if (isBg(si)) { id.data[di + 3] = 0; }
+            else { id.data[di] = data[si]; id.data[di + 1] = data[si + 1]; id.data[di + 2] = data[si + 2]; id.data[di + 3] = 255; }
+          }
+        }
+        cx.putImageData(id, 0, 0);
+        G.IMG.trainer_player_back = G.gfx._fitToBox(c, fh, false); // trim + bottom-anchor
+      };
+      img.onerror = function () {};
+      img.src = cfg.url;
     },
 
     // -----------------------------------------------------------------------

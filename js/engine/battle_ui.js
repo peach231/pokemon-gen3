@@ -159,6 +159,7 @@
     var message = '', msgShown = 0, msgWait = 0;
     var endTimer = -1;
     var trainerShown = !!battle.trainer; // portrait on the foe platform pre-sendOut
+    var playerShown = true;              // player's back sprite until they send out
 
     function setHpFractions() {
       var p = battle.active('p'), f = battle.active('f');
@@ -214,6 +215,7 @@
           break;
         case 'sendOut':
           if (step.side === 'f') trainerShown = false; // portrait steps aside
+          if (step.side === 'p') playerShown = false;   // player throws — back sprite exits
           if (step.mon.shiny && G.gfx.ensureShiny) G.gfx.ensureShiny(step.mon.sp, G.SPECIES[step.mon.sp].id);
           sprites[step.side].mon = step.mon;
           sprites[step.side].visible = true;
@@ -716,6 +718,11 @@
         if (trainerShown && battle.trainer) {
           var tImg = G.IMG[battle.trainer.sprite];
           if (tImg) ctx.drawImage(tImg, FOE.x - tImg.width / 2, FOE.y - tImg.height + 4);
+        }
+        // player's back sprite stands ready until they send out their lead
+        if (playerShown) {
+          var pImg = G.IMG.trainer_player_back;
+          if (pImg) ctx.drawImage(pImg, PLY.x - pImg.width / 2, PLY.y - pImg.height + 6);
         }
         // foe drawn first (behind its panel), then player
         drawSprite(ctx, 'f');
