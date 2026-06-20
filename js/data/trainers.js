@@ -116,28 +116,28 @@
 
   // ----------------------------------------------------- GYMS 5-8 (Hoenn)
   tr('gym5_norman', {
-    name: 'Norman', cls: 'leader', sprite: 'trainer_aldric', ai: 'smart', money: 5000,
+    name: 'Norman', cls: 'leader', sprite: 'trainer_norman', ai: 'smart', money: 5000,
     party: [{ sp: 'vigoroth', level: 34 }, { sp: 'linoone', level: 34 }, { sp: 'slaking', level: 37 }],
     intro: "I'm Norman, the Petalburg Leader. I won't hold back — not even a little.",
     defeat: 'I... lost? With my full strength? You are remarkable.',
     reward: { badge: 4, flag: 'badge5', text: 'Norman handed over the STAMINA BADGE!' }, music: 'gym'
   });
   tr('gym6_winona', {
-    name: 'Winona', cls: 'leader', sprite: 'trainer_maris', ai: 'smart', money: 5600,
+    name: 'Winona', cls: 'leader', sprite: 'trainer_winona', ai: 'smart', money: 5600,
     party: [{ sp: 'pelipper', level: 38 }, { sp: 'swellow', level: 38 }, { sp: 'skarmory', level: 40 }, { sp: 'altaria', level: 42 }],
     intro: 'I am Winona. I have become one with all flying Pokémon. Let us soar!',
     defeat: 'Never have I seen a Trainer fly so true. Take this.',
     reward: { badge: 5, flag: 'badge6', text: 'Winona handed over the FEATHER BADGE!' }, music: 'gym'
   });
   tr('gym7_tate', {
-    name: 'Tate & Liza', cls: 'leader', sprite: 'trainer_vesper', ai: 'smart', money: 6200,
+    name: 'Tate & Liza', cls: 'leader', sprite: 'trainer_tate', ai: 'smart', money: 6200,
     party: [{ sp: 'lunatone', level: 42 }, { sp: 'solrock', level: 42 }, { sp: 'xatu', level: 44 }, { sp: 'gardevoir', level: 44 }],
     intro: 'We are Tate and Liza! Two Leaders, one mind — can you keep up with both?',
     defeat: 'Our thoughts... were read. Impossible, and yet here you stand.',
     reward: { badge: 6, flag: 'badge7', text: 'The twins handed over the MIND BADGE!' }, music: 'gym'
   });
   tr('gym8_wallace', {
-    name: 'Wallace', cls: 'leader', sprite: 'trainer_aldric', ai: 'smart', money: 7000,
+    name: 'Wallace', cls: 'leader', sprite: 'trainer_wallace', ai: 'smart', money: 7000,
     party: [{ sp: 'whiscash', level: 44 }, { sp: 'sealeo', level: 44 }, { sp: 'gyarados', level: 46 }, { sp: 'milotic', level: 48 }],
     intro: 'I am Wallace, the final Gym Leader. Witness the artistry of water!',
     defeat: 'Beautiful. Your bond outshone even my Milotic. Go to the League!',
@@ -146,25 +146,25 @@
 
   // --------------------------------------- ELITE FOUR (the Summit gauntlet)
   tr('sp_rex', {
-    name: 'Sidney', cls: 'Elite Four', sprite: 'trainer_ace', ai: 'smart', money: 5600,
+    name: 'Sidney', cls: 'Elite Four', sprite: 'trainer_sidney', ai: 'smart', money: 5600,
     party: [{ sp: 'mightyena', level: 50 }, { sp: 'cacturne', level: 50 }, { sp: 'sharpedo', level: 51 }, { sp: 'crawdaunt', level: 52 }, { sp: 'absol', level: 54 }],
     intro: "I'm Sidney of the Elite Four. I like that look you're giving me. Let's go!",
     defeat: 'Well, listen to what the loser has to say. You won fair and square.', music: 'champion'
   });
   tr('sp_isa', {
-    name: 'Phoebe', cls: 'Elite Four', sprite: 'trainer_ace', ai: 'smart', money: 5800,
+    name: 'Phoebe', cls: 'Elite Four', sprite: 'trainer_phoebe', ai: 'smart', money: 5800,
     party: [{ sp: 'sableye', level: 51 }, { sp: 'banette', level: 53 }, { sp: 'dusclops', level: 54 }, { sp: 'gengar', level: 55 }],
     intro: "I'm Phoebe of the Elite Four. My ghosts and I trained on Mt. Pyre. Ready?",
     defeat: 'Oh, darn. I lost. There must be a reason you grew so strong.', music: 'champion'
   });
   tr('sp_olm', {
-    name: 'Glacia', cls: 'Elite Four', sprite: 'trainer_hiker', ai: 'smart', money: 6000,
+    name: 'Glacia', cls: 'Elite Four', sprite: 'trainer_glacia', ai: 'smart', money: 6000,
     party: [{ sp: 'sealeo', level: 52 }, { sp: 'glalie', level: 53 }, { sp: 'lapras', level: 54 }, { sp: 'walrein', level: 56 }],
     intro: "I am Glacia of the Elite Four. Show me — burn through my icy cold with your passion!",
     defeat: 'You and your creatures... how hot your spirits burn! Wonderful.', music: 'champion'
   });
   tr('sp_ada', {
-    name: 'Drake', cls: 'Elite Four', sprite: 'trainer_ace', ai: 'smart', money: 6400,
+    name: 'Drake', cls: 'Elite Four', sprite: 'trainer_drake', ai: 'smart', money: 6400,
     party: [{ sp: 'altaria', level: 53 }, { sp: 'flygon', level: 55 }, { sp: 'kingdra', level: 55 }, { sp: 'salamence', level: 57 }],
     intro: 'I am Drake of the Elite Four! Do you have what it takes to command dragons? Show me!',
     defeat: 'Superb! You deserve to face the Champion now.', music: 'champion'
@@ -172,7 +172,7 @@
 
   // ------------------------------------------------------------ champion ---
   tr('champion', {
-    name: 'Champion Steven', cls: 'champion', sprite: 'trainer_aldric', ai: 'smart', money: 12000,
+    name: 'Champion Steven', cls: 'champion', sprite: 'trainer_steven', ai: 'smart', money: 12000,
     party: [
       { sp: 'claydol', level: 55 }, { sp: 'cradily', level: 56 },
       { sp: 'armaldo', level: 56 }, { sp: 'golem', level: 57 },
@@ -223,7 +223,7 @@
     defeat: 'Impossible... go on, then. Archie is just ahead.', music: 'battle'
   });
   tr('aqua_archie', {
-    name: 'Archie', cls: 'Aqua Boss', sprite: 'trainer_aqua', ai: 'smart', money: 9000,
+    name: 'Archie', cls: 'Aqua Boss', sprite: 'trainer_archie', ai: 'smart', money: 9000,
     party: [{ sp: 'mightyena', level: 47 }, { sp: 'crobat', level: 48 }, { sp: 'wailord', level: 48 }, { sp: 'sharpedo', level: 50 }],
     intro: 'I am Archie, leader of Team Aqua! I will wake Kyogre and let the sea reclaim every shore. You cannot stop the rising tide!',
     defeat: 'Kyogre stirs... yet you stand taller than the waves. Perhaps the sea has chosen YOU.', music: 'champion'

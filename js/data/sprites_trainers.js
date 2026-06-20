@@ -643,4 +643,17 @@
       '................................................'
     ]
   };
+
+  // Per-character aliases: distinct sprite keys so each leader / Elite Four member
+  // (and the Aqua boss) can load its OWN real sprite, while falling back to a
+  // shared baked design until then. Each is a standalone copy of its source art.
+  [['trainer_norman', 'trainer_aldric'], ['trainer_wallace', 'trainer_aldric'],
+   ['trainer_steven', 'trainer_aldric'], ['trainer_winona', 'trainer_maris'],
+   ['trainer_tate', 'trainer_vesper'], ['trainer_sidney', 'trainer_ace'],
+   ['trainer_phoebe', 'trainer_ace'], ['trainer_glacia', 'trainer_hiker'],
+   ['trainer_drake', 'trainer_ace'], ['trainer_archie', 'trainer_aqua']
+  ].forEach(function (m) {
+    var s = G.ART[m[1]];
+    G.ART[m[0]] = { w: s.w, h: s.h, px: s.px, pal: s.pal };
+  });
 })();

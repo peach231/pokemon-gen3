@@ -51,19 +51,37 @@
   G.TRAINER_CFG = {
     localBase:  'assets/sprites/trainers/',
     localFile:  '{key}.png',
-    remoteBase: '',            // e.g. 'https://cdn.jsdelivr.net/gh/<you>/<repo>@main/trainers/'
-    remoteFile: '{key}.png',
+    // Public trainer-sprite library: Pokémon Showdown's set. Each art key maps to
+    // a Showdown filename below; anything missing or unmapped just keeps the
+    // hand-drawn baked art. To disable, set remoteBase: ''.
+    // NOTE: this host doesn't send CORS headers, so crossOrigin is left off — the
+    // images still load and draw; only the optional transparent-margin trim is
+    // skipped (Showdown sprites are already tightly framed).
+    remoteBase: 'https://play.pokemonshowdown.com/sprites/trainers/',
+    remoteFile: '{name}.png',
     preferRemote: true,
+    keyMap: {
+      trainer_youngster: 'youngster', trainer_lass: 'lass', trainer_hiker: 'hiker',
+      trainer_ace: 'acetrainer',
+      trainer_bram: 'roxanne', trainer_maris: 'brawly', trainer_tess: 'wattson',
+      trainer_vesper: 'flannery', trainer_norman: 'norman', trainer_winona: 'winona',
+      trainer_tate: 'tate', trainer_wallace: 'wallace', trainer_steven: 'steven',
+      trainer_sidney: 'sidney', trainer_phoebe: 'phoebe-gen3', trainer_glacia: 'glacia',
+      trainer_drake: 'drake-gen3', trainer_kai: 'brendan',
+      trainer_aqua: 'aquagrunt', trainer_archie: 'archie-gen6'
+    },
     box: 64,                   // portraits fit into a 64-tall box, bottom-anchored
-    crossOrigin: 'anonymous'
+    crossOrigin: ''            // host has no CORS; load uncredentialed (no trim)
   };
 
-  // Candidate URLs for a trainer/player sprite key, in priority order.
+  // Candidate URLs for a trainer/player sprite key, in priority order. Remote uses
+  // the mapped Showdown name; local uses the raw key (assets/sprites/trainers/).
   G.trainerSpriteUrl = function (key) {
     var cfg = G.TRAINER_CFG, urls = [];
-    function add(base, tpl) { if (base && tpl) urls.push(base + tpl.replace('{key}', key)); }
-    if (cfg.preferRemote) { add(cfg.remoteBase, cfg.remoteFile); add(cfg.localBase, cfg.localFile); }
-    else { add(cfg.localBase, cfg.localFile); add(cfg.remoteBase, cfg.remoteFile); }
+    var name = (cfg.keyMap && cfg.keyMap[key]) || null;
+    function addRemote() { if (cfg.remoteBase && name) urls.push(cfg.remoteBase + (cfg.remoteFile || '{name}.png').replace('{name}', name)); }
+    function addLocal() { if (cfg.localBase) urls.push(cfg.localBase + (cfg.localFile || '{key}.png').replace('{key}', key)); }
+    if (cfg.preferRemote) { addRemote(); addLocal(); } else { addLocal(); addRemote(); }
     return urls;
   };
 
