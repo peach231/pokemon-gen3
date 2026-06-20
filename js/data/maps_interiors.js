@@ -347,7 +347,7 @@
       }
       yield { t: 'text', s: 'Nursery Helper: Wonderful news — your Egg hatched while you were away!' };
       yield { t: 'fn', fn: function () {
-        var mon = G.makeMon(dc.sp, 5); G.healMon(mon);
+        var mon = G.makeMon(dc.sp, G.eggHatchLevel ? G.eggHatchLevel() : 5); G.healMon(mon);
         G.player.party.push(mon);
         G.player.dexSeen[dc.sp] = 1; G.player.dexCaught[dc.sp] = 1;
         G.player.daycare = null;

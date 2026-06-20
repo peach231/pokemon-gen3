@@ -84,12 +84,22 @@
   // ----- eggs -------------------------------------------------------------
   // An egg is a fully-formed level-5 creature kept hidden until it hatches:
   // `egg` true + `hatch` steps remaining. It can't battle and shows as "EGG".
-  G.EGG_STEPS = 120;
-  G.EGG_POOL = ['zigzagoon', 'poochyena', 'wurmple', 'wingull', 'taillow', 'shroomish', 'marill', 'seedot', 'lotad', 'whismur', 'ralts', 'skitty'];
+  G.EGG_STEPS = 600; // a long incubation — eggs are a rare prize, not a quick pull
+  // Deliberately rare/cool species you won't just bump into in the grass:
+  // pseudo-legendary lines, Eevee, Feebas->Milotic, and the egg-iconic Togepi.
+  G.EGG_POOL = ['beldum', 'larvitar', 'dratini', 'eevee', 'feebas', 'togepi', 'chimecho'];
 
   G.randomEggSpecies = function () {
     var pool = G.EGG_POOL.filter(function (k) { return G.SPECIES[k]; });
-    return pool.length ? pool[G.irand(pool.length)] : 'zigzagoon';
+    return pool.length ? pool[G.irand(pool.length)] : 'eevee';
+  };
+
+  // Hatchlings come out at your team's current level so they're useful right
+  // away (matches what your starter / other team members are around).
+  G.eggHatchLevel = function () {
+    var L = 5, p = (G.player && G.player.party) || [];
+    for (var i = 0; i < p.length; i++) if (!p[i].egg && p[i].level > L) L = p[i].level;
+    return Math.min(100, L);
   };
 
   G.makeEgg = function (spKey, steps) {
@@ -100,10 +110,15 @@
     return mon;
   };
 
-  // Reveal the creature inside: clear the egg flag, top it off, log the dex.
+  // Reveal the creature inside: clear the egg flag, level it to the team's level
+  // (fresh moves/stats for that level), top it off, log the dex.
   G.hatchEgg = function (mon) {
     mon.egg = false;
     mon.hatch = 0;
+    var L = G.eggHatchLevel();
+    mon.level = L;
+    mon.exp = G.expForLevel(L, (G.SPECIES[mon.sp] || {}).growth);
+    mon.moves = G.movesAtLevel(mon.sp, L);
     G.healMon(mon);
     if (G.player) { G.player.dexSeen[mon.sp] = 1; G.player.dexCaught[mon.sp] = 1; }
   };
