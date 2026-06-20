@@ -131,6 +131,7 @@
     signs: [],
     npcs: [],
     trainers: [
+      { id: 'aqua_grunt3', trainer: 'aqua_grunt3', x: 6, y: 16, sprite: 'aqua', dir: 'down', sight: 3, after: 'The sea will swallow this whole cavern one day. You will see.' },
       { id: 'hd_rok', trainer: 'hd_rok', x: 8, y: 9, sprite: 'prof', dir: 'right', sight: 3, after: 'The deeper level glitters. Bring a light heart.' },
       { id: 'hd_nyx', trainer: 'hd_nyx', x: 19, y: 13, sprite: 'boy', dir: 'left', sight: 4, after: 'The dark keeps secrets. So do I. Mostly about losing.' },
       { id: 'hd_moe', trainer: 'hd_moe', x: 14, y: 18, sprite: 'boy', dir: 'up', sight: 3, after: 'Seriously though. Which way is out?' }

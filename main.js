@@ -80,7 +80,7 @@
       G.pushScene(G.overworldScene);
       var auto = location.hash.indexOf('auto') !== -1;
       if (hashIs('battle')) {
-        var t = G.TRAINERS.rival1 || G.TRAINERS[Object.keys(G.TRAINERS)[0]];
+        var t = G.TRAINERS[(location.hash.match(/tr=(\w+)/) || [])[1]] || G.TRAINERS.rival1 || G.TRAINERS[Object.keys(G.TRAINERS)[0]];
         G.pushScene(G.BattleScene(new G.Battle({ party: G.player.party, foes: G.trainerParty(t), trainer: t }), { bg: 'meadow', autoPlay: auto }));
       } else {
         var wildKey = G.SPECIES.poochyena ? 'poochyena' : G.DEX_ORDER[0];

@@ -187,7 +187,10 @@
     name: 'Mossdeep City', bg: 'water', gymId: 'gym7', healId: 'heal_mossdeep', shopId: 'shop_mossdeep', gymType: 'psychic',
     gymSign: "Leaders Tate & Liza. 'Two minds, one will.'",
     west: { to: 'route7', tx: 22, ty: 5 }, east: { to: 'route8', tx: 1, ty: 5 },
-    npcs: [{ x: 9, y: 9, sprite: 'prof', dir: 'down', dialog: ['Tate and Liza share one mind. Dark and Ghost moves rattle Psychics.'] }]
+    npcs: [
+      { x: 9, y: 9, sprite: 'prof', dir: 'down', dialog: ['Tate and Liza share one mind. Dark and Ghost moves rattle Psychics.'] },
+      { id: 'aqua_grunt4', trainer: 'aqua_grunt4', x: 11, y: 11, sprite: 'aqua', dir: 'left', sight: 4, after: 'The boss sailed for Sootopolis. You will never beat him there.' }
+    ]
   });
 
   // ===== Route 124: Mossdeep -> Sootopolis (SEA crossing) ===============
@@ -206,6 +209,10 @@
     west: { to: 'route8', tx: 22, ty: 5 }, east: { to: 'summitpath', tx: 1, ty: 26 },
     npcs: [
       { x: 10, y: 10, sprite: 'prof', dir: 'down', dialog: ['Beyond Wallace lies Victory Road, then the League itself.', 'Grass and Electric moves wash out his Water-types.'] },
+      // Team Aqua's final stand — they've seized the crater to wake Kyogre (endgame)
+      { id: 'aqua_grunt5', trainer: 'aqua_grunt5', x: 6, y: 10, sprite: 'aqua', dir: 'down', sight: 4, ifFlag: 'badge8', after: 'You beat me, but the boss is already at the water...' },
+      { id: 'aqua_admin', trainer: 'aqua_admin', x: 8, y: 12, sprite: 'aqua', dir: 'up', sight: 4, ifFlag: 'badge8', after: 'Reef, defeated... Archie, the tide is yours alone now.' },
+      { id: 'aqua_archie', trainer: 'aqua_archie', x: 10, y: 6, sprite: 'aqua', dir: 'down', sight: 4, ifFlag: 'badge8', after: 'Maybe the sea and the land were always meant to share this world.' },
       // box legendaries: only spawn once all 8 badges are earned
       { x: 5, y: 7, sprite: 'mon_groudon', obj: true, ifFlag: 'badge8', event: 'meetGroudon' },
       { x: 14, y: 7, sprite: 'mon_kyogre', obj: true, ifFlag: 'badge8', event: 'meetKyogre' }

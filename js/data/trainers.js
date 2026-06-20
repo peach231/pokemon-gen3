@@ -183,6 +183,52 @@
     music: 'champion'
   });
 
+  // ----------------------------------------------------------- TEAM AQUA ---
+  // A sea-worshipping crew (Water/Dark teams) bent on waking Kyogre to drown the
+  // land and "give it back to the ocean." Original dialogue — names as identifiers.
+  tr('aqua_grunt1', {
+    name: 'Aqua Grunt', cls: 'Team Aqua', sprite: 'trainer_aqua', ai: 'basic', money: 320,
+    party: [{ sp: 'poochyena', level: 14 }, { sp: 'carvanha', level: 15 }],
+    intro: "Team Aqua's gonna hand this dusty coast back to the sea! Outta the way!",
+    defeat: 'Tch... the tide always turns on me.', music: 'battle'
+  });
+  tr('aqua_grunt2', {
+    name: 'Aqua Grunt', cls: 'Team Aqua', sprite: 'trainer_aqua', ai: 'basic', money: 360,
+    party: [{ sp: 'zubat', level: 15 }, { sp: 'carvanha', level: 16 }],
+    intro: 'More water means more life. That is the Aqua creed — now scram!',
+    defeat: "You can't hold back the ocean forever, kid.", music: 'battle'
+  });
+  tr('aqua_grunt3', {
+    name: 'Aqua Grunt', cls: 'Team Aqua', sprite: 'trainer_aqua', ai: 'basic', money: 460,
+    party: [{ sp: 'poochyena', level: 19 }, { sp: 'zubat', level: 19 }, { sp: 'carvanha', level: 20 }],
+    intro: 'You wandered into an Aqua operation. Bold. Stupid, but bold.',
+    defeat: 'Fine, fine — I never saw you, you never saw us.', music: 'battle'
+  });
+  tr('aqua_grunt4', {
+    name: 'Aqua Grunt', cls: 'Team Aqua', sprite: 'trainer_aqua', ai: 'smart', money: 760,
+    party: [{ sp: 'mightyena', level: 38 }, { sp: 'sharpedo', level: 39 }],
+    intro: 'These waves belong to Team Aqua now. Turn your boat around!',
+    defeat: 'Blub... beaten on my own sea.', music: 'battle'
+  });
+  tr('aqua_grunt5', {
+    name: 'Aqua Grunt', cls: 'Team Aqua', sprite: 'trainer_aqua', ai: 'smart', money: 900,
+    party: [{ sp: 'golbat', level: 43 }, { sp: 'sharpedo', level: 44 }, { sp: 'mightyena', level: 44 }],
+    intro: 'The boss is about to wake the great Kyogre! You are far too late!',
+    defeat: 'Then... go stop him yourself. If the sea lets you.', music: 'battle'
+  });
+  tr('aqua_admin', {
+    name: 'Aqua Admin Reef', cls: 'Aqua Admin', sprite: 'trainer_aqua', ai: 'smart', money: 4600,
+    party: [{ sp: 'mightyena', level: 45 }, { sp: 'crawdaunt', level: 46 }, { sp: 'sharpedo', level: 47 }],
+    intro: "I'm Reef. The boss has no time for you — but I have all the time in the world.",
+    defeat: 'Impossible... go on, then. Archie is just ahead.', music: 'battle'
+  });
+  tr('aqua_archie', {
+    name: 'Archie', cls: 'Aqua Boss', sprite: 'trainer_aqua', ai: 'smart', money: 9000,
+    party: [{ sp: 'mightyena', level: 47 }, { sp: 'crobat', level: 48 }, { sp: 'wailord', level: 48 }, { sp: 'sharpedo', level: 50 }],
+    intro: 'I am Archie, leader of Team Aqua! I will wake Kyogre and let the sea reclaim every shore. You cannot stop the rising tide!',
+    defeat: 'Kyogre stirs... yet you stand taller than the waves. Perhaps the sea has chosen YOU.', music: 'champion'
+  });
+
   // starter-counter cycle: rival takes the type-advantaged starter.
   // player grass(treecko) -> fire(torchic); fire -> water(mudkip); water -> grass(treecko)
   var COUNTER = { treecko: 'torchic', torchic: 'mudkip', mudkip: 'treecko' };

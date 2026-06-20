@@ -21,18 +21,32 @@
   }
 
   function platform(ctx, cx, cy, rx, ry, base, dark, lite) {
+    // soft drop shadow
+    ctx.fillStyle = 'rgba(18,20,34,0.22)';
+    ellipse(ctx, cx, cy + 6, rx * 1.05, ry * 0.85);
+    // body: dark underside, base, light cap
+    ctx.fillStyle = dark; ellipse(ctx, cx, cy + 2, rx, ry);
+    ctx.fillStyle = base; ellipse(ctx, cx, cy, rx, ry);
+    ctx.fillStyle = lite; ellipse(ctx, cx - rx * 0.15, cy - 2, rx * 0.7, ry * 0.55);
+    // speckle texture (deterministic)
     ctx.fillStyle = dark;
-    ellipse(ctx, cx, cy + 2, rx, ry);
-    ctx.fillStyle = base;
-    ellipse(ctx, cx, cy, rx, ry);
-    ctx.fillStyle = lite;
-    ellipse(ctx, cx - rx * 0.15, cy - 2, rx * 0.7, ry * 0.55);
+    for (var i = 0; i < 12; i++) {
+      var a = i * 2.3994;
+      ctx.fillRect(Math.round(cx + Math.cos(a) * rx * 0.62), Math.round(cy + Math.sin(a) * ry * 0.5), 1, 1);
+    }
   }
 
   function ellipse(ctx, cx, cy, rx, ry) {
     ctx.beginPath();
     ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
     ctx.fill();
+  }
+
+  // slowly scrolling horizontal strip along the horizon — GBA-style parallax band
+  function scrollBand(ctx, y, color) {
+    var off = (G.frame >> 1) % 14;
+    ctx.fillStyle = color;
+    for (var x = -14 + off; x < W; x += 14) ctx.fillRect(x, y, 7, 2);
   }
 
   G.BATTLE_BG = {
@@ -42,6 +56,7 @@
       dither(ctx, 0, 50, W, 6, G.C.sky0);
       ctx.fillStyle = G.C.leaf3; ctx.fillRect(0, 74, W, H - 74);
       dither(ctx, 0, 74, W, 5, G.C.sky0);
+      scrollBand(ctx, 72, G.C.grn0);
       dither(ctx, 0, 96, W, 8, G.C.leaf2);
       platform(ctx, FOE.x, FOE.y + 4, 44, 11, G.C.grn1, G.C.grn0, G.C.grn2);
       platform(ctx, PLY.x, PLY.y + 2, 52, 13, G.C.grn1, G.C.grn0, G.C.grn2);
@@ -51,6 +66,7 @@
       dither(ctx, 0, 56, W, 8, G.C.grn0);
       ctx.fillStyle = G.C.grn2; ctx.fillRect(0, 64, W, H - 64);
       dither(ctx, 0, 64, W, 6, G.C.grn0);
+      scrollBand(ctx, 62, G.C.grn0);
       dither(ctx, 0, 100, W, 8, G.C.grn1);
       platform(ctx, FOE.x, FOE.y + 4, 44, 11, G.C.grn1, G.C.grn0, G.C.grn2);
       platform(ctx, PLY.x, PLY.y + 2, 52, 13, G.C.grn1, G.C.grn0, G.C.grn2);
@@ -59,6 +75,7 @@
       ctx.fillStyle = G.C.stn0; ctx.fillRect(0, 0, W, 70);
       ctx.fillStyle = G.C.stn1; ctx.fillRect(0, 70, W, H - 70);
       dither(ctx, 0, 64, W, 8, G.C.stn0);
+      scrollBand(ctx, 68, G.C.stn0);
       dither(ctx, 0, 100, W, 10, G.C.stn0);
       platform(ctx, FOE.x, FOE.y + 4, 44, 11, G.C.stn2, G.C.stn1, G.C.stn3);
       platform(ctx, PLY.x, PLY.y + 2, 52, 13, G.C.stn2, G.C.stn1, G.C.stn3);
@@ -68,6 +85,8 @@
       dither(ctx, 0, 46, W, 6, G.C.sky0);
       ctx.fillStyle = G.C.blu2; ctx.fillRect(0, 52, W, H - 52);
       dither(ctx, 0, 52, W, 6, G.C.sky0);
+      scrollBand(ctx, 66, G.C.blu1);
+      scrollBand(ctx, 88, G.C.blu1);
       dither(ctx, 0, 88, W, 8, G.C.blu1);
       platform(ctx, FOE.x, FOE.y + 4, 44, 11, G.C.tan0, G.C.brn3, G.C.tan1);
       platform(ctx, PLY.x, PLY.y + 2, 52, 13, G.C.tan0, G.C.brn3, G.C.tan1);
@@ -75,6 +94,7 @@
     indoor: function (ctx) {
       ctx.fillStyle = G.C.pale; ctx.fillRect(0, 0, W, 64);
       dither(ctx, 0, 58, W, 6, G.C.lgry);
+      scrollBand(ctx, 62, G.C.lgry);
       ctx.fillStyle = G.C.tan1; ctx.fillRect(0, 64, W, H - 64);
       dither(ctx, 0, 96, W, 8, G.C.tan0);
       platform(ctx, FOE.x, FOE.y + 4, 44, 11, G.C.stn3, G.C.stn2, G.C.pale);
@@ -88,14 +108,20 @@
   }
 
   function drawHpBar(ctx, x, y, w, frac) {
-    ctx.fillStyle = G.C.dgry;
-    ctx.fillRect(x - 1, y - 1, w + 2, 5);
-    ctx.fillStyle = '#585868';
-    ctx.fillRect(x, y, w, 3);
+    // beveled Gen-III style: dark frame, inset track, filled bar with top highlight
+    ctx.fillStyle = G.C.ink;
+    ctx.fillRect(x - 1, y - 1, w + 2, 6);
+    ctx.fillStyle = '#40485a';
+    ctx.fillRect(x, y, w, 4);
     var fw = Math.round(w * G.clamp(frac, 0, 1));
     if (frac > 0 && fw === 0) fw = 1;
     ctx.fillStyle = hpColor(frac);
-    ctx.fillRect(x, y, fw, 3);
+    ctx.fillRect(x, y, fw, 4);
+    // bevel: bright top row, shaded bottom row
+    ctx.fillStyle = 'rgba(255,255,255,0.40)';
+    ctx.fillRect(x, y, fw, 1);
+    ctx.fillStyle = 'rgba(0,0,0,0.28)';
+    ctx.fillRect(x, y + 3, fw, 1);
   }
 
   var STATUS_TAGS = { brn: ['BRN', '#d06028'], psn: ['PSN', '#9040a0'], par: ['PAR', '#b08818'], slp: ['SLP', '#6e6e84'] };

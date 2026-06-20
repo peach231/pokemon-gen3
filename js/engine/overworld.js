@@ -81,6 +81,34 @@
     ctx.fillStyle = '#f8e878'; ctx.fill();
   }
 
+  // Overworld weather overlay — understated, drawn over the world but under HUD.
+  // Maps opt in with a `weather` field; the default (no field) is plain sunny.
+  function drawMapWeather(ctx, kind) {
+    var f = G.frame, W = G.SCREEN_W, H = G.SCREEN_H, i;
+    if (kind === 'sun') {
+      ctx.fillStyle = 'rgba(255,224,140,0.10)';
+      ctx.fillRect(0, 0, W, H);
+    } else if (kind === 'rain') {
+      ctx.fillStyle = 'rgba(34,52,98,0.16)';
+      ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = 'rgba(176,202,255,0.5)';
+      for (i = 0; i < 48; i++) {
+        var rx = (i * 53 + f * 7) % (W + 20) - 10;
+        var ry = (i * 37 + f * 13) % (H + 20) - 10;
+        ctx.fillRect(rx, ry, 1, 4);
+      }
+    } else if (kind === 'sand') {
+      ctx.fillStyle = 'rgba(196,160,90,0.18)';
+      ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = 'rgba(150,118,70,0.45)';
+      for (i = 0; i < 60; i++) {
+        var sx = (i * 71 + f * 10) % (W + 16) - 8;
+        var sy = (i * 29 + ((i & 1) ? f * 2 : 0)) % H;
+        ctx.fillRect(sx, sy, 2, 1);
+      }
+    }
+  }
+
   // A type-colored gym badge: a colored disc (with a highlight + dark rim) that
   // marks a gym by its specialty type. Small floating ones sit over town gym
   // doors; a big one with the type name sits on the gym's battle floor.
@@ -529,6 +557,9 @@
       for (var i = 0; i < ents.length; i++) self._drawActor(ctx, ents[i], cam);
 
       this._drawLayer(ctx, 'over', x0, y0, x1, y1, cam);
+
+      // weather overlay (rain / sandstorm / harsh sun) — over the world, under HUD
+      if (map.weather) drawMapWeather(ctx, map.weather);
 
       // exit arrows over map-edge warps (route/town entrances), so the way
       // onward is obvious. Building doors are interior, so they're skipped.

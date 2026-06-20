@@ -435,6 +435,16 @@
     '.....oooooo.....'
   ], true);
 
+  // ----------------------------------------------------------- Team Aqua ---
+  // Same build as the boy walker, recolored: blue bandana + navy/teal outfit.
+  var AQ = {
+    o: C.ink, h: C.blu1, i: C.blu2, s: C.skn2, t: C.skn1,
+    y: C.blu0, Y: C.ice0, g: C.stn0, e: '#3a3a4a'
+  };
+  S('ch_aqua_d0', AQ, G.ART.ch_boy_d0.px);
+  S('ch_aqua_u0', AQ, G.ART.ch_boy_u0.px);
+  S('ch_aqua_s0', AQ, G.ART.ch_boy_s0.px, true);
+
   // -------------------------------------------------------- starter orb -----
   // A capture orb resting on a stand (interactable in the lab).
   G.ART.orb_stand = {

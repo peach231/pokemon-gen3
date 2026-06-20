@@ -200,6 +200,8 @@
     npcs: [
       { x: 6, y: 8, sprite: 'prof', dir: 'down', dialog: ['Old sailor wisdom: Water creatures fear Electric and Grass moves.', 'Maris herself? Swears by raw power. Bring bandages.'] },
       { x: 20, y: 9, sprite: 'boy', dir: 'down', dialog: ['I saw a ghost ship figurehead drift past the pier last night!', 'Nobody believes me. You believe me, right?'] },
+      { id: 'aqua_grunt1', trainer: 'aqua_grunt1', x: 14, y: 8, sprite: 'aqua', dir: 'down', sight: 4, after: 'Team Aqua marks every port. We will be back for this one.' },
+      { id: 'aqua_grunt2', trainer: 'aqua_grunt2', x: 9, y: 14, sprite: 'aqua', dir: 'up', sight: 4, after: 'Enjoy your dry little town... while it lasts.' },
       { x: 12, y: 17, sprite: 'fx_boat', obj: true, event: 'boardBoat' }
     ],
     scripts: []
