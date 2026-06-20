@@ -50,12 +50,16 @@
             }
           } else if (pick === 'NEW GAME') {
             G.newGame();
-            G.world.loadMap('playerhome', 4, 4, 'down');
-            G.replaceScene(G.overworldScene);
-            G.pushScene(G.Textbox([
-              'A bright Hoenn morning. Prof. Birch is expecting you at his lab in Littleroot Town!',
-              '(Arrows to move, Z to talk and confirm, X to cancel, Enter for the menu. M mutes.)'
-            ]));
+            var startGame = function () {
+              G.world.loadMap('playerhome', 4, 4, 'down');
+              G.replaceScene(G.overworldScene);
+              G.pushScene(G.Textbox([
+                'A bright Hoenn morning. Prof. Birch is expecting you at his lab in Littleroot Town!',
+                '(Arrows to move, Z to talk and confirm, X to cancel, Enter for the menu. M mutes.)'
+              ]));
+            };
+            if (G.CharSelectScene) G.replaceScene(G.CharSelectScene(startGame));
+            else startGame();
           }
         }
       },

@@ -709,19 +709,20 @@
     _actorImage: function (a) {
       var base = 'ch_' + a.sprite + '_';
       var striding = (a.moving && a.step < 8) || (a.hop > 0 && a.hop > a.hopTotal / 2);
-      // true 3-pose walk: use the real second stride (d2/u2/s2) on the off-beat
-      // when the sprite has it; otherwise fall back to mirroring the first stride
-      // (so asymmetric sprites don't flip their bag/arm side-to-side each step).
+      // Animation is LOCKED to the facing direction — front/back are never mirrored
+      // (mirroring an asymmetric sprite makes it look like it turns each step).
+      // A true 3-pose walk uses the real second stride (d2/u2/s2) when present;
+      // otherwise it cycles stand <-> first stride. Right reuses the left frames
+      // flipped, since for side-on movement the flip IS the facing direction.
       var has = function (k) { return !!G.IMG[base + k]; };
       var name;
-      if (a.dir === 'down') name = striding ? (a.stride ? 'd1' : (has('d2') ? 'd2' : 'd1_flipped')) : 'd0';
-      else if (a.dir === 'up') name = striding ? (a.stride ? 'u1' : (has('u2') ? 'u2' : 'u1_flipped')) : 'u0';
-      else if (a.dir === 'left') name = striding ? (a.stride ? 's1' : (has('s2') ? 's2' : 's1')) : 's0';
-      else name = striding ? (a.stride ? 's1_flipped' : (has('s2') ? 's2_flipped' : 's1_flipped')) : 's0_flipped';
+      if (a.dir === 'down') name = !striding ? 'd0' : (a.stride ? 'd1' : (has('d2') ? 'd2' : 'd1'));
+      else if (a.dir === 'up') name = !striding ? 'u0' : (a.stride ? 'u1' : (has('u2') ? 'u2' : 'u1'));
+      else if (a.dir === 'left') name = !striding ? 's0' : (a.stride ? 's1' : (has('s2') ? 's2' : 's1'));
+      else name = !striding ? 's0_flipped' : (a.stride ? 's1_flipped' : (has('s2') ? 's2_flipped' : 's1_flipped'));
 
       // resolve, falling back to standing frame for sprites without strides
-      var resolved = this._resolve(base, name);
-      return resolved;
+      return this._resolve(base, name);
     },
 
     _resolve: function (base, name) {

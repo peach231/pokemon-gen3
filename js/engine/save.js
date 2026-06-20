@@ -54,6 +54,7 @@
     if (!G.player.box) G.player.box = [];          // back-compat for older saves
     if (!G.player.visited) G.player.visited = {};  // explored-map tracking
     G.flags = data.flags || {};
+    if (G.applyCharacter) G.applyCharacter(G.player.charKey || 'brendan'); // restore chosen sprite
     if (data.muted && !G.audio.muted) G.audio.toggleMute();
     G.world.loadMap(data.pos.mapId, data.pos.x, data.pos.y, data.pos.dir);
     return true;

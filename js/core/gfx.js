@@ -302,126 +302,154 @@
       });
     },
 
-    // Optional: real OVERWORLD walking sprites, sliced at runtime from animation
-    // sheets (see OVERWORLD_CFG). Each sheet is nine 16x32 frames; we take frames
-    // 0/1/2 (idle down/up/left) and 3/4/5 (one stride each), color-key the
-    // background to transparent, fit each into the engine's 16x24 slot, and write
-    // the ch_<name>_{d0,d1,u0,u1,s0,s1} keys (+ _flip variants the engine mirrors
-    // for right-facing / alternate step). Baked art stays the fallback.
+    // --- shared helpers for real-sprite slicing (overworld + characters) -----
+    _flipCanvas: function (src) {
+      var c = makeCanvas(src.width, src.height), x = c.getContext('2d');
+      x.imageSmoothingEnabled = false;
+      x.translate(src.width, 0); x.scale(-1, 1);
+      x.drawImage(src, 0, 0);
+      return c;
+    },
+
+    // Build a recolor lookup {packedSrcRGB: [r,g,b]} from a {'#rrggbb':'#rrggbb'} map.
+    _recolorLUT: function (recolor) {
+      if (!recolor) return null;
+      var lut = {};
+      for (var k in recolor) {
+        var d = parseInt(recolor[k].slice(1), 16);
+        lut[parseInt(k.slice(1), 16)] = [(d >> 16) & 255, (d >> 8) & 255, d & 255];
+      }
+      return lut;
+    },
+
+    // Slice a 9-frame (144x32) walk sheet into ch_<sprName>_{d0,d1,u0,u1,s0,s1,
+    // d2,u2,s2} (+ _flip variants). Optional recolor LUT remaps exact palette
+    // colors (e.g. skin/outfit) so one sheet yields several distinct characters.
+    _sliceWalkSheet: function (img, sprName, lut) {
+      var cfg = G.OVERWORLD_CFG || {};
+      var fw = cfg.frameW || 16, bw = cfg.boxW || 16, bh = cfg.boxH || 24;
+      var FRAMES = { d0: 0, u0: 1, s0: 2, d1: 3, u1: 4, s1: 5, d2: 6, u2: 7, s2: 8 };
+      var FLIP = ['d1', 'u1', 's0', 's1', 's2'];
+      var sw = img.width, sh = img.height;
+      var off = makeCanvas(sw, sh), octx = off.getContext('2d');
+      octx.drawImage(img, 0, 0);
+      var data;
+      try { data = octx.getImageData(0, 0, sw, sh).data; }
+      catch (e) { return; } // tainted (no CORS) -> keep baked art
+      var bgKeyed = data[3] >= 8, bgR = data[0], bgG = data[1], bgB = data[2];
+      function isBg(i) {
+        if (data[i + 3] < 8) return true;
+        return bgKeyed && Math.abs(data[i] - bgR) < 10 && Math.abs(data[i + 1] - bgG) < 10 && Math.abs(data[i + 2] - bgB) < 10;
+      }
+      var minY = sh, maxY = -1;
+      for (var y = 0; y < sh; y++) {
+        for (var x = 0; x < sw; x++) {
+          if (!isBg((y * sw + x) * 4)) { if (y < minY) minY = y; if (y > maxY) maxY = y; break; }
+        }
+      }
+      if (maxY < 0) return;
+      var srcH = maxY - minY + 1, base = 'ch_' + sprName + '_', self = this;
+      Object.keys(FRAMES).forEach(function (k) {
+        var fi = FRAMES[k];
+        if ((fi + 1) * fw > sw) return;
+        var tmp = makeCanvas(fw, srcH), tctx = tmp.getContext('2d');
+        var id = tctx.createImageData(fw, srcH);
+        for (var y = 0; y < srcH; y++) {
+          for (var x = 0; x < fw; x++) {
+            var si = ((minY + y) * sw + (fi * fw + x)) * 4, di = (y * fw + x) * 4;
+            if (isBg(si)) { id.data[di + 3] = 0; continue; }
+            var r = data[si], g = data[si + 1], b = data[si + 2];
+            if (lut) { var m = lut[(r << 16) | (g << 8) | b]; if (m) { r = m[0]; g = m[1]; b = m[2]; } }
+            id.data[di] = r; id.data[di + 1] = g; id.data[di + 2] = b; id.data[di + 3] = 255;
+          }
+        }
+        tctx.putImageData(id, 0, 0);
+        var c = makeCanvas(bw, bh), rctx = c.getContext('2d');
+        rctx.imageSmoothingEnabled = false;
+        var scale = Math.min(1, bh / srcH), dw = Math.round(fw * scale), dh = Math.round(srcH * scale);
+        rctx.drawImage(tmp, 0, 0, fw, srcH, Math.round((bw - dw) / 2), bh - dh, dw, dh);
+        G.IMG[base + k] = c;
+      });
+      FLIP.forEach(function (k) { if (G.IMG[base + k]) G.IMG[base + k + '_flip'] = self._flipCanvas(G.IMG[base + k]); });
+    },
+
+    // Load + slice a walk sheet (by path under OVERWORLD_CFG.remoteBase) into
+    // ch_<sprName>_*, with an optional recolor map. Baked art stays the fallback.
+    loadWalkSheet: function (sheetPath, sprName, recolor, cb) {
+      var cfg = G.OVERWORLD_CFG;
+      if (!cfg || !cfg.remoteBase) { if (cb) cb(); return; }
+      var lut = this._recolorLUT(recolor), self = this;
+      var img = new Image();
+      if (cfg.crossOrigin) img.crossOrigin = cfg.crossOrigin;
+      img.onload = function () { self._sliceWalkSheet(img, sprName, lut); if (cb) cb(); };
+      img.onerror = function () { if (cb) cb(); };
+      img.src = cfg.remoteBase + sheetPath + '.png';
+    },
+
+    // Optional: real OVERWORLD walking sprites for the configured NPC classes.
     loadOverworldSprites: function () {
       var cfg = G.OVERWORLD_CFG;
-      if (!cfg || !cfg.remoteBase) return;
-      var fw = cfg.frameW || 16, fh = cfg.frameH || 32, bw = cfg.boxW || 16, bh = cfg.boxH || 24;
-      // engine frame key -> sheet frame index. 0-2 = idle (down/up/left),
-      // 3-5 = first stride, 6-8 = second stride (for a true 3-pose walk).
-      var FRAMES = { d0: 0, u0: 1, s0: 2, d1: 3, u1: 4, s1: 5, d2: 6, u2: 7, s2: 8 };
-      var FLIP = ['d1', 'u1', 's0', 's1', 's2']; // mirrored variants the engine asks for
-
-      function flipCanvas(src) {
-        var c = makeCanvas(src.width, src.height), x = c.getContext('2d');
-        x.imageSmoothingEnabled = false;
-        x.translate(src.width, 0); x.scale(-1, 1);
-        x.drawImage(src, 0, 0);
-        return c;
-      }
-
-      function process(img, sprName) {
-        var sw = img.width, sh = img.height;
-        var off = makeCanvas(sw, sh), octx = off.getContext('2d');
-        octx.drawImage(img, 0, 0);
-        var data;
-        try { data = octx.getImageData(0, 0, sw, sh).data; }
-        catch (e) { return; } // tainted (no CORS) -> keep baked art
-        // background = top-left pixel; key by alpha, and by color if it's opaque
-        var b0 = 0;
-        var bgKeyed = data[3] >= 8;
-        var bgR = data[0], bgG = data[1], bgB = data[2];
-        function isBg(i) {
-          if (data[i + 3] < 8) return true;
-          return bgKeyed && Math.abs(data[i] - bgR) < 10 && Math.abs(data[i + 1] - bgG) < 10 && Math.abs(data[i + 2] - bgB) < 10;
-        }
-        // content vertical bounds across the whole sheet (stable across frames)
-        var minY = sh, maxY = -1;
-        for (var y = 0; y < sh; y++) {
-          for (var x = 0; x < sw; x++) {
-            if (!isBg((y * sw + x) * 4)) { if (y < minY) minY = y; if (y > maxY) maxY = y; break; }
-          }
-        }
-        if (maxY < 0) return; // empty
-        var srcH = maxY - minY + 1;
-        var base = 'ch_' + sprName + '_';
-
-        Object.keys(FRAMES).forEach(function (k) {
-          var fi = FRAMES[k];
-          if ((fi + 1) * fw > sw) return; // frame not present on this sheet
-          // keyed frame at native content size
-          var tmp = makeCanvas(fw, srcH), tctx = tmp.getContext('2d');
-          var id = tctx.createImageData(fw, srcH);
-          for (var y = 0; y < srcH; y++) {
-            for (var x = 0; x < fw; x++) {
-              var si = ((minY + y) * sw + (fi * fw + x)) * 4;
-              var di = (y * fw + x) * 4;
-              if (isBg(si)) { id.data[di + 3] = 0; }
-              else { id.data[di] = data[si]; id.data[di + 1] = data[si + 1]; id.data[di + 2] = data[si + 2]; id.data[di + 3] = 255; }
-            }
-          }
-          tctx.putImageData(id, 0, 0);
-          // fit into the 16x24 slot, bottom-center (downscale only if taller)
-          var c = makeCanvas(bw, bh), rctx = c.getContext('2d');
-          rctx.imageSmoothingEnabled = false;
-          var scale = Math.min(1, bh / srcH);
-          var dw = Math.round(fw * scale), dh = Math.round(srcH * scale);
-          rctx.drawImage(tmp, 0, 0, fw, srcH, Math.round((bw - dw) / 2), bh - dh, dw, dh);
-          G.IMG[base + k] = c;
-        });
-        // mirrored variants used by the engine for right-facing / alternate step
-        FLIP.forEach(function (k) { if (G.IMG[base + k]) G.IMG[base + k + '_flip'] = flipCanvas(G.IMG[base + k]); });
-      }
-
+      if (!cfg || !cfg.remoteBase || !cfg.sheets) return;
+      var self = this;
       Object.keys(cfg.sheets).forEach(function (sprName) {
-        var img = new Image();
-        if (cfg.crossOrigin) img.crossOrigin = cfg.crossOrigin;
-        img.onload = function () { process(img, sprName); };
-        img.onerror = function () {}; // keep baked art
-        img.src = cfg.remoteBase + cfg.sheets[sprName] + '.png';
+        self.loadWalkSheet(cfg.sheets[sprName], sprName, null);
       });
     },
 
-    // Optional: the player's real BATTLE back sprite. Source is a back-pic sheet
-    // (vertical strip of throw frames); we take frame 0, color-key the background,
-    // and overlay G.IMG.trainer_player_back. Baked art stays the fallback.
-    loadPlayerBack: function () {
-      var cfg = G.PLAYER_BACK_CFG;
-      if (!cfg || !cfg.url) return;
+    // Extract frame 0 of a battle back-pic sheet, color-keyed + optionally recolored.
+    _extractBackFrame: function (img, lut) {
+      var cfg = G.PLAYER_BACK_CFG || {};
       var fw = cfg.frameW || 64, fh = cfg.frameH || 64;
+      var sw = img.width;
+      var off = makeCanvas(sw, img.height), octx = off.getContext('2d');
+      octx.drawImage(img, 0, 0);
+      var data;
+      try { data = octx.getImageData(0, 0, sw, img.height).data; }
+      catch (e) { return null; }
+      var bgKeyed = data[3] >= 8, bgR = data[0], bgG = data[1], bgB = data[2];
+      function isBg(i) {
+        if (data[i + 3] < 8) return true;
+        return bgKeyed && Math.abs(data[i] - bgR) < 10 && Math.abs(data[i + 1] - bgG) < 10 && Math.abs(data[i + 2] - bgB) < 10;
+      }
+      var c = makeCanvas(fw, fh), cx = c.getContext('2d');
+      var id = cx.createImageData(fw, fh);
+      for (var y = 0; y < fh; y++) {
+        for (var x = 0; x < fw; x++) {
+          var si = (y * sw + x) * 4, di = (y * fw + x) * 4;
+          if (isBg(si)) { id.data[di + 3] = 0; continue; }
+          var r = data[si], g = data[si + 1], b = data[si + 2];
+          if (lut) { var m = lut[(r << 16) | (g << 8) | b]; if (m) { r = m[0]; g = m[1]; b = m[2]; } }
+          id.data[di] = r; id.data[di + 1] = g; id.data[di + 2] = b; id.data[di + 3] = 255;
+        }
+      }
+      cx.putImageData(id, 0, 0);
+      return G.gfx._fitToBox(c, fh, false); // trim + bottom-anchor
+    },
+
+    // Load a battle back-pic (by name under PLAYER_BACK_CFG.backBase) into
+    // G.IMG.trainer_player_back, with an optional recolor map.
+    loadBackPic: function (backName, recolor) {
+      var cfg = G.PLAYER_BACK_CFG;
+      if (!cfg || !cfg.backBase || !backName) return;
+      var lut = this._recolorLUT(recolor), self = this;
       var img = new Image();
       if (cfg.crossOrigin) img.crossOrigin = cfg.crossOrigin;
-      img.onload = function () {
-        var sw = img.width;
-        var off = makeCanvas(sw, img.height), octx = off.getContext('2d');
-        octx.drawImage(img, 0, 0);
-        var data;
-        try { data = octx.getImageData(0, 0, sw, img.height).data; }
-        catch (e) { return; } // tainted -> keep baked art
-        var bgKeyed = data[3] >= 8, bgR = data[0], bgG = data[1], bgB = data[2];
-        function isBg(i) {
-          if (data[i + 3] < 8) return true;
-          return bgKeyed && Math.abs(data[i] - bgR) < 10 && Math.abs(data[i + 1] - bgG) < 10 && Math.abs(data[i + 2] - bgB) < 10;
-        }
-        var c = makeCanvas(fw, fh), cx = c.getContext('2d');
-        var id = cx.createImageData(fw, fh);
-        for (var y = 0; y < fh; y++) {
-          for (var x = 0; x < fw; x++) {
-            var si = (y * sw + x) * 4, di = (y * fw + x) * 4;
-            if (isBg(si)) { id.data[di + 3] = 0; }
-            else { id.data[di] = data[si]; id.data[di + 1] = data[si + 1]; id.data[di + 2] = data[si + 2]; id.data[di + 3] = 255; }
-          }
-        }
-        cx.putImageData(id, 0, 0);
-        G.IMG.trainer_player_back = G.gfx._fitToBox(c, fh, false); // trim + bottom-anchor
-      };
+      img.onload = function () { var c = self._extractBackFrame(img, lut); if (c) G.IMG.trainer_player_back = c; };
       img.onerror = function () {};
-      img.src = cfg.url;
+      img.src = cfg.backBase + backName + '.png';
+    },
+
+    // Apply a chosen character: overworld walker (ch_player_*) + battle back sprite.
+    loadCharacter: function (charDef) {
+      if (!charDef) return;
+      this.loadWalkSheet(charDef.sheet, 'player', charDef.recolor);
+      this.loadBackPic(charDef.back, charDef.recolor);
+    },
+
+    // Load a character's walker under a preview key (ch_csel_<key>_*) for the
+    // character-select screen.
+    loadCharacterPreview: function (charDef) {
+      if (charDef) this.loadWalkSheet(charDef.sheet, 'csel_' + charDef.key, charDef.recolor);
     },
 
     // -----------------------------------------------------------------------

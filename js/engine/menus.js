@@ -130,6 +130,63 @@
   };
 
   // ------------------------------------------------------------ start menu --
+  // ------------------------------------------------ character select screen --
+  // Shown once on a new game: pick one of four playable trainers (the walker +
+  // battle back sprite for the rest of the run). onChosen(charDef) continues.
+  G.CharSelectScene = function (onChosen) {
+    var chars = G.CHARACTERS || [];
+    var sel = 0;
+    for (var i = 0; i < chars.length; i++) if (G.gfx.loadCharacterPreview) G.gfx.loadCharacterPreview(chars[i]);
+
+    function ctext(ctx, s, cx, y, col, sh) { G.text(ctx, s, Math.round(cx - G.textWidth(s) / 2), y, col, sh); }
+    function preview(c) {
+      var f = ['d0', 'd1', 'd0', 'd2'][(G.frame >> 3) % 4];
+      return G.IMG['ch_csel_' + c.key + '_' + f] || G.IMG['ch_csel_' + c.key + '_d0'] || G.IMG.ch_player_d0;
+    }
+    return {
+      opaque: true,
+      update: function () {
+        if (!chars.length) { if (onChosen) onChosen(null); return; }
+        if (G.input.repeat('left')) { sel = (sel + chars.length - 1) % chars.length; G.audio.sfx('menuMove'); }
+        if (G.input.repeat('right')) { sel = (sel + 1) % chars.length; G.audio.sfx('menuMove'); }
+        if (G.input.justPressed('A') || G.input.justPressed('start')) {
+          G.audio.sfx('confirm');
+          var c = chars[sel];
+          G.player.charKey = c.key;
+          G.player.name = c.name;
+          if (G.gfx.loadCharacter) G.gfx.loadCharacter(c);
+          if (onChosen) onChosen(c);
+        }
+      },
+      draw: function (ctx) {
+        ctx.fillStyle = '#bfe3f5'; ctx.fillRect(0, 0, W, H);
+        ctx.fillStyle = '#9fd6c4'; ctx.fillRect(0, H - 42, W, 42);
+        ctx.fillStyle = '#8fcab6'; ctx.fillRect(0, H - 42, W, 2);
+        ctext(ctx, 'CHOOSE YOUR TRAINER', W / 2, 7, G.UI.text, G.UI.textShadow);
+
+        var n = chars.length, slotW = 52, gap = Math.floor((W - n * slotW) / (n + 1));
+        for (var i = 0; i < n; i++) {
+          var sx = gap + i * (slotW + gap), sy = 24, on = i === sel;
+          panel(ctx, sx, sy, slotW, 74);
+          if (on) { ctx.fillStyle = 'rgba(255,236,120,0.30)'; ctx.fillRect(sx + 2, sy + 2, slotW - 4, 70); }
+          var img = preview(chars[i]);
+          if (img) {
+            ctx.imageSmoothingEnabled = false;
+            ctx.drawImage(img, sx + Math.round(slotW / 2 - img.width), sy + 54 - img.height * 2, img.width * 2, img.height * 2);
+          }
+          ctext(ctx, chars[i].name, sx + slotW / 2, sy + 56, G.UI.text, G.UI.textShadow);
+          ctext(ctx, chars[i].kind, sx + slotW / 2, sy + 64, G.C.gry);
+          if (on) {
+            var bob = (G.frame >> 3) % 2;
+            ctx.drawImage(G.IMG.ui_cursor, sx + Math.round(slotW / 2) - 4, sy - 7 + bob);
+          }
+        }
+        ctext(ctx, chars[sel].blurb, W / 2, H - 33, G.UI.text, G.UI.textShadow);
+        ctext(ctx, 'Arrows: pick    Z: choose', W / 2, H - 14, G.C.ink);
+      }
+    };
+  };
+
   G.StartMenu = function () {
     var items = ['DEX', 'MAP', 'PARTY', 'BAG', 'SAVE', 'EXIT'];
     return {

@@ -41,10 +41,10 @@
     // Optional real trainer/player sprites — non-blocking; baked art is the
     // fallback, so this is a no-op until a source is configured (sprites_config).
     if (G.gfx.loadTrainerSprites) G.gfx.loadTrainerSprites();
-    // Optional real overworld walking sprites (sliced from animation sheets).
+    // Optional real overworld walking sprites for NPC classes (sliced from sheets).
     if (G.gfx.loadOverworldSprites) G.gfx.loadOverworldSprites();
-    // Optional real player battle back-sprite.
-    if (G.gfx.loadPlayerBack) G.gfx.loadPlayerBack();
+    // Default player character (overridden by the new-game select or a save).
+    if (G.applyCharacter) G.applyCharacter((G.player && G.player.charKey) || 'brendan');
   }
 
   function drawLoading(info) {
@@ -68,6 +68,8 @@
     if (mapMatch) {
       G.player.party = [G.makeMon('treecko', 20)];
       G.flags.starter = 'treecko';
+      var chId = (location.hash.match(/char=(\w+)/) || [])[1];
+      if (chId && G.applyCharacter) { G.player.charKey = chId; G.applyCharacter(chId); }
       G.world.loadMap(mapMatch[1], parseInt(mapMatch[2], 10), parseInt(mapMatch[3], 10), (location.hash.match(/dir=(\w+)/) || [])[1] || 'down');
       G.pushScene(G.overworldScene);
     } else if (hashIs('gallery') && G.debug && G.debug.GalleryScene) {
@@ -93,6 +95,8 @@
         var wildKey = G.SPECIES.poochyena ? 'poochyena' : G.DEX_ORDER[0];
         G.pushScene(G.BattleScene(new G.Battle({ party: G.player.party, foes: [G.makeMon(wildKey, 7)], wild: true }), { bg: 'meadow', autoPlay: auto }));
       }
+    } else if (hashIs('charsel') && G.CharSelectScene) {
+      G.pushScene(G.CharSelectScene(function () {}));
     } else if (G.TitleScene) {
       G.pushScene(G.TitleScene());
     } else if (G.MAPS && G.MAPS.hearthvale) {

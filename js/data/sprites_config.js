@@ -96,7 +96,7 @@
   G.OVERWORLD_CFG = {
     remoteBase: 'https://cdn.jsdelivr.net/gh/pret/pokeemerald@master/graphics/object_events/pics/people/',
     sheets: {
-      player: 'brendan/walking',          // the player character
+      // NPC classes (the player walker is set by the chosen character — see below)
       boy:    'youngster',                // youngster / bug-catcher class + boy NPCs
       mom:    'woman_1',                   // lass / picnicker class + adult-woman NPCs
       prof:   'man_1',                     // hiker class + older-man NPCs / Birch
@@ -108,12 +108,43 @@
   };
 
   // The player's BATTLE back sprite (shown sending out the lead Pokémon). Source
-  // is a back-pic sheet (64x256 = four 64x64 throw frames); we use frame 0. Baked
-  // art stays the fallback if it can't be fetched.
+  // is a back-pic sheet (64x256 = four 64x64 throw frames); we use frame 0. The
+  // chosen character supplies the back-pic name; baked art is the fallback.
   G.PLAYER_BACK_CFG = {
-    url: 'https://cdn.jsdelivr.net/gh/pret/pokeemerald@master/graphics/trainers/back_pics/brendan.png',
+    backBase: 'https://cdn.jsdelivr.net/gh/pret/pokeemerald@master/graphics/trainers/back_pics/',
     frameW: 64, frameH: 64,
     crossOrigin: 'anonymous'
+  };
+
+  // ----------------------------------------------------------------------
+  // Playable main-character options, chosen on a new game. Two are the natural
+  // designs; two are recolored (darker skin + different outfit hue) so the
+  // roster is diverse. Each maps to a real walk sheet + battle back-pic, with
+  // an optional exact-color recolor applied at load time. 'kind' is shown in UI.
+  var SKIN_DARK = { l: '#cf9b6e', m: '#a86a40', s: '#7a4a2e' }; // light/mid/shadow
+  G.CHARACTERS = [
+    { key: 'brendan', name: 'Brendan', kind: 'Boy',  blurb: 'A steady kid from Littleroot Town.',
+      sheet: 'brendan/walking', back: 'brendan', recolor: null },
+    { key: 'may', name: 'May', kind: 'Girl', blurb: 'Curious and quick on her feet.',
+      sheet: 'may/walking', back: 'may', recolor: null },
+    { key: 'kofi', name: 'Kofi', kind: 'Boy', blurb: 'Came a long way chasing the sea breeze.',
+      sheet: 'brendan/walking', back: 'brendan', recolor: {
+        '#ffd5b4': SKIN_DARK.l, '#ffc594': SKIN_DARK.m, '#de9473': SKIN_DARK.s, // skin
+        '#ff625a': '#5ac46a', '#c54141': '#2e8a44'                              // red -> green outfit
+      } },
+    { key: 'amara', name: 'Amara', kind: 'Girl', blurb: 'Fearless, with a knack for Pokémon.',
+      sheet: 'may/walking', back: 'may', recolor: {
+        '#ffdecd': SKIN_DARK.l, '#dea494': SKIN_DARK.m, '#cd8373': SKIN_DARK.s, // skin
+        '#ff625a': '#9a6ad5', '#c54141': '#6a3aa8'                              // red -> purple bandana
+      } }
+  ];
+
+  // Apply a character by key (sets the player walker + battle back sprite).
+  G.applyCharacter = function (key) {
+    var c = null, list = G.CHARACTERS || [];
+    for (var i = 0; i < list.length; i++) if (list[i].key === key) { c = list[i]; break; }
+    if (!c) c = list[0];
+    if (c && G.gfx && G.gfx.loadCharacter) G.gfx.loadCharacter(c);
   };
 
   // Build the ordered list of candidate URLs for a sprite (front|back|icon).
