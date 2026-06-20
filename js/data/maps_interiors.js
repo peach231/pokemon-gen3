@@ -134,15 +134,15 @@
       ]
     };
   }
-  shop('shop_cobblemarch', { map: 'cobblemarch', x: 19, y: 7 }, ['potion', 'tameorb', 'cureall', 'snackbar']);
-  shop('shop_brinehollow', { map: 'brinehollow', x: 15, y: 5 }, ['potion', 'superpotion', 'tameorb', 'greatorb', 'netorb', 'cureall', 'repelmist', 'fishingrod', 'skates']);
-  shop('shop_coilgate', { map: 'coilgate', x: 7, y: 13 }, ['superpotion', 'tameorb', 'greatorb', 'nestorb', 'timerorb', 'cureall', 'repelmist', 'revivedust']);
-  shop('shop_aurelune', { map: 'aurelune', x: 6, y: 13 }, ['superpotion', 'hyperpotion', 'greatorb', 'ultraorb', 'cureall', 'repelmist', 'revivedust']);
-  shop('shop_summit', { map: 'crownsummit', x: 15, y: 13 }, ['hyperpotion', 'greatorb', 'ultraorb', 'cureall', 'revivedust', 'repelmist']);
-  shop('shop_petalburg', { map: 'petalburg', x: 4, y: 14 }, ['superpotion', 'hyperpotion', 'greatorb', 'ultraorb', 'timerorb', 'cureall', 'revivedust', 'fishingrod', 'skates']);
-  shop('shop_fortree', { map: 'fortree', x: 4, y: 14 }, ['hyperpotion', 'greatorb', 'ultraorb', 'nestorb', 'cureall', 'revivedust', 'repelmist', 'fishingrod', 'skates']);
-  shop('shop_mossdeep', { map: 'mossdeep', x: 4, y: 14 }, ['hyperpotion', 'greatorb', 'ultraorb', 'timerorb', 'diveorb', 'cureall', 'revivedust', 'fishingrod', 'skates']);
-  shop('shop_sootopolis', { map: 'sootopolis', x: 4, y: 14 }, ['hyperpotion', 'greatorb', 'ultraorb', 'diveorb', 'netorb', 'cureall', 'revivedust', 'fishingrod', 'skates']);
+  shop('shop_cobblemarch', { map: 'cobblemarch', x: 19, y: 7 }, ['potion', 'tameorb', 'cureall', 'snackbar', 'candyxs']);
+  shop('shop_brinehollow', { map: 'brinehollow', x: 15, y: 5 }, ['potion', 'superpotion', 'tameorb', 'greatorb', 'netorb', 'cureall', 'repelmist', 'candyxs', 'candys', 'fishingrod', 'skates']);
+  shop('shop_coilgate', { map: 'coilgate', x: 7, y: 13 }, ['superpotion', 'tameorb', 'greatorb', 'nestorb', 'timerorb', 'cureall', 'repelmist', 'revivedust', 'candys']);
+  shop('shop_aurelune', { map: 'aurelune', x: 6, y: 13 }, ['superpotion', 'hyperpotion', 'greatorb', 'ultraorb', 'cureall', 'repelmist', 'revivedust', 'candys', 'candym']);
+  shop('shop_summit', { map: 'crownsummit', x: 15, y: 13 }, ['hyperpotion', 'greatorb', 'ultraorb', 'cureall', 'revivedust', 'repelmist', 'candym', 'candyl']);
+  shop('shop_petalburg', { map: 'petalburg', x: 4, y: 14 }, ['superpotion', 'hyperpotion', 'greatorb', 'ultraorb', 'timerorb', 'cureall', 'revivedust', 'candym', 'fishingrod', 'skates']);
+  shop('shop_fortree', { map: 'fortree', x: 4, y: 14 }, ['hyperpotion', 'greatorb', 'ultraorb', 'nestorb', 'cureall', 'revivedust', 'repelmist', 'candym', 'fishingrod', 'skates']);
+  shop('shop_mossdeep', { map: 'mossdeep', x: 4, y: 14 }, ['hyperpotion', 'greatorb', 'ultraorb', 'timerorb', 'diveorb', 'cureall', 'revivedust', 'candym', 'candyl', 'fishingrod', 'skates']);
+  shop('shop_sootopolis', { map: 'sootopolis', x: 4, y: 14 }, ['hyperpotion', 'greatorb', 'ultraorb', 'diveorb', 'netorb', 'cureall', 'revivedust', 'candyl', 'fishingrod', 'skates']);
 
   // ------------------------------------------------------------------------
   // GYMS — one leader each, waiting at the far end of the hall.
@@ -340,6 +340,21 @@
       }
       G.pushScene(G.Textbox('There’s no open water to launch into from here.'));
     } };
+  };
+
+  // A friendly local who gifts a candy once, to introduce the mechanic.
+  G.EVENTS.giftCandy = function* () {
+    if (G.flags.ev_giftcandy) {
+      yield { t: 'text', s: 'Those Exp Candies really pack on the levels, huh? Save the big ones for a worthy teammate.' };
+      return;
+    }
+    yield { t: 'text', s: "New to training? Here — feed this to a teammate and watch it shoot up a level or two." };
+    yield { t: 'fn', fn: function () {
+      G.player.bag.candys = (G.player.bag.candys || 0) + 1;
+      G.flags.ev_giftcandy = 1;
+      G.audio.sfx('money');
+    } };
+    yield { t: 'text', s: 'You got an S Exp Candy! Open the BAG, pick it, and choose a creature to give it the EXP.' };
   };
 
   // Birch's Lab storage PC: deposit/withdraw between party and the Lab box

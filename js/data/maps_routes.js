@@ -56,7 +56,8 @@
     ],
     items: [
       { x: 3, y: 7, item: 'potion', qty: 1, flag: 'itm_r1_potion' },
-      { x: 14, y: 19, item: 'tameorb', qty: 2, flag: 'itm_r1_orbs' }
+      { x: 14, y: 19, item: 'tameorb', qty: 2, flag: 'itm_r1_orbs' },
+      { x: 9, y: 11, item: 'candyxs', qty: 1, flag: 'itm_r1_candy' }
     ],
     encounters: {
       rate: 0.10,

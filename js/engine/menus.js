@@ -461,6 +461,28 @@
                   msg = G.monName(mon) + ' came back to its senses!';
                   G.player.bag[id]--;
                   G.audio.sfx('heal');
+                } else if (item.kind === 'xp') {
+                  if (mon.egg) { msg = 'The EGG cannot use that.'; }
+                  else if (mon.level >= 100) { msg = G.monName(mon) + ' is already at the top level!'; }
+                  else {
+                    var startLvl = mon.level;
+                    var events = G.gainExp(mon, item.amount);
+                    G.player.bag[id]--;
+                    G.audio.sfx('levelUp');
+                    msg = G.monName(mon) + ' gained ' + item.amount + ' EXP!';
+                    if (mon.level > startLvl) msg += ' It grew to Lv' + mon.level + '!';
+                    var learned = [];
+                    for (var e = 0; e < events.length; e++) {
+                      if (events[e].type === 'learn' && mon.moves.length < 4 && !G.knowsMove(mon, events[e].moveId)) {
+                        var mv = events[e].moveId;
+                        mon.moves.push({ id: mv, pp: G.MOVES[mv].pp, maxPp: G.MOVES[mv].pp });
+                        learned.push(G.MOVES[mv].name);
+                      }
+                    }
+                    if (learned.length) msg += ' Learned ' + learned.join(', ') + '!';
+                    var evo = G.evolutionDue(mon);
+                    if (evo && G.EvolutionScene) G.pushScene(G.EvolutionScene([{ mon: mon, to: evo }]));
+                  }
                 }
                 G.pushScene(G.Textbox(msg));
               }

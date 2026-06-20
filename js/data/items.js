@@ -28,6 +28,11 @@
   item('mythorb',    'Myth Orb',    0,    'orb',    { mod: 255 },    'A legendary orb said never to fail.');
   item('repelmist',  'Repel Mist',  300,  'repel',  { steps: 100 },  'Repels weak wild creatures for 100 steps.');
   item('snackbar',   'Snack Bar',   100,  'heal',   { amount: 10 },  'A chewy snack. Restores 10 HP.');
+  // exp candies — feed one to a chosen party creature for instant EXP
+  item('candyxs',    'XS Exp Candy', 30,   'xp', { amount: 100 },   'A tiny candy. A little EXP for one creature.');
+  item('candys',     'S Exp Candy',  120,  'xp', { amount: 800 },   'A small candy. Some EXP for one creature.');
+  item('candym',     'M Exp Candy',  500,  'xp', { amount: 3000 },  'A candy. A good chunk of EXP for one creature.');
+  item('candyl',     'L Exp Candy',  1500, 'xp', { amount: 10000 }, 'A big candy. A lot of EXP for one creature.');
   // gear — held in the bag; behavior handled in the overworld, not via "use".
   item('fishingrod', 'Fishing Rod', 1000, 'gear', { gear: 'rod' },    'Face water and press Z to fish for wild Pokémon.');
   item('skates',     'Skates',      1200, 'gear', { gear: 'skates' }, 'Roll at double speed automatically while you have these.');

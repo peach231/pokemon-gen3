@@ -94,7 +94,8 @@
     ],
     npcs: [
       { x: 4, y: 7, sprite: 'mom', dir: 'down', event: 'momHeal' },
-      { x: 16, y: 9, sprite: 'boy', dir: 'down', dialog: ['Prof. Maple keeps four creatures in her lab.', 'FOUR! And one of them gets to be yours. So unfair!'] }
+      { x: 16, y: 9, sprite: 'boy', dir: 'down', dialog: ['Prof. Maple keeps four creatures in her lab.', 'FOUR! And one of them gets to be yours. So unfair!'] },
+      { x: 13, y: 9, sprite: 'prof', dir: 'down', event: 'giftCandy' }
     ],
     scripts: []
   };
