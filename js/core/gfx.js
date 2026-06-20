@@ -328,10 +328,10 @@
     _sliceWalkSheet: function (img, sprName, lut) {
       var cfg = G.OVERWORLD_CFG || {};
       var fw = cfg.frameW || 16, bw = cfg.boxW || 16, bh = cfg.boxH || 24;
-      // Sheet frame order (verified by rendering the slices): idle [S,N,W] then
-      // walks grouped South=3,4  West=5,8  North=6,7. Map to engine keys so each
-      // direction's frames all face that direction (no apparent turning).
-      var FRAMES = { d0: 0, u0: 1, s0: 2, d1: 3, d2: 4, s1: 5, u1: 6, u2: 7, s2: 8 };
+      // Sheet frame order: idle [S,N,W] then walk PAIRS per direction —
+      // South=3,4  North=5,6  West=7,8. Map to engine keys so each direction's
+      // frames all face that direction (no apparent turning while moving).
+      var FRAMES = { d0: 0, u0: 1, s0: 2, d1: 3, d2: 4, u1: 5, u2: 6, s1: 7, s2: 8 };
       var FLIP = ['d1', 'u1', 's0', 's1', 's2'];
       var sw = img.width, sh = img.height;
       var off = makeCanvas(sw, sh), octx = off.getContext('2d');
