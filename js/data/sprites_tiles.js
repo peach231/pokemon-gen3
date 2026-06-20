@@ -1176,52 +1176,57 @@
   ]);
 
   // ------------------------------------- heal / shop / gym facade pieces ----
-  G.ART.t_hroof_tl = { base: 't_roof_tl', pal: { o: C.ink, q: C.pnk2, R: C.pnk1, r: C.pnk0 } };
-  G.ART.t_hroof_tm = { base: 't_roof_tm', pal: { o: C.ink, q: C.pnk2, R: C.pnk1, r: C.pnk0 } };
-  G.ART.t_hroof_tr = { base: 't_roof_tr', pal: { o: C.ink, q: C.pnk2, R: C.pnk1, r: C.pnk0 } };
-  G.ART.t_hroof_bl = { base: 't_roof_bl', pal: { o: C.ink, q: C.pnk2, R: C.pnk1, r: C.pnk0 } };
-  G.ART.t_hroof_bm = { base: 't_roof_bm', pal: { o: C.ink, q: C.pnk2, R: C.pnk1, r: C.pnk0 } };
-  G.ART.t_hroof_br = { base: 't_roof_br', pal: { o: C.ink, q: C.pnk2, R: C.pnk1, r: C.pnk0 } };
-  G.ART.t_sroof_tl = { base: 't_roof_tl', pal: { o: C.ink, q: C.grn3, R: C.grn2, r: C.grn1 } };
-  G.ART.t_sroof_tm = { base: 't_roof_tm', pal: { o: C.ink, q: C.grn3, R: C.grn2, r: C.grn1 } };
-  G.ART.t_sroof_tr = { base: 't_roof_tr', pal: { o: C.ink, q: C.grn3, R: C.grn2, r: C.grn1 } };
-  G.ART.t_sroof_bl = { base: 't_roof_bl', pal: { o: C.ink, q: C.grn3, R: C.grn2, r: C.grn1 } };
-  G.ART.t_sroof_bm = { base: 't_roof_bm', pal: { o: C.ink, q: C.grn3, R: C.grn2, r: C.grn1 } };
-  G.ART.t_sroof_br = { base: 't_roof_br', pal: { o: C.ink, q: C.grn3, R: C.grn2, r: C.grn1 } };
+  // Pokémon-Center red roof (classic look) + Poké Mart blue roof.
+  var HR = { o: C.ink, q: C.red2, R: C.red1, r: C.red0 };
+  var SR = { o: C.ink, q: C.blu2, R: C.blu1, r: C.blu0 };
+  G.ART.t_hroof_tl = { base: 't_roof_tl', pal: HR };
+  G.ART.t_hroof_tm = { base: 't_roof_tm', pal: HR };
+  G.ART.t_hroof_tr = { base: 't_roof_tr', pal: HR };
+  G.ART.t_hroof_bl = { base: 't_roof_bl', pal: HR };
+  G.ART.t_hroof_bm = { base: 't_roof_bm', pal: HR };
+  G.ART.t_hroof_br = { base: 't_roof_br', pal: HR };
+  G.ART.t_sroof_tl = { base: 't_roof_tl', pal: SR };
+  G.ART.t_sroof_tm = { base: 't_roof_tm', pal: SR };
+  G.ART.t_sroof_tr = { base: 't_roof_tr', pal: SR };
+  G.ART.t_sroof_bl = { base: 't_roof_bl', pal: SR };
+  G.ART.t_sroof_bm = { base: 't_roof_bm', pal: SR };
+  G.ART.t_sroof_br = { base: 't_roof_br', pal: SR };
 
-  T('t_healsign', { o: C.ink, w: C.pale, l: C.lgry, r: C.pnk1, R: C.pnk2 }, [
+  // Center placard: a red-and-white capture-ball emblem.
+  T('t_healsign', { o: C.ink, w: C.pale, l: C.lgry, R: C.red2 }, [
     'llllllllllllllll',
     'wwwwwwwwwwwwwwww',
     'wwooooooooooooww',
     'wwowwwwwwwwwwoww',
-    'wwowwwRRwwwwwoww',
-    'wwowwRRRRwwwwoww',
-    'wwowRRrRRRwwwoww',
-    'wwowRRRRRRwwwoww',
-    'wwowwRRRRwwwwoww',
-    'wwowwwRRwwwwwoww',
-    'wwowwwwwwwwwwoww',
+    'wwowwoooooowwoww',
+    'wwowoRRRRRRowoww',
+    'wwowoRRRRRRowoww',
+    'wwowoRRRRRRowoww',
+    'wwowooowwooowoww',
+    'wwowowwwwwwowoww',
+    'wwowowwwwwwowoww',
+    'wwowwoooooowwoww',
     'wwooooooooooooww',
     'llllllllllllllll',
-    'wwwwwwwwwwwwwwww',
     'wwwwwwwwwwwwwwww',
     'oooooooooooooooo'
   ]);
-  T('t_shopsign', { o: C.ink, w: C.pale, l: C.lgry, y: C.yel1, Y: C.yel2 }, [
+  // Mart placard: a blue shopping bag.
+  T('t_shopsign', { o: C.ink, w: C.pale, l: C.lgry, b: C.blu2, B: C.blu1 }, [
     'llllllllllllllll',
     'wwwwwwwwwwwwwwww',
     'wwooooooooooooww',
-    'wwowwwwwwwwwwoww',
-    'wwowwyyyyywwwoww',
-    'wwowyYyyyyywwoww',
-    'wwowyyoyoyywwoww',
-    'wwowyyyyyyywwoww',
-    'wwowyyoooyywwoww',
-    'wwowwyyyyywwwoww',
-    'wwowwwwwwwwwwoww',
+    'wwowwoowwoowwoww',
+    'wwowoooooooowoww',
+    'wwoobbbbbbbbooww',
+    'wwoobBBBBBBbooww',
+    'wwoobbbbbbbbooww',
+    'wwoobBBBBBBbooww',
+    'wwoobbbbbbbbooww',
+    'wwoobBBBBBBbooww',
+    'wwowoooooooowoww',
     'wwooooooooooooww',
     'llllllllllllllll',
-    'wwwwwwwwwwwwwwww',
     'wwwwwwwwwwwwwwww',
     'oooooooooooooooo'
   ]);
