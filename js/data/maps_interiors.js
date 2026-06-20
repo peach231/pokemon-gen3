@@ -135,7 +135,8 @@
       ],
       shopInventory: inventory,
       npcs: [
-        { x: 3, y: 1, sprite: 'prof', dir: 'down', event: 'shopBuy' }
+        { x: 3, y: 1, sprite: 'prof', dir: 'down', event: 'shopBuy' },
+        { x: 2, y: 3, sprite: 'boy', dir: 'down', event: 'moveTutor' }
       ]
     };
   }
@@ -472,6 +473,50 @@
       };
     }
     yield { t: 'text', s: 'Clerk: Safe routes out there!' };
+  };
+
+  // Move Tutor / Reminder: teach a teammate any move from its species' level-up
+  // list that it qualifies for. Rescues late evolutions stuck on a weak moveset.
+  G.EVENTS.moveTutor = function* () {
+    yield { t: 'text', s: 'Move Tutor: I can remind one of your team of a move it could learn. Who needs it?' };
+    var st = { mon: null };
+    yield { t: 'custom', run: function (resume) {
+      G.pushScene(G.PartyScene({ pickMode: true, prompt: 'Teach which creature?', onPick: function (idx) {
+        if (idx >= 0) st.mon = G.player.party[idx];
+        resume();
+      } }));
+    } };
+    if (!st.mon) return;
+    if (st.mon.egg) { yield { t: 'text', s: "An EGG can't learn moves yet!" }; return; }
+    var moves = G.teachableMoves(st.mon);
+    if (!moves.length) { yield { t: 'text', s: G.monName(st.mon) + ' already knows every move it can learn right now.' }; return; }
+    var done = { v: false };
+    while (!done.v) {
+      yield { t: 'custom', run: function (resume) {
+        var items = moves.map(function (id) { return G.MOVES[id].name; });
+        items.push('Cancel');
+        G.pushScene(G.Chooser({ items: items, cols: 2, x: 8, y: 12, cancelIndex: items.length - 1, onPick: function (i) {
+          if (i >= moves.length) { done.v = true; resume(); return; }
+          var mid = moves[i];
+          if (st.mon.moves.length < 4) {
+            st.mon.moves.push({ id: mid, pp: G.MOVES[mid].pp, maxPp: G.MOVES[mid].pp });
+            G.audio.sfx('heal'); done.v = true;
+            G.pushScene(G.Textbox(G.monName(st.mon) + ' learned ' + G.MOVES[mid].name + '!', { onDone: resume }));
+            return;
+          }
+          var fItems = st.mon.moves.map(function (ms) { return G.MOVES[ms.id].name; });
+          fItems.push('Keep all moves');
+          G.pushScene(G.Chooser({ items: fItems, cancelIndex: fItems.length - 1, onPick: function (j) {
+            if (j >= st.mon.moves.length) { resume(); return; } // back to the move list
+            var forgot = G.MOVES[st.mon.moves[j].id].name;
+            st.mon.moves[j] = { id: mid, pp: G.MOVES[mid].pp, maxPp: G.MOVES[mid].pp };
+            G.audio.sfx('heal'); done.v = true;
+            G.pushScene(G.Textbox(G.monName(st.mon) + ' forgot ' + forgot + ' and learned ' + G.MOVES[mid].name + '!', { onDone: resume }));
+          } }));
+        } }));
+      } };
+    }
+    yield { t: 'text', s: 'Move Tutor: Come back whenever a teammate needs reminding!' };
   };
 
   // rival battles (map script triggers)

@@ -174,6 +174,20 @@
     return false;
   };
 
+  // Moves the creature COULD know now (in its current species' level-up list at
+  // or below its level) but doesn't — what a Move Tutor / Reminder can teach.
+  G.teachableMoves = function (mon) {
+    if (!mon || mon.egg) return [];
+    var sp = G.SPECIES[mon.sp];
+    if (!sp) return [];
+    var out = [], seen = {};
+    for (var i = 0; i < sp.learnset.length; i++) {
+      var lv = sp.learnset[i][0], id = sp.learnset[i][1];
+      if (lv <= mon.level && !seen[id] && !G.knowsMove(mon, id)) { out.push(id); seen[id] = 1; }
+    }
+    return out;
+  };
+
   // null = no evolution due, else the target species key
   G.evolutionDue = function (mon) {
     var sp = G.SPECIES[mon.sp];
@@ -187,6 +201,14 @@
     var hpLost = G.monStats(mon).hp - mon.curHp;
     mon.sp = to;
     mon.curHp = Math.max(1, G.monStats(mon).hp - hpLost);
+    // Top up empty move slots with the evolved form's level-appropriate moves,
+    // so a late evolution (e.g. Magikarp -> Gyarados) isn't stuck on one move.
+    if (mon.moves.length < 4) {
+      var pool = G.movesAtLevel(to, mon.level);
+      for (var i = 0; i < pool.length && mon.moves.length < 4; i++) {
+        if (!G.knowsMove(mon, pool[i].id)) mon.moves.push(pool[i]);
+      }
+    }
     if (G.player) {
       G.player.dexSeen[to] = 1;
       G.player.dexCaught[to] = 1;
