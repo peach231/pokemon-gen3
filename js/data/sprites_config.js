@@ -121,22 +121,25 @@
   // designs; two are recolored (darker skin + different outfit hue) so the
   // roster is diverse. Each maps to a real walk sheet + battle back-pic, with
   // an optional exact-color recolor applied at load time. 'kind' is shown in UI.
-  var SKIN_DARK = { l: '#cf9b6e', m: '#a86a40', s: '#7a4a2e' }; // light/mid/shadow
+  // Dark-skin remap covering both skin palettes the sheets use (brendan/NPC vs
+  // may), so the same map works on any walker + its battle back-pic.
+  var DARK_SKIN = {
+    '#ffd5b4': '#cf9b6e', '#ffc594': '#a86a40', '#de9473': '#7a4a2e', // brendan / NPC skin
+    '#ffdecd': '#cf9b6e', '#dea494': '#a86a40', '#cd8373': '#7a4a2e'  // may skin
+  };
+  // Four visually distinct designs (separate base sprites, not recolors of each
+  // other): a capped boy, a bandana girl, a bare-haired boy, and a pigtailed
+  // girl; the latter two also get darker skin for a diverse roster. `name` is
+  // only the default if the player leaves the name blank.
   G.CHARACTERS = [
-    { key: 'brendan', name: 'Brendan', kind: 'Boy',  blurb: 'A steady kid from Littleroot Town.',
+    { key: 'brendan', name: 'Brendan', kind: 'Boy',  blurb: 'Cap, satchel, and a steady stride.',
       sheet: 'brendan/walking', back: 'brendan', recolor: null },
-    { key: 'may', name: 'May', kind: 'Girl', blurb: 'Curious and quick on her feet.',
+    { key: 'may', name: 'May', kind: 'Girl', blurb: 'Bandana on, always ready to roam.',
       sheet: 'may/walking', back: 'may', recolor: null },
-    { key: 'kofi', name: 'Kofi', kind: 'Boy', blurb: 'Came a long way chasing the sea breeze.',
-      sheet: 'brendan/walking', back: 'brendan', recolor: {
-        '#ffd5b4': SKIN_DARK.l, '#ffc594': SKIN_DARK.m, '#de9473': SKIN_DARK.s, // skin
-        '#ff625a': '#5ac46a', '#c54141': '#2e8a44'                              // red -> green outfit
-      } },
-    { key: 'amara', name: 'Amara', kind: 'Girl', blurb: 'Fearless, with a knack for Pokémon.',
-      sheet: 'may/walking', back: 'may', recolor: {
-        '#ffdecd': SKIN_DARK.l, '#dea494': SKIN_DARK.m, '#cd8373': SKIN_DARK.s, // skin
-        '#ff625a': '#9a6ad5', '#c54141': '#6a3aa8'                              // red -> purple bandana
-      } }
+    { key: 'kofi', name: 'Kofi', kind: 'Boy', blurb: 'No hat, just hair and a sea breeze.',
+      sheet: 'boy_1', back: 'brendan', recolor: DARK_SKIN },
+    { key: 'amara', name: 'Amara', kind: 'Girl', blurb: 'Pigtails and a fearless grin.',
+      sheet: 'lass', back: 'may', recolor: DARK_SKIN }
   ];
 
   // Apply a character by key (sets the player walker + battle back sprite).

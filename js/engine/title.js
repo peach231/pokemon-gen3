@@ -54,7 +54,7 @@
               G.world.loadMap('playerhome', 4, 4, 'down');
               G.replaceScene(G.overworldScene);
               G.pushScene(G.Textbox([
-                'A bright Hoenn morning. Prof. Birch is expecting you at his lab in Littleroot Town!',
+                'A bright Hoenn morning, ' + (G.player.name || 'friend') + '! Prof. Birch is expecting you at his lab in Littleroot Town!',
                 '(Arrows to move, Z to talk and confirm, X to cancel, Enter for the menu. M mutes.)'
               ]));
             };

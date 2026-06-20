@@ -153,9 +153,12 @@
           G.audio.sfx('confirm');
           var c = chars[sel];
           G.player.charKey = c.key;
-          G.player.name = c.name;
           if (G.gfx.loadCharacter) G.gfx.loadCharacter(c);
-          if (onChosen) onChosen(c);
+          // now name the trainer, then continue
+          G.pushScene(G.NameEntryScene(c.name, function (nm) {
+            G.player.name = nm;
+            if (onChosen) onChosen(c);
+          }));
         }
       },
       draw: function (ctx) {
@@ -174,8 +177,7 @@
             ctx.imageSmoothingEnabled = false;
             ctx.drawImage(img, sx + Math.round(slotW / 2 - img.width), sy + 54 - img.height * 2, img.width * 2, img.height * 2);
           }
-          ctext(ctx, chars[i].name, sx + slotW / 2, sy + 56, G.UI.text, G.UI.textShadow);
-          ctext(ctx, chars[i].kind, sx + slotW / 2, sy + 64, G.C.gry);
+          ctext(ctx, chars[i].kind, sx + slotW / 2, sy + 58, G.UI.text, G.UI.textShadow);
           if (on) {
             var bob = (G.frame >> 3) % 2;
             ctx.drawImage(G.IMG.ui_cursor, sx + Math.round(slotW / 2) - 4, sy - 7 + bob);
@@ -183,6 +185,61 @@
         }
         ctext(ctx, chars[sel].blurb, W / 2, H - 33, G.UI.text, G.UI.textShadow);
         ctext(ctx, 'Arrows: pick    Z: choose', W / 2, H - 14, G.C.ink);
+      }
+    };
+  };
+
+  // ----------------------------------------------------- name entry screen --
+  // On-screen keyboard (arrows + Z), so it works without raw text input. B
+  // deletes, Enter/OK submits. Blank submit falls back to `defaultName`.
+  G.NameEntryScene = function (defaultName, onDone) {
+    var MAX = 8, name = '';
+    var LET = ['ABCDEFGHIJ', 'KLMNOPQRST', 'UVWXYZ', 'abcdefghij', 'klmnopqrst', 'uvwxyz'];
+    var ACT = ['SPACE', 'DEL', 'OK'], ACTX = [14, 96, 168];
+    var r = 0, c = 0, nrows = LET.length + 1;
+    function rowLen(rr) { return rr < LET.length ? LET[rr].length : ACT.length; }
+    function ctext(ctx, s, cx, y, col, sh) { G.text(ctx, s, Math.round(cx - G.textWidth(s) / 2), y, col, sh); }
+    function submit() {
+      var nm = name.replace(/\s+$/, '') || defaultName || 'RAM';
+      G.audio.sfx('confirm'); G.popScene(); if (onDone) onDone(nm);
+    }
+    function add(ch) { if (name.length < MAX) { name += ch; G.audio.sfx('menuMove'); } }
+    return {
+      opaque: true,
+      update: function () {
+        if (G.input.repeat('up')) { r = (r + nrows - 1) % nrows; c = Math.min(c, rowLen(r) - 1); G.audio.sfx('menuMove'); }
+        if (G.input.repeat('down')) { r = (r + 1) % nrows; c = Math.min(c, rowLen(r) - 1); G.audio.sfx('menuMove'); }
+        if (G.input.repeat('left')) { c = (c + rowLen(r) - 1) % rowLen(r); G.audio.sfx('menuMove'); }
+        if (G.input.repeat('right')) { c = (c + 1) % rowLen(r); G.audio.sfx('menuMove'); }
+        if (G.input.justPressed('B')) { if (name) { name = name.slice(0, -1); G.audio.sfx('cancel'); } return; }
+        if (G.input.justPressed('start')) { submit(); return; }
+        if (G.input.justPressed('A')) {
+          if (r < LET.length) { add(LET[r][c]); }
+          else if (ACT[c] === 'SPACE') { add(' '); }
+          else if (ACT[c] === 'DEL') { if (name) { name = name.slice(0, -1); G.audio.sfx('cancel'); } }
+          else { submit(); }
+        }
+      },
+      draw: function (ctx) {
+        ctx.fillStyle = '#bfe3f5'; ctx.fillRect(0, 0, W, H);
+        ctext(ctx, 'YOUR NAME?', W / 2, 6, G.UI.text, G.UI.textShadow);
+        panel(ctx, 58, 16, 124, 18);
+        var caret = (G.frame >> 4) % 2 ? '_' : ' ';
+        G.text(ctx, name + caret, 66, 22, G.UI.text, G.UI.textShadow);
+        var gx = 14, gy = 44, cw = 21, rh = 14;
+        for (var rr = 0; rr < LET.length; rr++) {
+          for (var cc = 0; cc < LET[rr].length; cc++) {
+            var x = gx + cc * cw, y = gy + rr * rh;
+            if (rr === r && cc === c) { ctx.fillStyle = 'rgba(255,236,120,0.55)'; ctx.fillRect(x - 3, y - 2, 12, 12); }
+            G.text(ctx, LET[rr][cc], x, y, G.C.ink);
+          }
+        }
+        var ay = gy + LET.length * rh + 4;
+        for (var a = 0; a < ACT.length; a++) {
+          if (r === LET.length && c === a) { ctx.fillStyle = 'rgba(255,236,120,0.55)'; ctx.fillRect(ACTX[a] - 3, ay - 2, G.textWidth(ACT[a]) + 6, 12); }
+          G.text(ctx, ACT[a], ACTX[a], ay, G.C.ink);
+        }
+        ctext(ctx, 'Z: select   X: delete   Enter: done', W / 2, H - 9, G.C.gry);
       }
     };
   };
@@ -220,9 +277,10 @@
           G.text(ctx, items[i], x + 20, y + 8 + i * 15, G.UI.text, G.UI.textShadow);
           if (i === this.sel) ctx.drawImage(G.IMG.ui_cursor, x + 9, y + 9 + i * 15);
         }
-        // money chip
-        panel(ctx, 4, 6, 80, 22);
-        G.text(ctx, '$' + G.player.money, 12, 13, G.UI.text, G.UI.textShadow);
+        // trainer chip: name + money
+        panel(ctx, 4, 6, 92, 34);
+        G.text(ctx, G.player.name || 'RAM', 12, 13, G.UI.text, G.UI.textShadow);
+        G.text(ctx, '$' + G.player.money, 12, 25, G.UI.text, G.UI.textShadow);
       }
     };
   };
