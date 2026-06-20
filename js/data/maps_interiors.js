@@ -81,12 +81,12 @@
       legend: G.LEG_INT,
       ground: pad([
         'IIIIIIIII',
-        '.E.....P.',
-        '..CCCCC..',
+        '.E.....H.',
+        '.CCCCCCC.',
         '.........',
+        '.P.....P.',
         '.........',
-        '.P.......',
-        '.........',
+        '.o.....o.',
         '....m....'
       ], 9, 8),
       warps: [{ x: 4, y: 7, to: exit.map, tx: exit.x, ty: exit.y, dir: 'down' }],
@@ -119,16 +119,20 @@
       legend: G.LEG_INT,
       ground: pad([
         'IIIIIIIII',
-        '.B.....B.',
+        '.B.....P.',
         '..CCCCC..',
         '.........',
-        '.........',
-        '.......P.',
-        '.........',
+        'TT.....TT',
+        'TT.....TT',
+        '...P.....',
         '....m....'
       ], 9, 8),
       warps: [{ x: 4, y: 7, to: exit.map, tx: exit.x, ty: exit.y, dir: 'down' }],
-      signs: [{ x: 1, y: 1, text: 'Shelves of travel gear, neatly stocked.' }],
+      signs: [
+        { x: 1, y: 1, text: 'Travel gear, neatly stocked behind the clerk.' },
+        { x: 0, y: 4, text: 'Shelves of Potions and Poké Balls.' },
+        { x: 8, y: 4, text: 'Shelves of candies and field gear.' }
+      ],
       shopInventory: inventory,
       npcs: [
         { x: 3, y: 1, sprite: 'prof', dir: 'down', event: 'shopBuy' }
@@ -155,26 +159,32 @@
       legend: G.LEG_INT,
       gymTint: type ? G.TYPE_COLORS[type] : null,         // type-colored floor
       gymEmblem: type ? { x: 5, y: 6, type: type, big: true } : null,
+      // a carpet runway leads from the door up to the leader, statues flanking
       ground: pad([
         'IIIIIIIIIII',
         'GGGGGGGGGGG',
-        'GGGGGGGGGGG',
-        'GGGGGGGGGGG',
-        'GGGGGGGGGGG',
-        'GGGGGGGGGGG',
-        'GGGGGGGGGGG',
-        'GGGGGGGGGGG',
-        'GGGGGGGGGGG',
-        'GUGGGGGGGUG',
-        'GGGGGGGGGGG',
+        'GGGGGRGGGGG',
+        'GGGGGRGGGGG',
+        'GUGGGRGGGUG',
+        'GGGGGRGGGGG',
+        'GGGGGRGGGGG',
+        'GGGGGRGGGGG',
+        'GUGGGRGGGUG',
+        'GGGGGRGGGGG',
+        'GGGGGRGGGGG',
         'GGGGGmGGGGG'
       ], 11, 12, 'G'),
       warps: [{ x: 5, y: 11, to: exit.map, tx: exit.x, ty: exit.y, dir: 'down' }],
       signs: [
-        { x: 1, y: 9, text: statueText },
-        { x: 9, y: 9, text: 'CHALLENGERS: heal up before approaching the leader.' }
+        { x: 1, y: 4, text: statueText },
+        { x: 9, y: 8, text: 'CHALLENGERS: heal up before approaching the Leader.' }
       ],
-      npcs: [],
+      npcs: [
+        { x: 7, y: 10, sprite: 'boy', dir: 'left', dialog: [
+          'Welcome to the ' + (type ? type.charAt(0).toUpperCase() + type.slice(1) : '') + ' Gym!',
+          'The Leader fields only ' + (type ? type.toUpperCase() : '') + '-types. Bring moves that counter them!'
+        ] }
+      ],
       trainers: [
         { id: leaderId, trainer: leaderId, x: 5, y: 2, sprite: leaderSprite, dir: 'down', sight: 6, after: 'Go on — the region is waiting for you.' }
       ]

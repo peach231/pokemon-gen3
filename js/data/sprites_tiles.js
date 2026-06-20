@@ -643,8 +643,9 @@
     'oooooooooooooooo'
   ]);
 
-  // lab building = palette swaps (blue roof, stone walls) + its own door
-  var LRF = { o: C.ink, q: C.blu3, R: C.blu2, r: C.blu1 };
+  // gym / lab building = sturdy stone-gray roof (gold trim via lroofx), stone
+  // walls — distinct from the red homes/center and the blue Mart.
+  var LRF = { o: C.ink, q: C.stn3, R: C.stn2, r: C.stn1 };
   G.ART.t_lroof_tl = { base: 't_roof_tl', pal: LRF };
   G.ART.t_lroof_tm = { base: 't_roof_tm', pal: LRF };
   G.ART.t_lroof_tr = { base: 't_roof_tr', pal: LRF };
@@ -1156,7 +1157,7 @@
     'RRRRRRRRRRRRRRRR',
     'RRRRRRRRRRRRRRRR'
   ]);
-  T('t_lroofx', { o: C.ink, R: C.blu2, r: C.blu1, y: C.yel1, Y: C.yel2 }, [
+  T('t_lroofx', { o: C.ink, R: C.stn2, r: C.stn1, y: C.yel1, Y: C.yel2 }, [
     'RRRRRRRRRRRRRRRR',
     'RRRRRRRRRRRRRRRR',
     'RRRRRRRooRRRRRRR',
