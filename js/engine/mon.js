@@ -87,7 +87,7 @@
   G.EGG_STEPS = 1200; // a long incubation — eggs are a rare prize, not a quick pull
   // Deliberately rare/cool species you won't just bump into in the grass:
   // pseudo-legendary lines, Eevee, Feebas->Milotic, and the egg-iconic Togepi.
-  G.EGG_POOL = ['beldum', 'larvitar', 'dratini', 'eevee', 'feebas', 'togepi', 'chimecho'];
+  G.EGG_POOL = ['beldum', 'bagon', 'feebas', 'chimecho', 'lileep', 'anorith', 'wynaut'];
 
   G.randomEggSpecies = function () {
     var pool = G.EGG_POOL.filter(function (k) { return G.SPECIES[k]; });

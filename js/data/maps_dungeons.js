@@ -84,10 +84,10 @@
         { sp: 'dustox', min: 10, max: 13 },
         { sp: 'nuzleaf', min: 11, max: 13 },
         { sp: 'lombre', min: 11, max: 13 },
-        { sp: 'caterpie', min: 8, max: 11 },
-        { sp: 'metapod', min: 9, max: 12 },
-        { sp: 'weedle', min: 8, max: 11 },
-        { sp: 'kakuna', min: 9, max: 12 },
+        { sp: 'nincada', min: 8, max: 11 },
+        { sp: 'surskit', min: 9, max: 12 },
+        { sp: 'volbeat', min: 9, max: 12 },
+        { sp: 'illumise', min: 9, max: 12 },
         { sp: 'oddish', min: 9, max: 12 },
         { sp: 'pikachu', min: 10, max: 13, w: 6 }
       ]
@@ -214,7 +214,7 @@
       rate: 0.13,
       table: [
         { sp: 'golbat', min: 18, max: 21 },
-        { sp: 'onix', min: 17, max: 20 },
+        { sp: 'rhyhorn', min: 17, max: 20 },
         { sp: 'graveler', min: 16, max: 19 },
         { sp: 'duskull', min: 16, max: 19 },
         { sp: 'aron', min: 17, max: 20 },

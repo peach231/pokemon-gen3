@@ -635,11 +635,14 @@
   // -------------------------------------------------------------- dex screen --
   G.DexScene = function () {
     var RARITY_STARS = { common: '★', uncommon: '★★', rare: '★★★', elusive: '★★★★', legendary: '★★★★★' };
+    // Hoenn regional dex first (Treecko -> Deoxys), then any kept extras.
+    var ORDER = (G.HOENN_DEX || G.DEX_ORDER).concat(
+      G.DEX_ORDER.filter(function (k) { return !(G.HOENN_NO && G.HOENN_NO[k]); }));
     return {
       opaque: true,
       sel: 0,
       update: function () {
-        var n = G.DEX_ORDER.length;
+        var n = ORDER.length;
         if (G.input.repeat('up')) { this.sel = (this.sel + n - 1) % n; G.audio.sfx('menuMove'); }
         if (G.input.repeat('down')) { this.sel = (this.sel + 1) % n; G.audio.sfx('menuMove'); }
         if (G.input.repeat('left')) { this.sel = Math.max(0, this.sel - 10); G.audio.sfx('menuMove'); }
@@ -655,13 +658,14 @@
         G.text(ctx, 'CREATURE DEX', 10, 5, G.C.white, '#1a1c2c');
         G.text(ctx, 'Seen ' + seen + '  Caught ' + caught, 130, 5, G.C.white, '#1a1c2c');
 
-        var top = G.clamp(this.sel - 4, 0, Math.max(0, G.DEX_ORDER.length - 9));
-        for (var i = top; i < Math.min(G.DEX_ORDER.length, top + 9); i++) {
-          var key = G.DEX_ORDER[i];
+        var top = G.clamp(this.sel - 4, 0, Math.max(0, ORDER.length - 9));
+        for (var i = top; i < Math.min(ORDER.length, top + 9); i++) {
+          var key = ORDER[i];
           var sp = G.SPECIES[key];
           var y = 18 + (i - top) * 14;
           var isSeen = G.player.dexSeen[key], isCaught = G.player.dexCaught[key];
-          var label = 'No.' + (sp.id < 10 ? '00' : sp.id < 100 ? '0' : '') + sp.id + '  ' + (isSeen ? sp.name : '-----');
+          var hno = G.HOENN_NO && G.HOENN_NO[key], num = hno || sp.id;
+          var label = (hno ? '#' : 'No.') + (num < 10 ? '00' : num < 100 ? '0' : '') + num + '  ' + (isSeen ? sp.name : '-----');
           // caught = bright, seen-only = grayed, unseen = darkest
           var color = isCaught ? G.C.white : isSeen ? G.C.gry : '#3a3f4e';
           if (i === this.sel) color = isCaught ? '#f8e878' : G.C.lgry;
@@ -670,7 +674,7 @@
           if (i === this.sel) ctx.drawImage(G.IMG.ui_cursor, 110, y + 1);
         }
         // detail panel
-        var curKey = G.DEX_ORDER[this.sel];
+        var curKey = ORDER[this.sel];
         var curSp = G.SPECIES[curKey];
         panel(ctx, 124, 16, 112, 120);
         if (G.player.dexCaught[curKey]) {

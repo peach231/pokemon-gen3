@@ -74,10 +74,7 @@
         { sp: 'surskit', min: 2, max: 4 },
         { sp: 'nincada', min: 3, max: 5 },
         { sp: 'azurill', min: 2, max: 4 },
-        { sp: 'wooper', min: 3, max: 5 },
-        { sp: 'rattata', min: 2, max: 4 },
-        { sp: 'pidgey', min: 3, max: 5 },
-        { sp: 'caterpie', min: 2, max: 4 },
+        { sp: 'whismur', min: 2, max: 4 },
         { sp: 'skitty', min: 3, max: 5, w: 8 },
         { sp: 'ralts', min: 3, max: 5, w: 8 }
       ]
@@ -158,11 +155,9 @@
         { sp: 'wurmple', min: 6, max: 9 },
         { sp: 'nincada', min: 7, max: 9 },
         { sp: 'marill', min: 7, max: 9 },
-        { sp: 'sentret', min: 6, max: 9 },
-        { sp: 'hoothoot', min: 7, max: 9 },
         { sp: 'oddish', min: 7, max: 9 },
-        { sp: 'bellsprout', min: 7, max: 9 },
-        { sp: 'spinarak', min: 7, max: 9 },
+        { sp: 'whismur', min: 6, max: 9 },
+        { sp: 'abra', min: 7, max: 9, w: 12 },
         { sp: 'ralts', min: 8, max: 9, w: 10 },
         { sp: 'slakoth', min: 7, max: 9, w: 12 }
       ]
@@ -405,7 +400,7 @@
         { sp: 'geodude', min: 32, max: 35 },
         { sp: 'golbat', min: 30, max: 34 },
         { sp: 'graveler', min: 32, max: 35 },
-        { sp: 'onix', min: 30, max: 34 },
+        { sp: 'rhyhorn', min: 30, max: 34 },
         { sp: 'lairon', min: 31, max: 34 },
         { sp: 'hariyama', min: 31, max: 35 },
         { sp: 'medicham', min: 30, max: 34 },
