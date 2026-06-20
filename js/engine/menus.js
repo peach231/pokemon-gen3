@@ -602,7 +602,7 @@
       },
       draw: function (ctx) {
         // ---- pixel-art helpers (crisp fillRect blocks, no anti-aliasing) ----
-        var CELL = 3;
+        var CELL = 4; // chunky, low-res blocks (coarse GBA-map coastline)
         function pxHash(gx, gy) { var h = (gx * 374761 ^ gy * 668265) >>> 0; h = (h ^ (h >>> 13)) >>> 0; return (h % 1000) / 1000; }
         function blob(cx, cy, rx, ry, color) {            // grid-quantized island w/ jagged coast
           ctx.fillStyle = color;
@@ -652,7 +652,10 @@
         // detailed per-area markers
         for (var i = 0; i < NODES.length; i++) {
           var n = NODES[i], seen = isSeen(n.id), here = (i === cur), x = n.x, y = n.y;
-          if (here) { ctx.fillStyle = '#f8e878'; var rr = 7 + (G.frame >> 3) % 2; ctx.fillRect(x - rr, y - 1, rr * 2, 2); ctx.fillRect(x - 1, y - rr, 2, rr * 2); }
+          if (here && (G.frame >> 4) % 2 === 0) { // blinking "you are here" arrow above the town
+            ctx.fillStyle = '#f8e878';
+            ctx.fillRect(x - 3, y - 12, 6, 2); ctx.fillRect(x - 2, y - 10, 4, 1); ctx.fillRect(x - 1, y - 9, 2, 1);
+          }
           if (!seen) {
             ctx.fillStyle = '#34465f'; ctx.fillRect(x - 2, y - 2, 4, 4);
             ctx.fillStyle = '#26354c'; ctx.fillRect(x - 1, y - 1, 2, 2);

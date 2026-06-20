@@ -135,14 +135,14 @@
     };
   }
   shop('shop_cobblemarch', { map: 'cobblemarch', x: 19, y: 7 }, ['potion', 'tameorb', 'cureall', 'snackbar']);
-  shop('shop_brinehollow', { map: 'brinehollow', x: 15, y: 5 }, ['potion', 'superpotion', 'tameorb', 'greatorb', 'cureall', 'repelmist', 'fishingrod', 'skates']);
-  shop('shop_coilgate', { map: 'coilgate', x: 7, y: 13 }, ['superpotion', 'tameorb', 'greatorb', 'cureall', 'repelmist', 'revivedust']);
-  shop('shop_aurelune', { map: 'aurelune', x: 6, y: 13 }, ['superpotion', 'hyperpotion', 'greatorb', 'cureall', 'repelmist', 'revivedust']);
-  shop('shop_summit', { map: 'crownsummit', x: 15, y: 13 }, ['hyperpotion', 'greatorb', 'cureall', 'revivedust', 'repelmist']);
-  shop('shop_petalburg', { map: 'petalburg', x: 4, y: 14 }, ['superpotion', 'hyperpotion', 'greatorb', 'cureall', 'revivedust', 'fishingrod', 'skates']);
-  shop('shop_fortree', { map: 'fortree', x: 4, y: 14 }, ['hyperpotion', 'greatorb', 'cureall', 'revivedust', 'repelmist', 'fishingrod', 'skates']);
-  shop('shop_mossdeep', { map: 'mossdeep', x: 4, y: 14 }, ['hyperpotion', 'greatorb', 'cureall', 'revivedust', 'fishingrod', 'skates']);
-  shop('shop_sootopolis', { map: 'sootopolis', x: 4, y: 14 }, ['hyperpotion', 'greatorb', 'cureall', 'revivedust', 'fishingrod', 'skates']);
+  shop('shop_brinehollow', { map: 'brinehollow', x: 15, y: 5 }, ['potion', 'superpotion', 'tameorb', 'greatorb', 'netorb', 'cureall', 'repelmist', 'fishingrod', 'skates']);
+  shop('shop_coilgate', { map: 'coilgate', x: 7, y: 13 }, ['superpotion', 'tameorb', 'greatorb', 'nestorb', 'timerorb', 'cureall', 'repelmist', 'revivedust']);
+  shop('shop_aurelune', { map: 'aurelune', x: 6, y: 13 }, ['superpotion', 'hyperpotion', 'greatorb', 'ultraorb', 'cureall', 'repelmist', 'revivedust']);
+  shop('shop_summit', { map: 'crownsummit', x: 15, y: 13 }, ['hyperpotion', 'greatorb', 'ultraorb', 'cureall', 'revivedust', 'repelmist']);
+  shop('shop_petalburg', { map: 'petalburg', x: 4, y: 14 }, ['superpotion', 'hyperpotion', 'greatorb', 'ultraorb', 'timerorb', 'cureall', 'revivedust', 'fishingrod', 'skates']);
+  shop('shop_fortree', { map: 'fortree', x: 4, y: 14 }, ['hyperpotion', 'greatorb', 'ultraorb', 'nestorb', 'cureall', 'revivedust', 'repelmist', 'fishingrod', 'skates']);
+  shop('shop_mossdeep', { map: 'mossdeep', x: 4, y: 14 }, ['hyperpotion', 'greatorb', 'ultraorb', 'timerorb', 'diveorb', 'cureall', 'revivedust', 'fishingrod', 'skates']);
+  shop('shop_sootopolis', { map: 'sootopolis', x: 4, y: 14 }, ['hyperpotion', 'greatorb', 'ultraorb', 'diveorb', 'netorb', 'cureall', 'revivedust', 'fishingrod', 'skates']);
 
   // ------------------------------------------------------------------------
   // GYMS — one leader each, waiting at the far end of the hall.

@@ -44,11 +44,12 @@
     mark(map.warps); mark(map.signs); mark(map.items); mark(map.npcs); mark(map.trainers);
     // tropical region: palms everywhere, heavier on the coast; cinders at the volcano
     var bg = map.battleBg || 'meadow';
-    var palette = map.volcano ? [['Z', 0.09], ['P', 0.03], ['o', 0.07], ['Q', 0.03]]
-      : bg === 'water' ? [['P', 0.09], ['H', 0.06], ['Q', 0.05], [',', 0.07], ['o', 0.04]]
-      : bg === 'cave' ? [['o', 0.10], ['Q', 0.04]]
-      : bg === 'indoor' ? [['f', 0.10], ['y', 0.07], [',', 0.10], ['Q', 0.04]]
-      : [['P', 0.05], ['f', 0.09], ['y', 0.06], [',', 0.08], ['Q', 0.05], ['o', 0.03]]; // meadow/forest -> tropical
+    // kept sparse so it reads as a subtle GBA ground pattern, not clutter
+    var palette = map.volcano ? [['Z', 0.05], ['o', 0.03], ['Q', 0.01]]
+      : bg === 'water' ? [['P', 0.045], ['H', 0.025], ['Q', 0.02], [',', 0.03]]
+      : bg === 'cave' ? [['o', 0.05], ['Q', 0.02]]
+      : bg === 'indoor' ? [['f', 0.04], ['y', 0.03], [',', 0.04]]
+      : [['P', 0.02], ['f', 0.035], ['y', 0.025], [',', 0.04], ['Q', 0.02]]; // meadow/forest
     var rng = mulberry32(strHash(map.id));
     var deco = map.deco.map(function (r) { return r.split(''); });
     for (var y = 0; y < map.h; y++) {
@@ -470,15 +471,11 @@
         return;
       }
 
-      // water: dive in to swim across it, or fish if you have a rod
+      // water's edge: from the BEACH you can swim out, or fish with a rod.
+      // (No fishing while already swimming — you must cast from shore.)
       var fdef = w.tileDefAt(fx, fy);
-      if (fdef && fdef.water) {
+      if (fdef && fdef.water && !p.vehicle) {
         var rod = G.player.bag && G.player.bag.fishingrod;
-        if (p.vehicle) { // already on the water
-          if (rod) G.fish(w.map);
-          else G.pushScene(G.Textbox('Open water all around. A Fishing Rod would let you cast here.'));
-          return;
-        }
         var dive = function () {
           p.vehicle = 'swim';
           p.fromX = p.x; p.fromY = p.y; p.x = fx; p.y = fy;
@@ -569,11 +566,10 @@
         }
       }
 
-      // controls hint, bottom-left
-      ctx.fillStyle = 'rgba(26,28,44,0.72)';
-      ctx.fillRect(0, G.SCREEN_H - 24, 124, 24);
-      G.text(ctx, 'Arrows Move  Z Talk', 4, G.SCREEN_H - 22, G.C.white);
-      G.text(ctx, 'Shift Run  Enter Menu', 4, G.SCREEN_H - 11, G.C.lgry);
+      // controls hint — small + discreet, tucked in the corner
+      ctx.fillStyle = 'rgba(20,22,38,0.4)';
+      ctx.fillRect(0, G.SCREEN_H - 10, 96, 10);
+      G.text(ctx, 'Z talk  Enter menu', 3, G.SCREEN_H - 8, G.C.lgry);
     },
 
     _drawLayer: function (ctx, layer, x0, y0, x1, y1, cam) {
@@ -605,11 +601,6 @@
       var pos = w.pixelPos(a);
       var sx = Math.round(pos.x) - cam.x, sy = Math.round(pos.y) - cam.y;
 
-      if (a.hop > 0) { // landing shadow
-        ctx.fillStyle = 'rgba(26,28,44,0.35)';
-        ctx.fillRect(a.x * TILE - cam.x + 3, a.y * TILE - cam.y + 12, 10, 3);
-      }
-
       var img;
       if (a.obj) {
         img = G.IMG[a.sprite];
@@ -618,19 +609,23 @@
       }
 
       img = this._actorImage(a);
+
+      // SWIMMING: body submerged — only head shows, arms stroke, legs kick.
+      if (a === w.player && a.vehicle === 'swim') { this._drawSwimmer(ctx, img, sx, sy); return; }
+
+      // static ground shadow (grounds the sprite, removes the floating look)
+      if (a.hop === 0) {
+        ctx.fillStyle = 'rgba(18,20,34,0.30)';
+        ctx.fillRect(sx + 5, sy + 11, 6, 1);
+        ctx.fillRect(sx + 4, sy + 12, 8, 2);
+        ctx.fillRect(sx + 5, sy + 14, 6, 1);
+      }
+
       var yoff = -8; // 8px head overhang
-      if (a === w.player && a.vehicle) {
+      if (a === w.player && a.vehicle === 'boat') {
         var bob = Math.round(Math.sin(G.frame * 0.22));
-        if (a.vehicle === 'boat') {
-          if (G.IMG.fx_boat) ctx.drawImage(G.IMG.fx_boat, sx, sy + bob);
-          yoff = -8 + bob;           // sit in the boat
-        } else {
-          var rt = (G.frame % 28) / 28; // expanding swim ripple
-          ctx.strokeStyle = 'rgba(240,248,255,' + (0.55 * (1 - rt)).toFixed(2) + ')';
-          ctx.lineWidth = 1;
-          ctx.beginPath(); ctx.ellipse(sx + 8, sy + 13, 4 + rt * 5, 2 + rt * 2, 0, 0, Math.PI * 2); ctx.stroke();
-          yoff = -4 + bob;           // ride low — half-submerged
-        }
+        if (G.IMG.fx_boat) ctx.drawImage(G.IMG.fx_boat, sx, sy + bob);
+        yoff = -8 + bob; // sit in the boat
       }
       if (img) ctx.drawImage(img, sx, sy + yoff);
 
@@ -638,6 +633,42 @@
       var def = w.tileDefAt(a.x, a.y);
       if (def && def.grass && !a.moving && a.hop === 0) {
         ctx.drawImage(G.IMG.fx_rustle, a.x * TILE - cam.x, a.y * TILE - cam.y);
+      }
+    },
+
+    // Swim pose built from the standing sprite: clip to the head/shoulders so the
+    // body is submerged, then draw animated arms (always) and kicking legs.
+    _drawSwimmer: function (ctx, img, sx, sy) {
+      var bob = Math.round(Math.sin(G.frame * 0.25));
+      var kicking = (G.frame % 28) < 9;
+      var waterY = sy + 4 + bob;
+      // expanding wake ripple
+      var rt = (G.frame % 26) / 26;
+      ctx.strokeStyle = 'rgba(240,248,255,' + (0.5 * (1 - rt)).toFixed(2) + ')';
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.ellipse(sx + 8, sy + 11 + bob, 5 + rt * 5, 2 + rt * 2, 0, 0, Math.PI * 2); ctx.stroke();
+      // head + shoulders only (rest clipped below the waterline)
+      if (img) {
+        ctx.save();
+        ctx.beginPath(); ctx.rect(sx - 4, sy - 12, 24, waterY - (sy - 12)); ctx.clip();
+        ctx.drawImage(img, sx, sy - 8 + bob);
+        ctx.restore();
+      }
+      // arms doing the stroke at the surface
+      var reach = Math.round(Math.sin(G.frame * 0.4) * 3);
+      ctx.fillStyle = '#e7b489';
+      ctx.fillRect(sx - 1 + Math.min(0, reach), waterY, 4, 2);
+      ctx.fillRect(sx + 13 - Math.max(0, reach), waterY, 4, 2);
+      ctx.fillStyle = 'rgba(255,255,255,0.7)';
+      ctx.fillRect(sx - 2 + Math.min(0, reach), waterY, 1, 1);
+      ctx.fillRect(sx + 16 - Math.max(0, reach), waterY, 1, 1);
+      // legs surface on the kick beat
+      if (kicking) {
+        ctx.fillStyle = '#e7b489';
+        ctx.fillRect(sx + 5, sy + 11 + bob, 2, 2);
+        ctx.fillRect(sx + 9, sy + 11 + bob, 2, 2);
+        ctx.fillStyle = 'rgba(255,255,255,0.85)';
+        ctx.fillRect(sx + 4, sy + 13 + bob, 8, 1);
       }
     },
 

@@ -338,7 +338,9 @@
   // ----------------------------------------------------------------- tree --
   // One big 32x32 tree split into 4 tiles. Tops go on the overhead layer
   // (player walks behind them), bottoms are solid deco. Transparent bg.
-  var TR = { o: C.ink, a: C.grn0, b: C.grn1, c: C.grn2, d: C.grn3, t: C.brn1, u: C.brn2 };
+  // flatter, dustier GBA canopy: 2 muted greens (dark edge/dither + main fill)
+  // instead of a smooth 4-green gradient. 'b' specks read as dither shading.
+  var TR = { o: C.ink, a: '#2f6b34', b: '#2f6b34', c: '#499140', d: '#499140', t: C.brn1, u: C.brn2 };
 
   T('t_tree_tl', TR, [
     '................',

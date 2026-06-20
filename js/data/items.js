@@ -19,7 +19,12 @@
   item('cureall',    'Cure-All',    400,  'cure',   { statuses: ['brn', 'psn', 'par', 'slp'] }, 'Heals any status condition.');
   item('revivedust', 'Revive Dust', 900,  'revive', { frac: 0.5 },   'Revives a fainted creature to half HP.');
   item('tameorb',    'Tame Orb',    150,  'orb',    { mod: 1.0 },    'A standard capture orb.');
-  item('greatorb',   'Great Orb',   500,  'orb',    { mod: 1.5 },    'A high-grade capture orb.');
+  item('greatorb',   'Great Orb',   500,  'orb',    { mod: 1.5 },    'A high-grade capture orb. 1.5x catch rate.');
+  item('ultraorb',   'Ultra Orb',   1200, 'orb',    { mod: 2.0 },    'A top-grade capture orb. 2x catch rate.');
+  item('netorb',     'Net Orb',     800,  'orb',    { mod: 1.0, special: 'net' },  '3.5x on Water- and Bug-types.');
+  item('diveorb',    'Dive Orb',    800,  'orb',    { mod: 1.0, special: 'dive' }, '3.5x while swimming on the water.');
+  item('nestorb',    'Nest Orb',    700,  'orb',    { mod: 1.0, special: 'nest' }, 'Better against lower-level wild Pokémon.');
+  item('timerorb',   'Timer Orb',   800,  'orb',    { mod: 1.0, special: 'timer' },'Stronger the longer the battle lasts.');
   item('mythorb',    'Myth Orb',    0,    'orb',    { mod: 255 },    'A legendary orb said never to fail.');
   item('repelmist',  'Repel Mist',  300,  'repel',  { steps: 100 },  'Repels weak wild creatures for 100 steps.');
   item('snackbar',   'Snack Bar',   100,  'heal',   { amount: 10 },  'A chewy snack. Restores 10 HP.');

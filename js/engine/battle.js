@@ -331,8 +331,19 @@
       return;
     }
 
+    // ball modifier — some are conditional (Gen 3 style)
+    var mod = orb.mod || 1;
+    if (orb.special === 'net') {
+      mod = (sp.types.indexOf('water') !== -1 || sp.types.indexOf('bug') !== -1) ? 3.5 : 1.0;
+    } else if (orb.special === 'dive') {
+      mod = (G.world && G.world.player && G.world.player.vehicle) ? 3.5 : 1.0;
+    } else if (orb.special === 'nest') {
+      mod = Math.max(1, Math.min(4, (41 - mon.level) / 10)); // better on low-level wilds
+    } else if (orb.special === 'timer') {
+      mod = Math.min(4, 1 + this.turnsOut.p / 5); // grows as the battle drags on
+    }
     var statusMod = mon.status === 'slp' ? 2 : (mon.status ? 1.5 : 1);
-    var a = Math.floor((3 * stats.hp - 2 * mon.curHp) * sp.catchRate * orb.mod / (3 * stats.hp)) * statusMod;
+    var a = Math.floor((3 * stats.hp - 2 * mon.curHp) * sp.catchRate * mod / (3 * stats.hp)) * statusMod;
 
     var shakes = 0;
     if (a >= 255) {
