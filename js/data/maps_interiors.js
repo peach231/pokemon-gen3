@@ -357,7 +357,7 @@
       return;
     }
     if (G.player.daycare) {
-      yield { t: 'text', s: 'Nursery Helper: Your Egg is still warming up. Walk around some more and check back!' };
+      yield { t: 'text', s: 'Nursery Helper: Your Egg is still warming up — about ' + G.player.daycare.hatch + ' steps to go. Walk around and check back!' };
       return;
     }
     // Only a couple of (spread-out) nurseries hand out Eggs, so getting one
@@ -390,7 +390,7 @@
             for (var k = 0; k < G.player.party.length; k++) if (G.player.party[k].egg) { idx = k; break; }
             if (idx < 0) { G.pushScene(G.Textbox(isGiver ? 'You have no Egg to leave with me.' : 'You have no Egg yet — the Nurseries in Cobblemarch and Mossdeep hand them out!', { onDone: resume })); return; }
             var egg = G.player.party[idx];
-            G.player.daycare = { sp: egg.sp, hatch: egg.hatch };
+            G.player.daycare = { sp: egg.sp, hatch: egg.hatch, total: egg.hatchTotal || egg.hatch };
             G.player.party.splice(idx, 1);
             G.pushScene(G.Textbox(['I will keep your Egg warm.', 'Walk around for a while, then come back — it should have hatched!'], { onDone: resume }));
           }
@@ -453,7 +453,7 @@
           });
           items.push('Done');
           G.pushScene(G.Chooser({
-            items: items, x: 30, y: 14,
+            items: items, cols: 2, x: 8, y: 12,
             cancelIndex: items.length - 1,
             onPick: function (i) {
               if (i >= inv.length) { done.v = true; resume(); return; }

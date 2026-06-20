@@ -84,7 +84,7 @@
   // ----- eggs -------------------------------------------------------------
   // An egg is a fully-formed level-5 creature kept hidden until it hatches:
   // `egg` true + `hatch` steps remaining. It can't battle and shows as "EGG".
-  G.EGG_STEPS = 600; // a long incubation — eggs are a rare prize, not a quick pull
+  G.EGG_STEPS = 1200; // a long incubation — eggs are a rare prize, not a quick pull
   // Deliberately rare/cool species you won't just bump into in the grass:
   // pseudo-legendary lines, Eevee, Feebas->Milotic, and the egg-iconic Togepi.
   G.EGG_POOL = ['beldum', 'larvitar', 'dratini', 'eevee', 'feebas', 'togepi', 'chimecho'];
@@ -106,6 +106,7 @@
     var mon = G.makeMon(spKey || G.randomEggSpecies(), 5);
     mon.egg = true;
     mon.hatch = steps || G.EGG_STEPS;
+    mon.hatchTotal = mon.hatch;   // for progress display
     mon.nick = null;
     return mon;
   };

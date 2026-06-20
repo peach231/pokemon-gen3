@@ -69,7 +69,11 @@
         { sp: 'seedot', min: 2, max: 4 },
         { sp: 'lotad', min: 2, max: 4 },
         { sp: 'shroomish', min: 3, max: 5 },
-        { sp: 'wingull', min: 3, max: 5 }
+        { sp: 'wingull', min: 3, max: 5 },
+        { sp: 'marill', min: 3, max: 5 },
+        { sp: 'surskit', min: 2, max: 4 },
+        { sp: 'nincada', min: 3, max: 5 },
+        { sp: 'skitty', min: 3, max: 5, w: 8 }
       ]
     },
     scripts: [
@@ -142,7 +146,11 @@
         { sp: 'lotad', min: 7, max: 9 },
         { sp: 'seedot', min: 7, max: 9 },
         { sp: 'taillow', min: 7, max: 9 },
-        { sp: 'ralts', min: 8, max: 9 }
+        { sp: 'shroomish', min: 7, max: 9 },
+        { sp: 'surskit', min: 7, max: 9 },
+        { sp: 'wingull', min: 7, max: 9 },
+        { sp: 'ralts', min: 8, max: 9, w: 10 },
+        { sp: 'slakoth', min: 7, max: 9, w: 12 }
       ]
     },
     scripts: []

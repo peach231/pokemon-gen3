@@ -75,17 +75,25 @@
   //   cancelIndex: index B maps to (default items.length-1; -1 = call onCancel)
   G.Chooser = function (opts) {
     var items = opts.items;
+    var n = items.length;
+    var cols = opts.cols || 1;                 // opt-in grid (shops pass cols: 2)
+    var rows = Math.ceil(n / cols);
     var w = 0;
     for (var i = 0; i < items.length; i++) w = Math.max(w, G.textWidth(items[i]));
-    var boxW = w + 26, boxH = items.length * 14 + 12;
+    var colW = w + 18;
+    var boxW = colW * cols + 12, boxH = rows * 14 + 12;
     var x = (opts.x !== undefined) ? opts.x : 240 - boxW - 4;
     var y = (opts.y !== undefined) ? opts.y : 114 - boxH - 2;
+    x = Math.max(2, Math.min(x, 240 - boxW - 2));  // stay on-screen when wide/tall
+    y = Math.max(2, Math.min(y, 160 - boxH - 2));
     return {
       opaque: false,
       sel: opts.initial || 0,
       update: function () {
-        if (G.input.repeat('up')) { this.sel = (this.sel + items.length - 1) % items.length; G.audio.sfx('menuMove'); }
-        if (G.input.repeat('down')) { this.sel = (this.sel + 1) % items.length; G.audio.sfx('menuMove'); }
+        if (G.input.repeat('left')) { this.sel = (this.sel + n - 1) % n; G.audio.sfx('menuMove'); }
+        if (G.input.repeat('right')) { this.sel = (this.sel + 1) % n; G.audio.sfx('menuMove'); }
+        if (G.input.repeat('up')) { if (this.sel - cols >= 0) { this.sel -= cols; G.audio.sfx('menuMove'); } }
+        if (G.input.repeat('down')) { if (this.sel + cols < n) { this.sel += cols; G.audio.sfx('menuMove'); } }
         if (G.input.justPressed('A')) {
           G.audio.sfx('confirm');
           var pick = this.sel;
@@ -102,8 +110,10 @@
       draw: function (ctx) {
         G.nineSlice(ctx, G.IMG.ui_box, x, y, boxW, boxH, 4);
         for (var i = 0; i < items.length; i++) {
-          G.text(ctx, items[i], x + 18, y + 7 + i * 14, G.UI.text, G.UI.textShadow);
-          if (i === this.sel) ctx.drawImage(G.IMG.ui_cursor, x + 8, y + 7 + i * 14 + 1);
+          var col = i % cols, row = Math.floor(i / cols);
+          var ix = x + 16 + col * colW, iy = y + 7 + row * 14;
+          G.text(ctx, items[i], ix, iy, G.UI.text, G.UI.textShadow);
+          if (i === this.sel) ctx.drawImage(G.IMG.ui_cursor, ix - 10, iy + 1);
         }
       }
     };

@@ -333,7 +333,7 @@
           panel(ctx, 8, y, 136, 22);
           if (mon.egg) {
             G.text(ctx, 'EGG', 16, y + 7, G.UI.text, G.UI.textShadow);
-            G.text(ctx, mon.hatch > 60 ? 'a while...' : mon.hatch > 0 ? 'soon!' : 'ready!', 78, y + 7, G.C.lgry);
+            G.text(ctx, mon.hatch > 0 ? mon.hatch + ' steps' : 'ready!', 70, y + 7, G.C.lgry);
           } else {
             G.text(ctx, (mon.shiny ? '★' : '') + G.monName(mon), 16, y + 7, G.UI.text, G.UI.textShadow);
             G.text(ctx, 'Lv' + mon.level, 78, y + 7, G.UI.text, G.UI.textShadow);
@@ -350,10 +350,13 @@
           panel(ctx, 152, 20, 84, 92);
           if (cur.egg) {
             var eimg = G.IMG.mon_egg;
-            if (eimg) ctx.drawImage(eimg, 194 - eimg.width / 2, 96 - eimg.height);
+            if (eimg) ctx.drawImage(eimg, 194 - eimg.width / 2, 92 - eimg.height);
             G.text(ctx, 'A mystery EGG.', 158, 26, G.UI.text, G.UI.textShadow);
-            G.text(ctx, 'Keep walking', 158, 96, G.C.lgry);
-            G.text(ctx, 'to hatch it!', 158, 104, G.C.lgry);
+            var tot = cur.hatchTotal || G.EGG_STEPS || 1;
+            var prog = G.clamp((tot - cur.hatch) / tot, 0, 1);
+            ctx.fillStyle = G.C.dgry; ctx.fillRect(158, 94, 72, 6);
+            ctx.fillStyle = G.UI.expBlue || '#4a90e0'; ctx.fillRect(158, 94, Math.round(72 * prog), 6);
+            G.text(ctx, Math.round(prog * 100) + '% warmed', 158, 103, G.C.lgry);
           } else {
             var img = G.IMG['mon_' + cur.sp];
             if (img) ctx.drawImage(img, 194 - img.width / 2, 96 - img.height);
