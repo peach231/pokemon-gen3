@@ -302,6 +302,90 @@
       });
     },
 
+    // Optional: real OVERWORLD walking sprites, sliced at runtime from animation
+    // sheets (see OVERWORLD_CFG). Each sheet is nine 16x32 frames; we take frames
+    // 0/1/2 (idle down/up/left) and 3/4/5 (one stride each), color-key the
+    // background to transparent, fit each into the engine's 16x24 slot, and write
+    // the ch_<name>_{d0,d1,u0,u1,s0,s1} keys (+ _flip variants the engine mirrors
+    // for right-facing / alternate step). Baked art stays the fallback.
+    loadOverworldSprites: function () {
+      var cfg = G.OVERWORLD_CFG;
+      if (!cfg || !cfg.remoteBase) return;
+      var fw = cfg.frameW || 16, fh = cfg.frameH || 32, bw = cfg.boxW || 16, bh = cfg.boxH || 24;
+      // engine frame key -> sheet frame index
+      var FRAMES = { d0: 0, u0: 1, s0: 2, d1: 3, u1: 4, s1: 5 };
+      var FLIP = ['d1', 'u1', 's0', 's1']; // mirrored variants the engine asks for
+
+      function flipCanvas(src) {
+        var c = makeCanvas(src.width, src.height), x = c.getContext('2d');
+        x.imageSmoothingEnabled = false;
+        x.translate(src.width, 0); x.scale(-1, 1);
+        x.drawImage(src, 0, 0);
+        return c;
+      }
+
+      function process(img, sprName) {
+        var sw = img.width, sh = img.height;
+        var off = makeCanvas(sw, sh), octx = off.getContext('2d');
+        octx.drawImage(img, 0, 0);
+        var data;
+        try { data = octx.getImageData(0, 0, sw, sh).data; }
+        catch (e) { return; } // tainted (no CORS) -> keep baked art
+        // background = top-left pixel; key by alpha, and by color if it's opaque
+        var b0 = 0;
+        var bgKeyed = data[3] >= 8;
+        var bgR = data[0], bgG = data[1], bgB = data[2];
+        function isBg(i) {
+          if (data[i + 3] < 8) return true;
+          return bgKeyed && Math.abs(data[i] - bgR) < 10 && Math.abs(data[i + 1] - bgG) < 10 && Math.abs(data[i + 2] - bgB) < 10;
+        }
+        // content vertical bounds across the whole sheet (stable across frames)
+        var minY = sh, maxY = -1;
+        for (var y = 0; y < sh; y++) {
+          for (var x = 0; x < sw; x++) {
+            if (!isBg((y * sw + x) * 4)) { if (y < minY) minY = y; if (y > maxY) maxY = y; break; }
+          }
+        }
+        if (maxY < 0) return; // empty
+        var srcH = maxY - minY + 1;
+        var base = 'ch_' + sprName + '_';
+
+        Object.keys(FRAMES).forEach(function (k) {
+          var fi = FRAMES[k];
+          if ((fi + 1) * fw > sw) return; // frame not present on this sheet
+          // keyed frame at native content size
+          var tmp = makeCanvas(fw, srcH), tctx = tmp.getContext('2d');
+          var id = tctx.createImageData(fw, srcH);
+          for (var y = 0; y < srcH; y++) {
+            for (var x = 0; x < fw; x++) {
+              var si = ((minY + y) * sw + (fi * fw + x)) * 4;
+              var di = (y * fw + x) * 4;
+              if (isBg(si)) { id.data[di + 3] = 0; }
+              else { id.data[di] = data[si]; id.data[di + 1] = data[si + 1]; id.data[di + 2] = data[si + 2]; id.data[di + 3] = 255; }
+            }
+          }
+          tctx.putImageData(id, 0, 0);
+          // fit into the 16x24 slot, bottom-center (downscale only if taller)
+          var c = makeCanvas(bw, bh), rctx = c.getContext('2d');
+          rctx.imageSmoothingEnabled = false;
+          var scale = Math.min(1, bh / srcH);
+          var dw = Math.round(fw * scale), dh = Math.round(srcH * scale);
+          rctx.drawImage(tmp, 0, 0, fw, srcH, Math.round((bw - dw) / 2), bh - dh, dw, dh);
+          G.IMG[base + k] = c;
+        });
+        // mirrored variants used by the engine for right-facing / alternate step
+        FLIP.forEach(function (k) { if (G.IMG[base + k]) G.IMG[base + k + '_flip'] = flipCanvas(G.IMG[base + k]); });
+      }
+
+      Object.keys(cfg.sheets).forEach(function (sprName) {
+        var img = new Image();
+        if (cfg.crossOrigin) img.crossOrigin = cfg.crossOrigin;
+        img.onload = function () { process(img, sprName); };
+        img.onerror = function () {}; // keep baked art
+        img.src = cfg.remoteBase + cfg.sheets[sprName] + '.png';
+      });
+    },
+
     // -----------------------------------------------------------------------
     // Bitmap font. G.FONT.glyphs[char] = array of rows of '.'/'#'.
     // Pre-rendered per color on demand; '#' pixels take the requested color.

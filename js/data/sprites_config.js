@@ -85,6 +85,27 @@
     return urls;
   };
 
+  // ----------------------------------------------------------------------
+  // OVERWORLD walking sprites (the little map characters). Loaded at runtime
+  // from real overworld animation SHEETS (the pokeemerald decompilation, served
+  // via the jsDelivr CDN with CORS so the frames can be sliced). Each sheet is
+  // 144x32 = nine 16x32 frames: [down, up, left] idle, then two walk strides.
+  // We use the idle + first stride of each direction; the engine mirrors them
+  // for right-facing and the alternate step. Baked art stays the fallback.
+  // `sheets` maps an engine sprite name (ch_<name>_*) to a sheet path.
+  G.OVERWORLD_CFG = {
+    remoteBase: 'https://cdn.jsdelivr.net/gh/pret/pokeemerald@master/graphics/object_events/pics/people/',
+    sheets: {
+      player: 'brendan/walking',  // the player character
+      boy:    'youngster',        // youngster / bug-catcher class + boy NPCs
+      mom:    'woman_1',          // lass / picnicker class + adult-woman NPCs
+      prof:   'man_1'             // hiker class + older-man NPCs / Birch
+    },
+    frameW: 16, frameH: 32,       // source frame size on the sheet
+    boxW: 16, boxH: 24,           // fit into the engine's 16x24 overworld slot
+    crossOrigin: 'anonymous'
+  };
+
   // Build the ordered list of candidate URLs for a sprite (front|back|icon).
   G.spriteUrl = function (which, dexId) {
     var cfg = G.SPRITE_CFG;

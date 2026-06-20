@@ -41,6 +41,8 @@
     // Optional real trainer/player sprites — non-blocking; baked art is the
     // fallback, so this is a no-op until a source is configured (sprites_config).
     if (G.gfx.loadTrainerSprites) G.gfx.loadTrainerSprites();
+    // Optional real overworld walking sprites (sliced from animation sheets).
+    if (G.gfx.loadOverworldSprites) G.gfx.loadOverworldSprites();
   }
 
   function drawLoading(info) {
@@ -64,7 +66,7 @@
     if (mapMatch) {
       G.player.party = [G.makeMon('treecko', 20)];
       G.flags.starter = 'treecko';
-      G.world.loadMap(mapMatch[1], parseInt(mapMatch[2], 10), parseInt(mapMatch[3], 10), 'down');
+      G.world.loadMap(mapMatch[1], parseInt(mapMatch[2], 10), parseInt(mapMatch[3], 10), (location.hash.match(/dir=(\w+)/) || [])[1] || 'down');
       G.pushScene(G.overworldScene);
     } else if (hashIs('gallery') && G.debug && G.debug.GalleryScene) {
       G.pushScene(G.debug.GalleryScene());
