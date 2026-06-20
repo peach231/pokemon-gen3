@@ -38,6 +38,9 @@
       function (done, total) { loadInfo.done = done; loadInfo.total = total; drawLoading(loadInfo); },
       startGame
     );
+    // Optional real trainer/player sprites — non-blocking; baked art is the
+    // fallback, so this is a no-op until a source is configured (sprites_config).
+    if (G.gfx.loadTrainerSprites) G.gfx.loadTrainerSprites();
   }
 
   function drawLoading(info) {

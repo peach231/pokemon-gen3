@@ -278,6 +278,30 @@
       setTimeout(done, 9000); // never hang boot on a slow/dead source
     },
 
+    // Optional: overlay real TRAINER/player battle sprites at runtime. The baked
+    // art is already in G.IMG (from decodeAll) and stays the fallback — this only
+    // REPLACES a key if its image loads. Non-blocking: sprites swap in when ready.
+    loadTrainerSprites: function () {
+      if (!G.TRAINER_CFG) return;
+      var cfg = G.TRAINER_CFG, box = cfg.box || 64;
+      var keys = [];
+      for (var name in G.ART) {
+        if (name.indexOf('trainer_') === 0) keys.push(name);
+      }
+      keys.forEach(function (key) {
+        var urls = G.trainerSpriteUrl(key);
+        var i = 0;
+        (function attempt() {
+          if (i >= urls.length) return;            // none loaded -> keep baked art
+          var img = new Image();
+          if (cfg.remoteBase && cfg.crossOrigin) img.crossOrigin = cfg.crossOrigin;
+          img.onload = function () { G.IMG[key] = G.gfx._fitToBox(img, box, false); };
+          img.onerror = function () { i++; attempt(); };
+          img.src = urls[i];
+        })();
+      });
+    },
+
     // -----------------------------------------------------------------------
     // Bitmap font. G.FONT.glyphs[char] = array of rows of '.'/'#'.
     // Pre-rendered per color on demand; '#' pixels take the requested color.

@@ -36,6 +36,37 @@
     crossOrigin: 'anonymous'  // remote host must send CORS headers (jsDelivr does)
   };
 
+  // ----------------------------------------------------------------------
+  // TRAINER + player sprites (battle portraits). Same idea as creatures: the
+  // engine ships hand-drawn baked art (always the fallback), but if you supply
+  // a real image per key it is loaded at runtime and drawn instead. NO trainer
+  // art is bundled here. Keys are the G.ART names the battle uses, e.g.
+  // 'trainer_bram' (Roxanne), 'trainer_aqua' (Team Aqua), 'trainer_player_back'.
+  // See assets/sprites/trainers/README.txt for the full key list.
+  //
+  // For the DEPLOYED site to show them, remoteBase must point at a CORS-enabled
+  // host (your own GitHub repo via jsDelivr, an image host, etc.) — local files
+  // only show when you run the game locally. There is no stable public CDN of
+  // Gen-III trainer rips, so this is left empty by default (baked art shows).
+  G.TRAINER_CFG = {
+    localBase:  'assets/sprites/trainers/',
+    localFile:  '{key}.png',
+    remoteBase: '',            // e.g. 'https://cdn.jsdelivr.net/gh/<you>/<repo>@main/trainers/'
+    remoteFile: '{key}.png',
+    preferRemote: true,
+    box: 64,                   // portraits fit into a 64-tall box, bottom-anchored
+    crossOrigin: 'anonymous'
+  };
+
+  // Candidate URLs for a trainer/player sprite key, in priority order.
+  G.trainerSpriteUrl = function (key) {
+    var cfg = G.TRAINER_CFG, urls = [];
+    function add(base, tpl) { if (base && tpl) urls.push(base + tpl.replace('{key}', key)); }
+    if (cfg.preferRemote) { add(cfg.remoteBase, cfg.remoteFile); add(cfg.localBase, cfg.localFile); }
+    else { add(cfg.localBase, cfg.localFile); add(cfg.remoteBase, cfg.remoteFile); }
+    return urls;
+  };
+
   // Build the ordered list of candidate URLs for a sprite (front|back|icon).
   G.spriteUrl = function (which, dexId) {
     var cfg = G.SPRITE_CFG;
