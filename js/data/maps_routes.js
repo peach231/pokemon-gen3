@@ -73,7 +73,13 @@
         { sp: 'marill', min: 3, max: 5 },
         { sp: 'surskit', min: 2, max: 4 },
         { sp: 'nincada', min: 3, max: 5 },
-        { sp: 'skitty', min: 3, max: 5, w: 8 }
+        { sp: 'azurill', min: 2, max: 4 },
+        { sp: 'wooper', min: 3, max: 5 },
+        { sp: 'rattata', min: 2, max: 4 },
+        { sp: 'pidgey', min: 3, max: 5 },
+        { sp: 'caterpie', min: 2, max: 4 },
+        { sp: 'skitty', min: 3, max: 5, w: 8 },
+        { sp: 'ralts', min: 3, max: 5, w: 8 }
       ]
     },
     scripts: [
@@ -149,6 +155,14 @@
         { sp: 'shroomish', min: 7, max: 9 },
         { sp: 'surskit', min: 7, max: 9 },
         { sp: 'wingull', min: 7, max: 9 },
+        { sp: 'wurmple', min: 6, max: 9 },
+        { sp: 'nincada', min: 7, max: 9 },
+        { sp: 'marill', min: 7, max: 9 },
+        { sp: 'sentret', min: 6, max: 9 },
+        { sp: 'hoothoot', min: 7, max: 9 },
+        { sp: 'oddish', min: 7, max: 9 },
+        { sp: 'bellsprout', min: 7, max: 9 },
+        { sp: 'spinarak', min: 7, max: 9 },
         { sp: 'ralts', min: 8, max: 9, w: 10 },
         { sp: 'slakoth', min: 7, max: 9, w: 12 }
       ]
@@ -217,7 +231,16 @@
         { sp: 'magikarp', min: 14, max: 16 },
         { sp: 'tentacool', min: 13, max: 15 },
         { sp: 'electrike', min: 14, max: 16 },
-        { sp: 'wailmer', min: 15, max: 17 }
+        { sp: 'wailmer', min: 15, max: 17 },
+        { sp: 'zigzagoon', min: 13, max: 16 },
+        { sp: 'taillow', min: 13, max: 16 },
+        { sp: 'gulpin', min: 13, max: 16 },
+        { sp: 'staryu', min: 13, max: 16 },
+        { sp: 'corphish', min: 14, max: 17 },
+        { sp: 'goldeen', min: 13, max: 16 },
+        { sp: 'horsea', min: 14, max: 16 },
+        { sp: 'carvanha', min: 14, max: 17, w: 10 },
+        { sp: 'spheal', min: 14, max: 16, w: 8 }
       ]
     },
     scripts: []
@@ -290,7 +313,17 @@
         { sp: 'gulpin', min: 23, max: 26 },
         { sp: 'spoink', min: 23, max: 26 },
         { sp: 'numel', min: 24, max: 26 },
-        { sp: 'zangoose', min: 25, max: 27 }
+        { sp: 'zangoose', min: 25, max: 27 },
+        { sp: 'seviper', min: 25, max: 27 },
+        { sp: 'trapinch', min: 22, max: 26 },
+        { sp: 'cacnea', min: 23, max: 26 },
+        { sp: 'sandshrew', min: 22, max: 26 },
+        { sp: 'baltoy', min: 23, max: 26 },
+        { sp: 'slugma', min: 23, max: 26 },
+        { sp: 'phanpy', min: 22, max: 25 },
+        { sp: 'rhyhorn', min: 24, max: 27 },
+        { sp: 'spinda', min: 22, max: 26 },
+        { sp: 'torkoal', min: 24, max: 27, w: 10 }
       ]
     },
     scripts: []
@@ -369,7 +402,18 @@
         { sp: 'sableye', min: 30, max: 33 },
         { sp: 'bagon', min: 31, max: 34 },
         { sp: 'absol', min: 30, max: 33 },
-        { sp: 'geodude', min: 32, max: 35 }
+        { sp: 'geodude', min: 32, max: 35 },
+        { sp: 'golbat', min: 30, max: 34 },
+        { sp: 'graveler', min: 32, max: 35 },
+        { sp: 'onix', min: 30, max: 34 },
+        { sp: 'lairon', min: 31, max: 34 },
+        { sp: 'hariyama', min: 31, max: 35 },
+        { sp: 'medicham', min: 30, max: 34 },
+        { sp: 'mawile', min: 30, max: 34 },
+        { sp: 'kecleon', min: 30, max: 33 },
+        { sp: 'claydol', min: 32, max: 35, w: 12 },
+        { sp: 'shelgon', min: 33, max: 35, w: 8 },
+        { sp: 'dusclops', min: 32, max: 35, w: 10 }
       ]
     },
     scripts: [

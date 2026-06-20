@@ -141,7 +141,11 @@
     encounters: { rate: 0.12, table: [
       { sp: 'linoone', min: 30, max: 33 }, { sp: 'manectric', min: 30, max: 33 },
       { sp: 'breloom', min: 31, max: 34 }, { sp: 'kadabra', min: 30, max: 33 },
-      { sp: 'graveler', min: 31, max: 34 }, { sp: 'swellow', min: 30, max: 33 }
+      { sp: 'graveler', min: 31, max: 34 }, { sp: 'swellow', min: 30, max: 33 },
+      { sp: 'zangoose', min: 30, max: 33 }, { sp: 'seviper', min: 30, max: 33 },
+      { sp: 'kecleon', min: 30, max: 33 }, { sp: 'vigoroth', min: 31, max: 34 },
+      { sp: 'gloom', min: 30, max: 33 }, { sp: 'weepinbell', min: 30, max: 33 },
+      { sp: 'girafarig', min: 31, max: 34 }, { sp: 'dunsparce', min: 30, max: 33 }
     ] }
   });
 
@@ -162,7 +166,11 @@
     encounters: { rate: 0.12, table: [
       { sp: 'tropius', min: 34, max: 37 }, { sp: 'noctowl', min: 34, max: 37 },
       { sp: 'altaria', min: 35, max: 38 }, { sp: 'pelipper', min: 34, max: 37 },
-      { sp: 'fearow', min: 34, max: 37 }, { sp: 'vibrava', min: 35, max: 38 }
+      { sp: 'fearow', min: 34, max: 37 }, { sp: 'vibrava', min: 35, max: 38 },
+      { sp: 'swablu', min: 34, max: 37 }, { sp: 'swellow', min: 34, max: 37 },
+      { sp: 'xatu', min: 35, max: 38 }, { sp: 'jumpluff', min: 34, max: 37 },
+      { sp: 'yanma', min: 34, max: 37 }, { sp: 'dodrio', min: 35, max: 38 },
+      { sp: 'natu', min: 34, max: 37 }, { sp: 'skarmory', min: 35, max: 38, w: 14 }
     ] }
   });
 
@@ -179,7 +187,14 @@
     west: { to: 'fortree', tx: 18, ty: 8 },
     east: { to: 'mossdeep', tx: 1, ty: 8 },
     encounters: { rate: 0.12, table: [
-      { sp: 'tentacruel', min: 38, max: 41 }, { sp: 'wingull', min: 38, max: 41 }, { sp: 'pelipper', min: 39, max: 42 }
+      { sp: 'tentacruel', min: 38, max: 41 }, { sp: 'wingull', min: 38, max: 41 }, { sp: 'pelipper', min: 39, max: 42 },
+      { sp: 'sharpedo', min: 38, max: 41 }, { sp: 'carvanha', min: 38, max: 41 },
+      { sp: 'wailmer', min: 38, max: 41 }, { sp: 'magikarp', min: 38, max: 41 },
+      { sp: 'gyarados', min: 39, max: 42 }, { sp: 'horsea', min: 38, max: 41 },
+      { sp: 'seadra', min: 39, max: 42 }, { sp: 'chinchou', min: 38, max: 41 },
+      { sp: 'lanturn', min: 39, max: 42 }, { sp: 'mantine', min: 39, max: 42 },
+      { sp: 'luvdisc', min: 38, max: 41 }, { sp: 'corsola', min: 38, max: 41 },
+      { sp: 'wailord', min: 40, max: 42, w: 6 }
     ] }
   });
 
@@ -199,7 +214,14 @@
     west: { to: 'mossdeep', tx: 18, ty: 8 },
     east: { to: 'sootopolis', tx: 1, ty: 8 },
     encounters: { rate: 0.12, table: [
-      { sp: 'sharpedo', min: 42, max: 45 }, { sp: 'wailmer', min: 43, max: 46 }, { sp: 'gyarados', min: 43, max: 46 }
+      { sp: 'sharpedo', min: 42, max: 45 }, { sp: 'wailmer', min: 43, max: 46 }, { sp: 'gyarados', min: 43, max: 46 },
+      { sp: 'tentacruel', min: 42, max: 45 }, { sp: 'pelipper', min: 42, max: 45 },
+      { sp: 'seadra', min: 42, max: 45 }, { sp: 'lanturn', min: 42, max: 45 },
+      { sp: 'mantine', min: 43, max: 46 }, { sp: 'barboach', min: 42, max: 45 },
+      { sp: 'whiscash', min: 43, max: 46 }, { sp: 'wailord', min: 44, max: 46 },
+      { sp: 'spheal', min: 42, max: 45 }, { sp: 'sealeo', min: 43, max: 46 },
+      { sp: 'relicanth', min: 43, max: 46, w: 8 }, { sp: 'clamperl', min: 42, max: 45, w: 8 },
+      { sp: 'kingdra', min: 44, max: 46, w: 6 }
     ] }
   });
 

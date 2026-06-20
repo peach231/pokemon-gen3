@@ -79,7 +79,17 @@
         { sp: 'seedot', min: 9, max: 12 },
         { sp: 'lotad', min: 10, max: 12 },
         { sp: 'taillow', min: 10, max: 13 },
-        { sp: 'slakoth', min: 11, max: 13 }
+        { sp: 'slakoth', min: 11, max: 13 },
+        { sp: 'beautifly', min: 10, max: 13 },
+        { sp: 'dustox', min: 10, max: 13 },
+        { sp: 'nuzleaf', min: 11, max: 13 },
+        { sp: 'lombre', min: 11, max: 13 },
+        { sp: 'caterpie', min: 8, max: 11 },
+        { sp: 'metapod', min: 9, max: 12 },
+        { sp: 'weedle', min: 8, max: 11 },
+        { sp: 'kakuna', min: 9, max: 12 },
+        { sp: 'oddish', min: 9, max: 12 },
+        { sp: 'pikachu', min: 10, max: 13, w: 6 }
       ]
     },
     scripts: [
@@ -150,7 +160,14 @@
         { sp: 'whismur', min: 15, max: 18 },
         { sp: 'makuhita', min: 16, max: 19 },
         { sp: 'nincada', min: 15, max: 18 },
-        { sp: 'sableye', min: 16, max: 19 }
+        { sp: 'sableye', min: 16, max: 19 },
+        { sp: 'mawile', min: 15, max: 18 },
+        { sp: 'meditite', min: 15, max: 18 },
+        { sp: 'baltoy', min: 15, max: 18 },
+        { sp: 'nosepass', min: 16, max: 19 },
+        { sp: 'ninjask', min: 16, max: 19 },
+        { sp: 'loudred', min: 16, max: 19 },
+        { sp: 'golbat', min: 16, max: 19 }
       ]
     },
     scripts: []
@@ -204,7 +221,14 @@
         { sp: 'lairon', min: 17, max: 20 },
         { sp: 'mawile', min: 17, max: 20 },
         { sp: 'sableye', min: 18, max: 20 },
-        { sp: 'bagon', min: 17, max: 20 }
+        { sp: 'bagon', min: 17, max: 20 },
+        { sp: 'machoke', min: 18, max: 21 },
+        { sp: 'meditite', min: 16, max: 19 },
+        { sp: 'medicham', min: 18, max: 21 },
+        { sp: 'nosepass', min: 17, max: 20 },
+        { sp: 'solrock', min: 18, max: 21, w: 10 },
+        { sp: 'lunatone', min: 18, max: 21, w: 10 },
+        { sp: 'aggron', min: 20, max: 21, w: 6 }
       ]
     },
     scripts: []
