@@ -97,7 +97,8 @@
       respawnPoint: { mapId: id, x: 4, y: 5 },
       npcs: [
         { x: 3, y: 1, sprite: 'mom', dir: 'down', event: 'nurseHeal' },
-        { x: 6, y: 1, sprite: 'prof', dir: 'down', event: 'birchPC' }
+        { x: 6, y: 1, sprite: 'prof', dir: 'down', event: 'birchPC' },
+        { x: 5, y: 3, sprite: 'egglady', dir: 'down', event: 'nursery' }
       ]
     };
   }
@@ -322,6 +323,61 @@
     };
     yield { t: 'wait', frames: 30 };
     yield { t: 'text', s: 'All patched up! We hope to see you again. Wait — no. You know what I mean.' };
+  };
+
+  // Nursery helper in each heal center: gives eggs, and can incubate one you
+  // leave with her (it hatches after you've walked a while; come back for it).
+  G.EVENTS.nursery = function* () {
+    // a deposited egg has finished -> hand over the hatchling
+    if (G.player.daycare && G.player.daycare.hatch <= 0) {
+      var dc = G.player.daycare;
+      if (G.player.party.length >= 6) {
+        yield { t: 'text', s: 'Nursery Helper: Your Egg hatched! But your team is full — make room and come back, dear.' };
+        return;
+      }
+      yield { t: 'text', s: 'Nursery Helper: Wonderful news — your Egg hatched while you were away!' };
+      yield { t: 'fn', fn: function () {
+        var mon = G.makeMon(dc.sp, 5); G.healMon(mon);
+        G.player.party.push(mon);
+        G.player.dexSeen[dc.sp] = 1; G.player.dexCaught[dc.sp] = 1;
+        G.player.daycare = null;
+        if (G.audio.playJingle) G.audio.playJingle('jingle_heal');
+      } };
+      yield { t: 'text', s: 'It hatched into ' + G.SPECIES[dc.sp].name + '! Take good care of it.' };
+      return;
+    }
+    if (G.player.daycare) {
+      yield { t: 'text', s: 'Nursery Helper: Your Egg is still warming up. Walk around some more and check back!' };
+      return;
+    }
+    var done = { v: false };
+    while (!done.v) {
+      yield { t: 'custom', run: function (resume) {
+        G.pushScene(G.Chooser({
+          items: ['Receive an Egg', 'Leave an Egg', 'Done'], x: 24, y: 10, cancelIndex: 2,
+          onPick: function (i) {
+            if (i === 2) { done.v = true; resume(); return; }
+            if (i === 0) {
+              if (G.player.party.some(function (m) { return m.egg; })) { G.pushScene(G.Textbox('You already have an Egg to care for!', { onDone: resume })); return; }
+              if (G.player.party.length >= 6) { G.pushScene(G.Textbox('Your team is full — no room for an Egg.', { onDone: resume })); return; }
+              G.player.party.push(G.makeEgg());
+              G.audio.sfx('money');
+              G.pushScene(G.Textbox(['You received an EGG!', 'Keep it in your team and it will hatch as you walk.'], { onDone: resume }));
+              return;
+            }
+            // Leave an egg to incubate
+            var idx = -1;
+            for (var k = 0; k < G.player.party.length; k++) if (G.player.party[k].egg) { idx = k; break; }
+            if (idx < 0) { G.pushScene(G.Textbox('You have no Egg to leave with me.', { onDone: resume })); return; }
+            var egg = G.player.party[idx];
+            G.player.daycare = { sp: egg.sp, hatch: egg.hatch };
+            G.player.party.splice(idx, 1);
+            G.pushScene(G.Textbox(['I will keep your Egg warm.', 'Walk around for a while, then come back — it should have hatched!'], { onDone: resume }));
+          }
+        }));
+      } };
+    }
+    yield { t: 'text', s: 'Nursery Helper: Eggs love a good long walk. Off you go!' };
   };
 
   // Board a docked boat and set sail onto the adjacent water (cross + fish).

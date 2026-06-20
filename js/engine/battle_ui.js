@@ -279,7 +279,7 @@
         var items = [], map = [];
         for (var i = 0; i < battle.party.length; i++) {
           var m = battle.party[i];
-          if (m.curHp > 0 && i !== battle.activeP) {
+          if (m.curHp > 0 && !m.egg && i !== battle.activeP) {
             items.push(G.monName(m) + '  Lv' + m.level);
             map.push(i);
           }
@@ -308,7 +308,7 @@
                 var items3 = [], map3 = [];
                 for (var pi = 0; pi < battle.party.length; pi++) {
                   var m3 = battle.party[pi];
-                  if (m3.curHp > 0 && pi !== battle.activeP) {
+                  if (m3.curHp > 0 && !m3.egg && pi !== battle.activeP) {
                     items3.push(G.monName(m3) + ' Lv' + m3.level);
                     map3.push(pi);
                   }

@@ -81,6 +81,33 @@
     return mon;
   };
 
+  // ----- eggs -------------------------------------------------------------
+  // An egg is a fully-formed level-5 creature kept hidden until it hatches:
+  // `egg` true + `hatch` steps remaining. It can't battle and shows as "EGG".
+  G.EGG_STEPS = 120;
+  G.EGG_POOL = ['zigzagoon', 'poochyena', 'wurmple', 'wingull', 'taillow', 'shroomish', 'marill', 'seedot', 'lotad', 'whismur', 'ralts', 'skitty'];
+
+  G.randomEggSpecies = function () {
+    var pool = G.EGG_POOL.filter(function (k) { return G.SPECIES[k]; });
+    return pool.length ? pool[G.irand(pool.length)] : 'zigzagoon';
+  };
+
+  G.makeEgg = function (spKey, steps) {
+    var mon = G.makeMon(spKey || G.randomEggSpecies(), 5);
+    mon.egg = true;
+    mon.hatch = steps || G.EGG_STEPS;
+    mon.nick = null;
+    return mon;
+  };
+
+  // Reveal the creature inside: clear the egg flag, top it off, log the dex.
+  G.hatchEgg = function (mon) {
+    mon.egg = false;
+    mon.hatch = 0;
+    G.healMon(mon);
+    if (G.player) { G.player.dexSeen[mon.sp] = 1; G.player.dexCaught[mon.sp] = 1; }
+  };
+
   G.monStats = function (mon) {
     var sp = G.SPECIES[mon.sp];
     var L = mon.level, iv = mon.ivs;

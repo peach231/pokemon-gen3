@@ -445,6 +445,11 @@
   S('ch_aqua_u0', AQ, G.ART.ch_boy_u0.px);
   S('ch_aqua_s0', AQ, G.ART.ch_boy_s0.px, true);
 
+  // Nursery helper fallback: reuse the mom walker until her real sprite loads.
+  S('ch_egglady_d0', MO, G.ART.ch_mom_d0.px);
+  S('ch_egglady_u0', MO, G.ART.ch_mom_u0.px);
+  S('ch_egglady_s0', MO, G.ART.ch_mom_s0.px, true);
+
   // -------------------------------------------------------- starter orb -----
   // A capture orb resting on a stand (interactable in the lab).
   G.ART.orb_stand = {

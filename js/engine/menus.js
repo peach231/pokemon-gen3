@@ -307,11 +307,13 @@
             return;
           }
           var self = this;
+          var isEgg = !!G.player.party[idx].egg;
           G.pushScene(G.Chooser({
-            items: ['Summary', 'Move up', 'Back'],
+            items: isEgg ? ['Move up', 'Back'] : ['Summary', 'Move up', 'Back'],
             onPick: function (i) {
-              if (i === 0) G.pushScene(G.SummaryScene(G.player.party[idx]));
-              if (i === 1 && idx > 0) {
+              var moveI = isEgg ? 0 : 1;
+              if (!isEgg && i === 0) G.pushScene(G.SummaryScene(G.player.party[idx]));
+              if (i === moveI && idx > 0) {
                 var p = G.player.party;
                 var tmp = p[idx - 1]; p[idx - 1] = p[idx]; p[idx] = tmp;
                 self.sel = idx - 1;
@@ -329,28 +331,41 @@
           var mon = party[i];
           var y = 20 + i * 22;
           panel(ctx, 8, y, 136, 22);
-          G.text(ctx, (mon.shiny ? '★' : '') + G.monName(mon), 16, y + 7, G.UI.text, G.UI.textShadow);
-          G.text(ctx, 'Lv' + mon.level, 78, y + 7, G.UI.text, G.UI.textShadow);
-          var stats = G.monStats(mon);
-          hpBar(ctx, 104, y + 10, 32, mon.curHp / stats.hp);
-          if (mon.curHp <= 0) G.text(ctx, 'FNT', 104, y + 1, G.UI.hpRed);
-          else if (mon.status) G.text(ctx, mon.status.toUpperCase(), 104, y + 1, '#9040a0');
+          if (mon.egg) {
+            G.text(ctx, 'EGG', 16, y + 7, G.UI.text, G.UI.textShadow);
+            G.text(ctx, mon.hatch > 60 ? 'a while...' : mon.hatch > 0 ? 'soon!' : 'ready!', 78, y + 7, G.C.lgry);
+          } else {
+            G.text(ctx, (mon.shiny ? '★' : '') + G.monName(mon), 16, y + 7, G.UI.text, G.UI.textShadow);
+            G.text(ctx, 'Lv' + mon.level, 78, y + 7, G.UI.text, G.UI.textShadow);
+            var stats = G.monStats(mon);
+            hpBar(ctx, 104, y + 10, 32, mon.curHp / stats.hp);
+            if (mon.curHp <= 0) G.text(ctx, 'FNT', 104, y + 1, G.UI.hpRed);
+            else if (mon.status) G.text(ctx, mon.status.toUpperCase(), 104, y + 1, '#9040a0');
+          }
           if (i === this.sel) ctx.drawImage(G.IMG.ui_cursor, 2, y + 8);
         }
         // selected mon portrait
         var cur = party[this.sel];
         if (cur) {
           panel(ctx, 152, 20, 84, 92);
-          var img = G.IMG['mon_' + cur.sp];
-          if (img) ctx.drawImage(img, 194 - img.width / 2, 96 - img.height);
-          var sp = G.SPECIES[cur.sp];
-          for (var t = 0; t < sp.types.length; t++) {
-            ctx.fillStyle = G.TYPE_COLORS[sp.types[t]];
-            ctx.fillRect(158 + t * 40, 98, 36, 10);
-            G.text(ctx, sp.types[t].toUpperCase().slice(0, 8), 160 + t * 40, 100, G.C.white);
+          if (cur.egg) {
+            var eimg = G.IMG.mon_egg;
+            if (eimg) ctx.drawImage(eimg, 194 - eimg.width / 2, 96 - eimg.height);
+            G.text(ctx, 'A mystery EGG.', 158, 26, G.UI.text, G.UI.textShadow);
+            G.text(ctx, 'Keep walking', 158, 96, G.C.lgry);
+            G.text(ctx, 'to hatch it!', 158, 104, G.C.lgry);
+          } else {
+            var img = G.IMG['mon_' + cur.sp];
+            if (img) ctx.drawImage(img, 194 - img.width / 2, 96 - img.height);
+            var sp = G.SPECIES[cur.sp];
+            for (var t = 0; t < sp.types.length; t++) {
+              ctx.fillStyle = G.TYPE_COLORS[sp.types[t]];
+              ctx.fillRect(158 + t * 40, 98, 36, 10);
+              G.text(ctx, sp.types[t].toUpperCase().slice(0, 8), 160 + t * 40, 100, G.C.white);
+            }
+            var stats2 = G.monStats(cur);
+            G.text(ctx, cur.curHp + '/' + stats2.hp + ' HP', 158, 26, G.UI.text, G.UI.textShadow);
           }
-          var stats2 = G.monStats(cur);
-          G.text(ctx, cur.curHp + '/' + stats2.hp + ' HP', 158, 26, G.UI.text, G.UI.textShadow);
         }
         G.text(ctx, 'Z: select   X: back', 10, H - 12, G.C.lgry);
       }

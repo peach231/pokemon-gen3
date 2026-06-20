@@ -59,7 +59,7 @@
   }
 
   function firstAlive(party) {
-    for (var i = 0; i < party.length; i++) if (party[i].curHp > 0) return i;
+    for (var i = 0; i < party.length; i++) if (party[i].curHp > 0 && !party[i].egg) return i;
     return 0;
   }
 
@@ -76,7 +76,7 @@
 
   G.Battle.prototype.anyAlive = function (side) {
     var arr = side === 'p' ? this.party : this.foes;
-    for (var i = 0; i < arr.length; i++) if (arr[i].curHp > 0) return true;
+    for (var i = 0; i < arr.length; i++) if (arr[i].curHp > 0 && !arr[i].egg) return true;
     return false;
   };
 
@@ -583,7 +583,7 @@
       if (this.trainer && this.active('p').curHp > 0) {
         var benched = 0;
         for (var bi = 0; bi < this.party.length; bi++) {
-          if (this.party[bi].curHp > 0 && bi !== this.activeP) benched++;
+          if (this.party[bi].curHp > 0 && !this.party[bi].egg && bi !== this.activeP) benched++;
         }
         if (benched > 0) {
           var pick = yield { t: 'choose', kind: 'shift', incoming: this.foes[next] };

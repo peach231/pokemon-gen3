@@ -104,6 +104,35 @@
       // image files (see loadMonSprites), which is async, so boot waits on them
       // separately (main.js). World/UI art above is still baked synchronously.
       G.gfx.buildFont();
+      G.gfx.makeEggSprite();
+    },
+
+    // A creature egg shown in the party/summary while it incubates: a white egg
+    // with blue + orange blotches and a highlight (original art).
+    makeEggSprite: function () {
+      var w = 44, h = 54, c = makeCanvas(w, h), x = c.getContext('2d');
+      var cx = w / 2, cy = h / 2 + 2, rx = 17, ry = 24, TAU = Math.PI * 2;
+      function eggPath() {
+        x.beginPath();
+        x.moveTo(cx, cy - ry);
+        x.bezierCurveTo(cx + rx * 1.05, cy - ry * 0.55, cx + rx, cy + ry * 0.7, cx, cy + ry);
+        x.bezierCurveTo(cx - rx, cy + ry * 0.7, cx - rx * 1.05, cy - ry * 0.55, cx, cy - ry);
+        x.closePath();
+      }
+      x.fillStyle = 'rgba(18,20,34,0.22)';
+      x.beginPath(); x.ellipse(cx, cy + ry - 1, rx * 0.85, 4, 0, 0, TAU); x.fill();
+      x.fillStyle = G.C.ink || '#1a1c2c'; eggPath(); x.fill();
+      x.save(); eggPath(); x.clip();
+      x.fillStyle = '#fbfbf6'; x.fillRect(0, 0, w, h);
+      x.fillStyle = '#e2e2ea'; x.beginPath(); x.ellipse(cx + 3, cy + ry - 6, rx, ry * 0.6, 0, 0, TAU); x.fill();
+      x.fillStyle = '#9ad7e6'; x.beginPath(); x.ellipse(cx - 7, cy + 7, 7, 8, 0, 0, TAU); x.fill();
+      x.fillStyle = '#79bcd0'; x.beginPath(); x.ellipse(cx - 7, cy + 9, 5, 5, 0, 0, TAU); x.fill();
+      x.fillStyle = '#9ad7e6'; x.beginPath(); x.ellipse(cx + 6, cy - 9, 5, 6, 0, 0, TAU); x.fill();
+      x.fillStyle = '#f0a85c'; x.beginPath(); x.ellipse(cx + 8, cy + 8, 5, 6, 0, 0, TAU); x.fill();
+      x.fillStyle = '#d6843c'; x.beginPath(); x.ellipse(cx + 8, cy + 9, 3, 3, 0, 0, TAU); x.fill();
+      x.fillStyle = 'rgba(255,255,255,0.85)'; x.beginPath(); x.ellipse(cx - 5, cy - 12, 4, 7, -0.3, 0, TAU); x.fill();
+      x.restore();
+      G.IMG.mon_egg = c;
     },
 
     // -----------------------------------------------------------------------

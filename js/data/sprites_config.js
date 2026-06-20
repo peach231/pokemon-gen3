@@ -97,10 +97,11 @@
     remoteBase: 'https://cdn.jsdelivr.net/gh/pret/pokeemerald@master/graphics/object_events/pics/people/',
     sheets: {
       // NPC classes (the player walker is set by the chosen character — see below)
-      boy:    'youngster',                // youngster / bug-catcher class + boy NPCs
-      mom:    'woman_1',                   // lass / picnicker class + adult-woman NPCs
-      prof:   'man_1',                     // hiker class + older-man NPCs / Birch
-      aqua:   'team_aqua/aqua_member_m'    // Team Aqua grunts / admin
+      boy:     'youngster',                // youngster / bug-catcher class + boy NPCs
+      mom:     'woman_1',                   // lass / picnicker class + adult-woman NPCs
+      prof:    'man_1',                     // hiker class + older-man NPCs / Birch
+      aqua:    'team_aqua/aqua_member_m',   // Team Aqua grunts / admin
+      egglady: 'beauty'                     // Nursery helper in heal centers
     },
     frameW: 16, frameH: 32,       // source frame size on the sheet
     boxW: 16, boxH: 24,           // fit into the engine's 16x24 overworld slot
