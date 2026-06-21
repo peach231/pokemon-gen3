@@ -136,7 +136,7 @@
       shopInventory: inventory,
       npcs: [
         { x: 3, y: 1, sprite: 'prof', dir: 'down', event: 'shopBuy' },
-        { x: 2, y: 3, sprite: 'boy', dir: 'down', event: 'moveTutor' }
+        { x: 5, y: 1, sprite: 'boy', dir: 'down', event: 'moveTutor' }
       ]
     };
   }
