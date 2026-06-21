@@ -12,8 +12,12 @@
 
   // ---- custom legends (compose from existing tiles) ----------------------
   var FORK  = { '.': 'cavefloor', '#': 'cavewall', '*': 'rock', 'c': 'crystal', '~': 'water', 'Z': 'deco_cinder' };
-  var SEA   = { '.': 'cavefloor', '#': 'cavewall', '~': 'deepwater', '*': 'rock', 'c': 'crystal' };
-  var MAGMA = { '.': 'cavefloor', '#': 'cavewall', 'L': 'lava', 'Z': 'deco_cinder', '*': 'rock', 'c': 'crystal' };
+  // seabed lanes wind between towering deep water ('~'); kelp ('k') are the only
+  // encounter zones, coral ('C') is a solid accent, bubbles ('b') drift on lanes.
+  var SEA   = { '.': 'seabed', '#': 'cavewall', '~': 'deepwater', 'k': 'kelp', 'C': 'coral', 'b': 'bubbles' };
+  // basalt causeway ('.') over molten lava ('L'); ember veins ('e') are the only
+  // encounter zones, obsidian ('O') is a solid glass-pillar accent.
+  var MAGMA = { '.': 'basalt', '#': 'cavewall', 'L': 'lava', 'e': 'emberfloor', 'O': 'obsidian' };
 
   // ===== Titan Crossroads (post-HoF hub) =================================
   G.MAPS.legendfork = {
@@ -33,9 +37,9 @@
       '###############'
     ], 15, 11, '#'),
     warps: [
-      { x: 3, y: 0, to: 'seapath', tx: 7, ty: 13, dir: 'up' },
+      { x: 3, y: 0, to: 'seapath', tx: 7, ty: 15, dir: 'up' },
       { x: 7, y: 0, to: 'skypillar', tx: 7, ty: 15, dir: 'up' },
-      { x: 11, y: 0, to: 'magmapath', tx: 7, ty: 13, dir: 'up' },
+      { x: 11, y: 0, to: 'magmapath', tx: 7, ty: 15, dir: 'up' },
       { x: 7, y: 9, to: 'crownsummit', tx: 10, ty: 9, dir: 'down' }
     ],
     signs: [
@@ -111,36 +115,38 @@
 
   // ===== Marine Cavern (Kyogre) =========================================
   G.MAPS.seapath = {
-    id: 'seapath', name: 'Marine Cavern', w: 15, h: 15,
-    music: 'cave', battleBg: 'water', base: 'cavefloor', legend: SEA,
-    // a flooded serpentine trench — water walls you must wind between (dive deep
-    // and snake your way up to the sea titan).
+    id: 'seapath', name: 'Marine Cavern', w: 15, h: 17,
+    music: 'cave', battleBg: 'water', base: 'seabed', legend: SEA,
+    // a deep-dive maze: narrow seabed trenches winding between walls of crushing
+    // deep water, kelp forests, and coral. Snake your way up to the sea titan.
     ground: pad([
       '###############',
-      '#.............#',
-      '#~~~~~~~~~~~~.#',
-      '#.............#',
-      '#.~~~~~~~~~~~~#',
-      '#.............#',
-      '#~~~~~~~~~~~~.#',
-      '#.............#',
-      '#.~~~~~~~~~~~~#',
-      '#.............#',
-      '#~~~~~~~~~~~~.#',
-      '#.............#',
-      '#.~~~~~~~~~~~~#',
-      '#.............#',
+      '#.....C.~...k.#',
+      '#.~~~.C.~.~.~~#',
+      '#..bk.~.~..k..#',
+      '#.~.~.~.~.~~~.#',
+      '#k~.....~k..~.#',
+      '#.~~~.~~~.~~~.#',
+      '#.~.......~...#',
+      '#kC.~~~~~~~.C.#',
+      '#b~...~...~k~.#',
+      '#.~C~.~~~k~.~~#',
+      '#b..C.~.......#',
+      '#.~.~.~.C.~~~.#',
+      '#.~.~...~kC.k.#',
+      '#.~~C.C~~~~b~.#',
+      '#.k...~...k.~.#',
       '###############'
-    ], 15, 15, '#'),
+    ], 15, 17, '#'),
     warps: [],
-    signs: [{ x: 1, y: 13, text: 'A drowned trench. The water remembers an ancient rage. Wind your way down.' }],
+    signs: [{ x: 7, y: 14, text: 'You sink into the abyss. Cold pressure folds in — only the trenches between the deep are passable. KYOGRE waits at the bottom.' }],
     npcs: [
       { x: 7, y: 1, sprite: 'mon_kyogre', obj: true, unlessFlag: 'ev_kyogre', event: 'kyogreBoss' }
     ],
     scripts: [
       { x: 7, y: 1, ifFlag: 'ev_kyogre', run: 'teleFork' }
     ],
-    encounters: { rate: 0.14, table: [
+    encounters: { rate: 0.2, table: [
       { sp: 'tentacruel', min: 52, max: 56 }, { sp: 'sharpedo', min: 52, max: 56 },
       { sp: 'gyarados', min: 53, max: 57 }, { sp: 'wailord', min: 54, max: 58 },
       { sp: 'kingdra', min: 54, max: 58 }, { sp: 'lanturn', min: 52, max: 56 },
@@ -152,36 +158,39 @@
 
   // ===== Magma Chamber (Groudon) ========================================
   G.MAPS.magmapath = {
-    id: 'magmapath', name: 'Magma Chamber', w: 15, h: 15,
-    music: 'cave', battleBg: 'cave', base: 'cavefloor', legend: MAGMA,
-    // a raised rock causeway across a sea of molten lava — the lava is lower and
-    // impassable; pick your way up the narrow ledges to the land titan.
+    id: 'magmapath', name: 'Magma Chamber', w: 15, h: 17,
+    music: 'cave', battleBg: 'cave', base: 'basalt', legend: MAGMA,
+    // a maze of raised basalt causeways across a churning lava sea — the lava is
+    // lower and impassable; pick your way up the ledges to the land titan. Glowing
+    // ember veins are the only ground that stirs up wilds.
     ground: pad([
-      'LLLLLLLLLLLLLLL',
-      'L.............L',
-      'LLLLLLLLLLLLL.L',
-      'L.............L',
-      'L.LLLLLLLLLLLLL',
-      'L.............L',
-      'LLLLLLLLLLLLL.L',
-      'L.............L',
-      'L.LLLLLLLLLLLLL',
-      'L.............L',
-      'LLLLLLLLLLLLL.L',
-      'L.............L',
-      'L.LLLLLLLLLLLLL',
-      'L.............L',
-      'LLLLLLLLLLLLLLL'
-    ], 15, 15, 'L'),
+      '###############',
+      '#.............#',
+      '#.LLLLL.LLL.O.#',
+      '#e..Le..O...L.#',
+      '#LL.O.LLL.LLLe#',
+      '#.L.L.OeL...L.#',
+      '#.L.L.L.L.L.L.#',
+      '#...L.O.......#',
+      '#eLLL.LLLLL.O.#',
+      '#...L......eL.#',
+      '#LOeLLLLLLL.L.#',
+      '#.L...L..e..L.#',
+      '#.LLL.L.OOLLL.#',
+      '#eL.....L...Le#',
+      '#.LeLLO.L.LeL.#',
+      '#.......L.L...#',
+      '###############'
+    ], 15, 17, '#'),
     warps: [],
-    signs: [{ x: 1, y: 13, text: 'A molten forge. Only the raised ledges are safe — the rest is living fire.' }],
+    signs: [{ x: 8, y: 15, text: 'Heat slams into you. Molten rock churns below; only the high basalt holds your weight. GROUDON waits at the summit of the forge.' }],
     npcs: [
       { x: 7, y: 1, sprite: 'mon_groudon', obj: true, unlessFlag: 'ev_groudon', event: 'groudonBoss' }
     ],
     scripts: [
       { x: 7, y: 1, ifFlag: 'ev_groudon', run: 'teleFork' }
     ],
-    encounters: { rate: 0.14, table: [
+    encounters: { rate: 0.2, table: [
       { sp: 'camerupt', min: 52, max: 56 }, { sp: 'magcargo', min: 52, max: 56 },
       { sp: 'torkoal', min: 52, max: 56 }, { sp: 'golem', min: 53, max: 57 },
       { sp: 'aggron', min: 54, max: 58 }, { sp: 'claydol', min: 53, max: 57 },
@@ -219,7 +228,7 @@
       { x: 7, y: 4, sprite: 'mon_rayquaza', obj: true, unlessFlag: 'ev_rayquaza', event: 'rayquazaBoss' }
     ],
     scripts: [],
-    encounters: { rate: 0.13, table: [
+    encounters: { rate: 0.1, table: [
       { sp: 'altaria', min: 55, max: 60 }, { sp: 'crobat', min: 55, max: 60 },
       { sp: 'swellow', min: 55, max: 59 }, { sp: 'claydol', min: 56, max: 60 },
       { sp: 'golbat', min: 54, max: 58 }, { sp: 'tropius', min: 55, max: 59 },

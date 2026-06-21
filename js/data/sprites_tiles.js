@@ -221,24 +221,234 @@
   ]);
   // molten lava — a solid, impassable floor for the Magma Chamber (the path is
   // the raised cave floor; everything lower is this).
-  T('t_lava', { o: C.org0, r: C.org1, R: C.org2, y: C.yel1 }, [
-    'RRRRRRRRRRRRRRRR',
-    'RRRyRRRRRRRyRRRR',
-    'rrrrrrRrrrrrrrRr',
-    'RRRRRRRyRRRRRRRR',
-    'RRRyRRRRRRRRRyRR',
-    'RRRRRRRRRRRRRRRR',
-    'rRrrrrrrrrRrrrrr',
-    'RRRRRyRRRRRyRRRR',
-    'RRRRRRRRRRRRRRRR',
-    'RyRRRRRRRyRRRRRR',
-    'rrrrrRrrrrrrrrrr',
-    'RRRRRRRyRRRRRRRy',
-    'RRRRRRRRRRRRRRRR',
-    'RRRyRRRRRyRRRRRR',
-    'rrrrrrrrrRrrrrrr',
-    'RRRRRRRRRRRRRRRR'
+  T('t_lava', { o: C.org0, b: C.red1, r: C.org1, R: C.org2, y: C.yel1 }, [
+    'RRRoooRRRRRRbbRR',
+    'RRoRRRoRRRRoRRbR',
+    'RoRyyRRoRRoRyyRo',
+    'RoRyRRRRbRRRyRRo',
+    'RRoRRRRoRRoRRRRo',
+    'RRRooooRRRRoooRR',
+    'bRRRRRRRRyRRRRRb',
+    'RRRyyRRRRRRRRyRR',
+    'RoooRRRoooRRRRoR',
+    'oRRRoRoRRRoRRroR',
+    'oRyRRoRyyRoRyRRo',
+    'RRRRRoRRRRoRRRRo',
+    'RRoooRRRRRRooobR',
+    'bRRRRyRRRyRRRRRR',
+    'RRRRRRoooRRRRyRR',
+    'RRyRRRRRRRRoRRRR'
   ]);
+
+  // ===== Marine Cavern (Kyogre lair) tiles ==============================
+  // seabed: pale blue-grey sand floor with cyan ripples (walkable lane)
+  T('t_seabed', { s: C.stn2, d: C.stn1, l: C.stn3, w: C.ice1 }, [
+    'ssssssssssssssss',
+    'ssssssssswssssss',
+    'ssdsssssssssssss',
+    'ssssssssssssssss',
+    'sssswssssssssdss',
+    'ssssssssssssssss',
+    'sssssssssslsssss',
+    'swssssssssssssss',
+    'ssssssssssssssss',
+    'sssssssssswsssss',
+    'sssdssssssssssss',
+    'ssssssssssssssss',
+    'ssssssssssssslss',
+    'sssssswsssssssss',
+    'ssssssssdsssssss',
+    'ssssssssssssssss'
+  ]);
+  // kelp: swaying seaweed fronds — the encounter zones (2 frames)
+  T('t_kelp1', { s: C.stn2, d: C.stn1, g: C.grn1, G: C.grn2, h: C.grn3, t: C.ice2 }, [
+    'ssssssssssssssss',
+    'ssssssssssssssss',
+    'ssdsssssssssssss',
+    'shtsssshthtsdsss',
+    'shgsssshghgsssss',
+    'sghssssghghsssss',
+    'ssGsssssGsGsssss',
+    'sssGsssssGsGssss',
+    'sssGgssssGgGgsss',
+    'ssssGsssGsssGsss',
+    'sssgGssgGssgGsss',
+    'ssssGsssGsssGsss',
+    'ssssGgssGgssGgss',
+    'ssssGssdGsssGsss',
+    'sssGsssGsssGssss',
+    'ssgGssgGssgGssss'
+  ]);
+  T('t_kelp2', { s: C.stn2, d: C.stn1, g: C.grn1, G: C.grn2, h: C.grn3, t: C.ice2 }, [
+    'ssssssssssssssss',
+    'ssssssssssssssss',
+    'ssdsssssssssssss',
+    'ssshthtsssshtsss',
+    'ssshghgsssshgsss',
+    'sssghghssssghsss',
+    'ssssGsGsssssGsss',
+    'sssssGsGsssssGss',
+    'sssssGgGgssssGgs',
+    'ssssGsssGsssGsss',
+    'sssgGssgGssgGsss',
+    'ssssGsssGsssGsss',
+    'ssssGgssGgssGgss',
+    'ssssGssdGsssGsss',
+    'sssGsssGsssGssss',
+    'ssgGssgGssgGssss'
+  ]);
+  // coral: solid fan coral on a deep-water field (blends with deepwater walls)
+  T('t_coral', { B: C.blu0, o: C.ink, r: C.red2, R: C.red3, y: C.org2, w: C.ice2 }, [
+    'BBBBBBBBBBBBBBBB',
+    'BBBBBBByyBBBBBBB',
+    'BBBBByyRRyyBBBBB',
+    'BBBBoRRrrRRoBBBB',
+    'BBBoRrrwrrrRoBBB',
+    'BBoRrrrrrrrRRoBB',
+    'BBoRrwrrrwrrRoBB',
+    'BBoRRrrrrrrRRoBB',
+    'BBBoRrrrrrrRoBBB',
+    'BBBBoRRrrRRoBBBB',
+    'BBBBBoRrrRoBBBBB',
+    'BBBBBBoRRoBBBBBB',
+    'BBBBBBBrrBBBBBBB',
+    'BBBBBBBrrBBBBBBB',
+    'BBBBBBorroBBBBBB',
+    'BBBBBBooooBBBBBB'
+  ]);
+  // bubbles: rising air bubbles over seabed (walkable accent, 3 frames)
+  T('t_bubbles1', { s: C.stn2, d: C.stn1, o: C.ice1, w: C.ice3 }, [
+    'ssssssssssssssss',
+    'ssssssssssssssss',
+    'ssssssssssssssss',
+    'ssssssssssssssss',
+    'ssssssssssssssss',
+    'ssssssssssssssds',
+    'ssssssssssssssss',
+    'ssssssssssssssss',
+    'ssssssssssssssss',
+    'sdssssssssssssss',
+    'ssssssssssswosss',
+    'sssssssssssoosss',
+    'sssswossssssssss',
+    'ssssoossswosssss',
+    'sssssssssoosssss',
+    'ssssssssssssssss'
+  ]);
+  T('t_bubbles2', { s: C.stn2, d: C.stn1, o: C.ice1, w: C.ice3 }, [
+    'ssssssssssssssss',
+    'ssssssssssssssss',
+    'ssssssssssssssss',
+    'ssssssssssssssss',
+    'ssssssssssssssss',
+    'ssssssssssssssds',
+    'ssssssssssswosss',
+    'sssssssssssoosss',
+    'sssswossssssssss',
+    'sdssoossswosssss',
+    'sssssssssoosssss',
+    'sssssswossssssss',
+    'ssssssoossssssss',
+    'ssssssssssssssss',
+    'ssssssssssssssss',
+    'ssssssssssssssss'
+  ]);
+  T('t_bubbles3', { s: C.stn2, d: C.stn1, o: C.ice1, w: C.ice3 }, [
+    'ssssssssssssssss',
+    'ssssssssssssssss',
+    'ssssssssssswosss',
+    'sssssssssssoosss',
+    'sssswossssssssss',
+    'ssssoossswosssds',
+    'sssssssssoosssss',
+    'sssssswossssssss',
+    'ssssssoossssssss',
+    'sdssssssssssssss',
+    'ssssssssssssssss',
+    'ssssssssssssssss',
+    'ssssssssssssssss',
+    'ssssssssssssssss',
+    'ssssssssssssssss',
+    'ssssssssssssssss'
+  ]);
+
+  // ===== Magma Chamber (Groudon lair) tiles =============================
+  // basalt: dark volcanic causeway floor (walkable lane)
+  T('t_basalt', { s: C.stn1, t: C.stn2, k: C.stn0, o: C.org1 }, [
+    'ssssstssssssssss',
+    'ssssssssssstssss',
+    'sstsssssssssssss',
+    'ssskkssstsssssts',
+    'sssssssssoksssss',
+    'sssstsssssssssss',
+    'sssssssssstsssss',
+    'sssssskossssssss',
+    'stssssssssssssss',
+    'ssssssstssssksss',
+    'ssssssssssssstss',
+    'sskossssssssssss',
+    'ssstssssssssssss',
+    'sssssssskkssssss',
+    'sssssstsssssskss',
+    'sssssssssssstsss'
+  ]);
+  // emberfloor: cracked ground with glowing magma veins — encounter zones (2 frames)
+  T('t_emberfloor1', { d: C.stn0, k: C.ink, o: C.org1, r: C.org2, y: C.yel1 }, [
+    'dddddddddddddddd',
+    'dddddddddddddddd',
+    'dddddddddddddddd',
+    'droddddddddddddd',
+    'dkkooddddddddddd',
+    'dddkkooddooddddd',
+    'ddddokkyokkooddd',
+    'ddddkddkkdokkrdd',
+    'ddddrdddddkddkdd',
+    'dddokdddddrddddd',
+    'dddkorddddkddddd',
+    'ddddkkoodddddddd',
+    'ddddddkkrodddddd',
+    'ddddddddkkordddd',
+    'ddddddddddkkdddd',
+    'dddddddddddddddd'
+  ]);
+  T('t_emberfloor2', { d: C.stn0, k: C.ink, o: C.org1, r: C.org2, y: C.yel1 }, [
+    'dddddddddddddddd',
+    'dddddddddddddddd',
+    'dddddddddddddddd',
+    'dyrddddddddddddd',
+    'dkkrrddddddddddd',
+    'dddkkrrddrrddddd',
+    'ddddrkkyrkkrrddd',
+    'ddddkddkkdrkkydd',
+    'ddddydddddkddkdd',
+    'dddrkdddddyddddd',
+    'dddkryddddkddddd',
+    'ddddkkrrdddddddd',
+    'ddddddkkyrdddddd',
+    'ddddddddkkrydddd',
+    'ddddddddddkkdddd',
+    'dddddddddddddddd'
+  ]);
+  // obsidian: black glassy faceted pillar with a molten reflection (solid accent)
+  T('t_obsidian', { d: C.stn0, o: C.ink, p: C.pur1, h: C.pur3, q: C.pur2, r: C.org1 }, [
+    'ddoooooooooooooo',
+    'dopppppppphpppoo',
+    'doppphpppphpppoo',
+    'doppphpppphpppoo',
+    'doppphpppphpppoo',
+    'dopqqqqqqqqqqpoo',
+    'doppphpppphpppoo',
+    'doppphpppphpppoo',
+    'doppphprpphpppoo',
+    'doppphpprphpppoo',
+    'doppphpppphpppoo',
+    'doppphrppphpppoo',
+    'doppphpppphpppoo',
+    'doppphppppppppoo',
+    'doppppppppppppoo',
+    'dooooooooooooooo'
+  ]);
+
   // small boat drawn under the player while sailing (see overworld _drawActor)
   T('fx_boat', { w: C.brn2, d: C.brn3, l: C.tan0 }, [
     '................',
@@ -1384,6 +1594,14 @@
     deco_shell:   { img: 't_deco_shell' },
     deco_cinder:  { img: 't_deco_cinder' },
     lava:      { img: 't_lava', solid: true },
+    // ---- endgame lair tiles ----
+    seabed:    { img: 't_seabed' },
+    kelp:      { anim: ['t_kelp1', 't_kelp2'], animSpeed: 30, grass: true },
+    coral:     { img: 't_coral', solid: true },
+    bubbles:   { anim: ['t_bubbles1', 't_bubbles2', 't_bubbles3'], animSpeed: 20 },
+    basalt:    { img: 't_basalt' },
+    emberfloor:{ anim: ['t_emberfloor1', 't_emberfloor2'], animSpeed: 26, cave: true },
+    obsidian:  { img: 't_obsidian', solid: true },
     path:      { img: 't_path' },
     path_n:    { img: 't_path_n' },
     path_s:    { img: 't_path_s' },
