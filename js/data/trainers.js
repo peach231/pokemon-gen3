@@ -234,21 +234,22 @@
   // wields the titan you did NOT claim ('_otherlegend' resolves at battle time).
   tr('arena1', {
     name: 'Sage Regulus', cls: 'Hall of Fame', sprite: 'trainer_aldric', ai: 'smart', money: 12000,
-    party: [{ sp: 'aggron', level: 62 }, { sp: 'claydol', level: 62 }, { sp: 'regice', level: 64 }, { sp: 'regirock', level: 64 }, { sp: 'registeel', level: 64 }, { sp: 'metagross', level: 66 }],
-    intro: 'I am Regulus, keeper of the golems. Three titans of stone answer to me — let us see your steel!',
+    party: [{ sp: 'aggron', level: 58 }, { sp: 'claydol', level: 59 }, { sp: 'regice', level: 60 }, { sp: 'regirock', level: 61 }, { sp: 'registeel', level: 62 }, { sp: '_weathertrio', level: 64 }],
+    intro: 'I am Regulus, keeper of the golems. Three titans of stone answer to me — and perhaps a fourth wonder. Show me your steel!',
     defeat: 'The golems bow. Climb higher, Champion.', music: 'champion'
   });
   tr('arena2', {
     name: 'Lady Eonia', cls: 'Hall of Fame', sprite: 'trainer_maris', ai: 'smart', money: 13000,
-    party: [{ sp: 'altaria', level: 64 }, { sp: 'flygon', level: 65 }, { sp: 'kingdra', level: 65 }, { sp: 'latias', level: 67 }, { sp: 'latios', level: 67 }, { sp: 'salamence', level: 68 }],
-    intro: 'Eonia, rider of the Eon dragons. Latias and Latios fly with me. Can your bond fly higher?',
+    party: [{ sp: 'altaria', level: 61 }, { sp: 'flygon', level: 62 }, { sp: 'kingdra', level: 63 }, { sp: 'latias', level: 64 }, { sp: 'latios', level: 65 }, { sp: 'deoxys', level: 66 }],
+    intro: 'Eonia, rider of the Eon dragons. Latias and Latios fly with me — and a visitor from beyond the stars. Can your bond fly higher?',
     defeat: 'The dragons accept you. One champion yet remains.', music: 'champion'
   });
   tr('arena3', {
     name: 'Grandmaster Orin', cls: 'Hall of Fame', sprite: 'trainer_vesper', ai: 'smart', money: 16000,
-    party: [{ sp: 'gardevoir', level: 68 }, { sp: 'milotic', level: 68 }, { sp: 'tyranitar', level: 69 }, { sp: 'salamence', level: 69 }, { sp: 'metagross', level: 70 }, { sp: '_otherlegend', level: 70 }],
+    party: [{ sp: 'gardevoir', level: 64 }, { sp: 'milotic', level: 65 }, { sp: 'salamence', level: 66 }, { sp: 'metagross', level: 68 }, { sp: '_weathertrio', level: 69 }, { sp: '_otherlegend', level: 70 }],
     intro: 'I am Orin, the first Champion. I hold the titan you let slip away. Prove you were the worthier vessel!',
-    defeat: 'Astonishing. Sea, land, and sky — all yours. You are the finest this Hall has ever seen.', music: 'champion'
+    defeat: 'Astonishing. Sea, land, and sky — all yours. You are the finest this Hall has ever seen.',
+    onWin: 'arenaReward', music: 'champion'
   });
 
   // starter-counter cycle: rival takes the type-advantaged starter.
@@ -267,6 +268,10 @@
       if (key === '_starter3') key = STAGE3[rivalBase];
       // the legendary the player passed over (caught Kyogre -> they fight Groudon)
       if (key === '_otherlegend') key = G.flags.ev_kyogre ? 'groudon' : 'kyogre';
+      // a ~50/50 chance the slot is a weather-trio titan, else a strong pseudo
+      if (key === '_weathertrio') key = G.chance(0.5)
+        ? ['kyogre', 'groudon', 'rayquaza'][G.irand(3)]
+        : ['salamence', 'metagross', 'tyranitar'][G.irand(3)];
       return G.makeMon(key, p.level);
     });
   };

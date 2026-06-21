@@ -195,6 +195,7 @@ function resolveStarter(key) {
   if (key === '_starter2') return 'grovyle';
   if (key === '_starter3') return 'sceptile';
   if (key === '_otherlegend') return 'kyogre'; // resolves to the uncaught titan in-game
+  if (key === '_weathertrio') return 'rayquaza'; // resolves to a random rare/legend in-game
   return key;
 }
 for (const tid in (G.TRAINERS || {})) {

@@ -96,14 +96,8 @@
   G.EVENTS.rayquazaBoss = bossEvent('rayquaza', 'ev_rayquaza', [
     'The sky tears open atop the Pillar. A vast green serpent uncoils.',
     'RAYQUAZA, lord of the sky, descends to judge you!'
-  ], 70, {
+  ], 60, {
     bg: 'water',
-    gate: function () {
-      var team = (G.player.party || []).filter(function (m) { return !m.egg; });
-      if (team.length < 6 || team.some(function (m) { return m.level < 52; }))
-        return 'RAYQUAZA only tests a full team of SIX, each at Lv52 or higher. Return when you are ready.';
-      return null;
-    },
     onCatch: function () {
       G.world.warpTo({ to: 'playerhome', tx: 5, ty: 4, dir: 'left' });
     }
@@ -220,7 +214,7 @@
       '~~~~~~%%%~~~~~~'
     ], 15, 16, '~'),
     warps: [],
-    signs: [{ x: 8, y: 3, text: 'SKY PILLAR — at its peak the sky dragon coils. Only the strongest may climb.' }],
+    signs: [{ x: 8, y: 3, text: 'SKY PILLAR — the sky dragon coils at its peak. Bring a seasoned team (around Lv50+) for the fight of your life.' }],
     npcs: [
       { x: 7, y: 4, sprite: 'mon_rayquaza', obj: true, unlessFlag: 'ev_rayquaza', event: 'rayquazaBoss' }
     ],
@@ -303,10 +297,36 @@
   };
   G.MAPS.hearthvale.npcs.push({ x: 18, y: 11, sprite: 'orb_stand', obj: true, ifFlag: 'arenaOpen', event: 'enterArena' });
 
-  // a rift in the League town to re-enter the Crossroads after you've left
+  // reward for clearing all three Hall of Fame Arena champions (Orin, last)
+  G.EVENTS.arenaReward = function* () {
+    if (G.flags.arenaCleared) { yield { t: 'text', s: 'Orin: The hall is yours, champion of champions.' }; return; }
+    yield { t: 'text', s: 'Orin: You have bested every champion of old. Sea, land and sky all bow to you.' };
+    yield { t: 'text', s: 'Orin: The hall keeps one last gift for its finest — a wish made real. Take it.' };
+    yield { t: 'sfx', id: 'superEff' };
+    yield { t: 'fn', fn: function () {
+      G.flags.arenaCleared = 1;
+      var mon = G.makeMon('jirachi', 50);
+      G.player.dexSeen.jirachi = 1; G.player.dexCaught.jirachi = 1;
+      if (G.player.party.length < 6) G.player.party.push(mon); else G.player.box.push(mon);
+      if (G.audio.playJingle) G.audio.playJingle('jingle_catch');
+    } };
+    yield { t: 'text', s: "You received JIRACHI, the Wish Pokemon! (Joined your party, or sent to Birch's Lab if it was full.)" };
+  };
+
+  // a rift in the League town: re-enter the Crossroads after you've left, and
+  // the catch-up entry for anyone who beat the Champion before the questline
+  // existed (no hofDone yet) — it plays the induction the first time through.
   G.EVENTS.enterFork = function* () {
+    if (!G.flags.hofDone) {
+      yield { t: 'text', s: 'The light of the Hall of Fame finds you at last — your legend is recorded.' };
+      yield { t: 'custom', run: function (resume) { G.pushScene(G.HallOfFameScene(resume)); } };
+      yield { t: 'fn', fn: function () { G.flags.hofDone = 1; G.world.warpTo({ to: 'legendfork', tx: 7, ty: 8, dir: 'up' }); } };
+      return;
+    }
     yield { t: 'text', s: 'A rift shimmers with sea, land and sky — the Titan Crossroads. Step through?' };
     yield { t: 'fn', fn: function () { G.world.warpTo({ to: 'legendfork', tx: 7, ty: 8, dir: 'up' }); } };
   };
-  G.MAPS.crownsummit.npcs.push({ x: 13, y: 9, sprite: 'orb_stand', obj: true, ifFlag: 'hofDone', event: 'enterFork' });
+  // visible to anyone who has beaten the Champion (flag 'champion'), so players
+  // already past the League can reach the new endgame.
+  G.MAPS.crownsummit.npcs.push({ x: 13, y: 9, sprite: 'orb_stand', obj: true, ifFlag: 'champion', event: 'enterFork' });
 })();
