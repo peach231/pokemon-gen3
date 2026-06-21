@@ -219,6 +219,26 @@
     '..........yoy...',
     '...........y....'
   ]);
+  // molten lava — a solid, impassable floor for the Magma Chamber (the path is
+  // the raised cave floor; everything lower is this).
+  T('t_lava', { o: C.org0, r: C.org1, R: C.org2, y: C.yel1 }, [
+    'RRRRRRRRRRRRRRRR',
+    'RRRyRRRRRRRyRRRR',
+    'rrrrrrRrrrrrrrRr',
+    'RRRRRRRyRRRRRRRR',
+    'RRRyRRRRRRRRRyRR',
+    'RRRRRRRRRRRRRRRR',
+    'rRrrrrrrrrRrrrrr',
+    'RRRRRyRRRRRyRRRR',
+    'RRRRRRRRRRRRRRRR',
+    'RyRRRRRRRyRRRRRR',
+    'rrrrrRrrrrrrrrrr',
+    'RRRRRRRyRRRRRRRy',
+    'RRRRRRRRRRRRRRRR',
+    'RRRyRRRRRyRRRRRR',
+    'rrrrrrrrrRrrrrrr',
+    'RRRRRRRRRRRRRRRR'
+  ]);
   // small boat drawn under the player while sailing (see overworld _drawActor)
   T('fx_boat', { w: C.brn2, d: C.brn3, l: C.tan0 }, [
     '................',
@@ -912,6 +932,12 @@
     'bbbbbbbbbbbbabbb'
   ]);
   G.ART.t_water4 = { base: 't_water2', pal: WT };
+  // deep water — same churn, darker; SOLID and NOT swimmable (maze barriers)
+  var DEEP = { a: C.blu0, b: C.blu1, c: C.blu2 };
+  G.ART.t_deepwater1 = { base: 't_water1', pal: DEEP };
+  G.ART.t_deepwater2 = { base: 't_water2', pal: DEEP };
+  G.ART.t_deepwater3 = { base: 't_water3', pal: DEEP };
+  G.ART.t_deepwater4 = { base: 't_water2', pal: DEEP };
 
   // shores: water with a grass bank on one side
   var SH = { a: C.blu1, b: C.blu2, c: C.blu3, g: C.leaf2, e: C.leaf1 };
@@ -1357,6 +1383,7 @@
     deco_palm:    { img: 't_deco_palm' },
     deco_shell:   { img: 't_deco_shell' },
     deco_cinder:  { img: 't_deco_cinder' },
+    lava:      { img: 't_lava', solid: true },
     path:      { img: 't_path' },
     path_n:    { img: 't_path_n' },
     path_s:    { img: 't_path_s' },
@@ -1394,6 +1421,7 @@
     istool: { img: 't_istool', solid: true },
 
     water:   { anim: ['t_water1', 't_water2', 't_water3', 't_water4'], animSpeed: 24, solid: true, water: true },
+    deepwater: { anim: ['t_deepwater1', 't_deepwater2', 't_deepwater3', 't_deepwater4'], animSpeed: 24, solid: true },
     // beaches are walkable so you can wade from the sand into the sea and swim
     shore_n: { img: 't_shore_n' },
     shore_s: { img: 't_shore_s' },

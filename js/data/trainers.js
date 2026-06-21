@@ -229,6 +229,28 @@
     defeat: 'Kyogre stirs... yet you stand taller than the waves. Perhaps the sea has chosen YOU.', music: 'champion'
   });
 
+  // ----------------------------------- HALL OF FAME ARENA (post-game) ------
+  // Three champions of ages past, teams stacked with legends. The final one
+  // wields the titan you did NOT claim ('_otherlegend' resolves at battle time).
+  tr('arena1', {
+    name: 'Sage Regulus', cls: 'Hall of Fame', sprite: 'trainer_aldric', ai: 'smart', money: 12000,
+    party: [{ sp: 'aggron', level: 62 }, { sp: 'claydol', level: 62 }, { sp: 'regice', level: 64 }, { sp: 'regirock', level: 64 }, { sp: 'registeel', level: 64 }, { sp: 'metagross', level: 66 }],
+    intro: 'I am Regulus, keeper of the golems. Three titans of stone answer to me — let us see your steel!',
+    defeat: 'The golems bow. Climb higher, Champion.', music: 'champion'
+  });
+  tr('arena2', {
+    name: 'Lady Eonia', cls: 'Hall of Fame', sprite: 'trainer_maris', ai: 'smart', money: 13000,
+    party: [{ sp: 'altaria', level: 64 }, { sp: 'flygon', level: 65 }, { sp: 'kingdra', level: 65 }, { sp: 'latias', level: 67 }, { sp: 'latios', level: 67 }, { sp: 'salamence', level: 68 }],
+    intro: 'Eonia, rider of the Eon dragons. Latias and Latios fly with me. Can your bond fly higher?',
+    defeat: 'The dragons accept you. One champion yet remains.', music: 'champion'
+  });
+  tr('arena3', {
+    name: 'Grandmaster Orin', cls: 'Hall of Fame', sprite: 'trainer_vesper', ai: 'smart', money: 16000,
+    party: [{ sp: 'gardevoir', level: 68 }, { sp: 'milotic', level: 68 }, { sp: 'tyranitar', level: 69 }, { sp: 'salamence', level: 69 }, { sp: 'metagross', level: 70 }, { sp: '_otherlegend', level: 70 }],
+    intro: 'I am Orin, the first Champion. I hold the titan you let slip away. Prove you were the worthier vessel!',
+    defeat: 'Astonishing. Sea, land, and sky — all yours. You are the finest this Hall has ever seen.', music: 'champion'
+  });
+
   // starter-counter cycle: rival takes the type-advantaged starter.
   // player grass(treecko) -> fire(torchic); fire -> water(mudkip); water -> grass(treecko)
   var COUNTER = { treecko: 'torchic', torchic: 'mudkip', mudkip: 'treecko' };
@@ -243,6 +265,8 @@
       if (key === '_starter') key = rivalBase;
       if (key === '_starter2') key = STAGE2[rivalBase];
       if (key === '_starter3') key = STAGE3[rivalBase];
+      // the legendary the player passed over (caught Kyogre -> they fight Groudon)
+      if (key === '_otherlegend') key = G.flags.ev_kyogre ? 'groudon' : 'kyogre';
       return G.makeMon(key, p.level);
     });
   };

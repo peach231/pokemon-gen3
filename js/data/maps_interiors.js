@@ -233,7 +233,7 @@
     ],
     npcs: [],
     trainers: [
-      { id: 'champion', trainer: 'champion', x: 4, y: 2, sprite: 'prof', dir: 'down', sight: 8, after: 'The pedestal is yours now. Wear it well.' }
+      { id: 'champion', trainer: 'champion', x: 4, y: 2, sprite: 'prof', dir: 'down', sight: 8, after: 'The pedestal is yours now. Wear it well.', onWin: 'hallOfFame' }
     ]
   };
 

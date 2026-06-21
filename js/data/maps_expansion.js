@@ -234,10 +234,8 @@
       // Team Aqua's final stand — they've seized the crater to wake Kyogre (endgame)
       { id: 'aqua_grunt5', trainer: 'aqua_grunt5', x: 6, y: 10, sprite: 'aqua', dir: 'down', sight: 4, ifFlag: 'badge8', after: 'You beat me, but the boss is already at the water...' },
       { id: 'aqua_admin', trainer: 'aqua_admin', x: 8, y: 12, sprite: 'aqua', dir: 'up', sight: 4, ifFlag: 'badge8', after: 'Reef, defeated... Archie, the tide is yours alone now.' },
-      { id: 'aqua_archie', trainer: 'aqua_archie', x: 10, y: 6, sprite: 'aqua', dir: 'down', sight: 4, ifFlag: 'badge8', after: 'Maybe the sea and the land were always meant to share this world.' },
-      // box legendaries: only spawn once all 8 badges are earned
-      { x: 5, y: 7, sprite: 'mon_groudon', obj: true, ifFlag: 'badge8', event: 'meetGroudon' },
-      { x: 14, y: 7, sprite: 'mon_kyogre', obj: true, ifFlag: 'badge8', event: 'meetKyogre' }
+      { id: 'aqua_archie', trainer: 'aqua_archie', x: 10, y: 6, sprite: 'aqua', dir: 'down', sight: 4, ifFlag: 'badge8', after: 'Maybe the sea and the land were always meant to share this world.' }
+      // (Kyogre & Groudon now sleep in the Titan Crossroads, opened after the League)
     ]
   });
 })();

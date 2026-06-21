@@ -450,6 +450,10 @@
         if (result.v === 'win' && def.after) {
           yield { t: 'text', s: trDef.name + ': ' + def.after };
         }
+        // a trainer can fire a follow-up event on defeat (e.g. Champion -> HoF)
+        if (result.v === 'win' && def.onWin && G.EVENTS && G.EVENTS[def.onWin]) {
+          yield* G.EVENTS[def.onWin]();
+        }
       };
     },
 

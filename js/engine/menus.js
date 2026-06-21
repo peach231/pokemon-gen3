@@ -633,6 +633,58 @@
   };
 
   // -------------------------------------------------------------- dex screen --
+  // ------------------------------------------------ Hall of Fame induction ---
+  // Plays after the Champion falls: a starlit parade of your team, then a
+  // closing line. onDone() continues the post-game (the legend fork).
+  G.HallOfFameScene = function (onDone) {
+    var party = (G.player.party || []).filter(function (m) { return !m.egg; });
+    var t = 0, finished = false;
+    function ct(ctx, s, cx, y, c, sh) { G.text(ctx, s, Math.round(cx - G.textWidth(s) / 2), y, c, sh); }
+    function finish() { if (finished) return; finished = true; G.popScene(); if (onDone) onDone(); }
+    return {
+      opaque: true,
+      enter: function () { if (G.audio.playMusic) G.audio.playMusic('champion'); },
+      update: function () {
+        t++;
+        var total = 60 + party.length * 45 + 200;
+        if (t >= total || (t > 90 && (G.input.justPressed('A') || G.input.justPressed('start') || G.input.justPressed('B')))) finish();
+      },
+      draw: function (ctx) {
+        ctx.fillStyle = '#191335'; ctx.fillRect(0, 0, W, H);
+        ctx.fillStyle = '#241a4a'; ctx.fillRect(0, 44, W, 70);
+        for (var i = 0; i < 40; i++) {
+          var sx = (i * 53 + t * 0.6) % W, sy = (i * 29 + t * 0.3) % H, tw = (t + i * 7) % 40;
+          ctx.fillStyle = tw < 20 ? 'rgba(255,236,150,0.8)' : 'rgba(255,236,150,0.25)';
+          ctx.fillRect(Math.round(sx), Math.round(sy), 1, 1);
+        }
+        ct(ctx, '★ HALL OF FAME ★', W / 2, 8, '#f8e878', '#5a3a10');
+        var shown = Math.min(party.length, Math.floor((t - 55) / 45) + 1);
+        var cols = Math.max(1, party.length), slotW = Math.floor(W / cols);
+        for (var k = 0; k < shown; k++) {
+          var m = party[k];
+          var img = G.IMG['mon_' + m.sp + (m.shiny && G.IMG['mon_' + m.sp + '_shiny'] ? '_shiny' : '')];
+          var cx = Math.round(slotW * k + slotW / 2);
+          var appear = G.clamp((t - 55 - k * 45) / 12, 0, 1);
+          if (img) {
+            var dw = Math.round(img.width * 0.5), dh = Math.round(img.height * 0.5);
+            ctx.globalAlpha = appear; ctx.imageSmoothingEnabled = false;
+            ctx.drawImage(img, Math.round(cx - dw / 2), Math.round(86 - dh - appear * 2), dw, dh);
+            ctx.globalAlpha = 1;
+            if (appear >= 1) {
+              ct(ctx, G.monName(m), cx, 88, G.C.white, '#1a1c2c');
+              ct(ctx, 'Lv' + m.level, cx, 98, G.C.lgry, '#1a1c2c');
+            }
+          }
+        }
+        if (shown >= party.length) {
+          ct(ctx, (G.player.name || 'You') + ' and partners', W / 2, 118, G.C.white, '#1a1c2c');
+          ct(ctx, 'are now LEGENDS of Hoenn!', W / 2, 130, '#f8e878', '#5a3a10');
+          ct(ctx, 'Z: continue', W / 2, 150, G.C.lgry);
+        }
+      }
+    };
+  };
+
   G.DexScene = function () {
     var RARITY_STARS = { common: '★', uncommon: '★★', rare: '★★★', elusive: '★★★★', legendary: '★★★★★' };
     // Hoenn regional dex first (Treecko -> Deoxys), then any kept extras.

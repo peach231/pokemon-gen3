@@ -358,8 +358,7 @@
       { x: 12, y: 8, text: 'CROWN SUMMIT — Beyond this hall sits the Champion of Solyn.' }
     ],
     npcs: [
-      { x: 9, y: 2, sprite: 'mon_rayquaza', obj: true, ifFlag: 'champion', event: 'meetAstradrax' },
-      { x: 9, y: 3, sprite: 'prof', dir: 'down', unlessFlag: 'champion', dialog: ['The sky high dragon RAYQUAZA is said to nest at the very peak.', 'It reveals itself only to a champion.'] }
+      { x: 9, y: 3, sprite: 'prof', dir: 'down', dialog: ['Beyond the Champion, they say, the very titans of Hoenn stir...', 'Sea, land, and sky — a Champion may yet be called to face them.'] }
     ],
     scripts: []
   };
