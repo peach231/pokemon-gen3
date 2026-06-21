@@ -56,12 +56,27 @@
     scripts: []
   };
 
+  // does the bag hold any capture orb? (you can't win a titan without one)
+  function hasOrb() {
+    var bag = G.player.bag || {};
+    for (var id in bag) { if (bag[id] > 0 && G.ITEMS[id] && G.ITEMS[id].kind === 'orb') return true; }
+    return false;
+  }
+
   // ===== shared boss helper: catch sets the flag ONLY on success (retry-safe)
   function bossEvent(key, flag, intro, level, opts) {
     opts = opts || {};
+    var start = opts.start || { x: 7, y: 15, dir: 'up' }; // the lair entrance
     return function* () {
       if (G.flags[flag]) { yield { t: 'text', s: opts.after || ('Where ' + G.SPECIES[key].name + ' stood, the air still trembles.') }; return; }
       if (opts.gate) { var msg = opts.gate(); if (msg) { yield { t: 'text', s: msg }; return; } }
+      // no orb = no capture possible: bounce back to the Crossroads to restock.
+      if (!hasOrb()) {
+        yield { t: 'text', s: G.SPECIES[key].name + ' looms before you — but your bag holds no Poké Balls!' };
+        yield { t: 'text', s: 'There is no way to capture it now. You slip back to the Titan Crossroads — the League shop below stocks orbs.' };
+        yield { t: 'fn', fn: function () { G.world.warpTo({ to: 'legendfork', tx: 7, ty: 8, dir: 'down' }); } };
+        return;
+      }
       for (var i = 0; i < intro.length; i++) yield { t: 'text', s: intro[i] };
       yield { t: 'sfx', id: 'superEff' };
       yield { t: 'fn', fn: function () {
@@ -76,9 +91,15 @@
               if (opts.primal) G.flags.primal = 1;
               if (opts.onCatch) opts.onCatch();
               else G.world.loadMap(G.world.mapId, G.world.player.x, G.world.player.y, G.world.player.dir);
+            } else if (r === 'win') {
+              // struck the titan down instead of catching it — it reforms, and
+              // you're swept back to the start of the lair to make the trek again.
+              G.pushScene(G.Textbox(
+                G.SPECIES[key].name + ' was struck down... but a fallen titan is no prize. It will gather itself anew, and the depths cast you out.',
+                { onDone: function () { G.world.loadMap(G.world.mapId, start.x, start.y, start.dir); } }
+              ));
             } else if (r !== 'lose') {
-              // won-without-catching or fled: stay in the lair to try again
-              // (a loss whites you out to the last center via afterBattle)
+              // fled: stay where you are to try again (a loss whites you out)
               G.world.loadMap(G.world.mapId, G.world.player.x, G.world.player.y, G.world.player.dir);
             }
           } }
