@@ -205,19 +205,19 @@
   sp(382, 'kyogre', 'Kyogre', ['water'], 'legendary', [100, 100, 90, 150, 140, 90], null, 0,
     [[1, 'watergun'], [1, 'leer'], [15, 'bubblebeam'], [30, 'raindance'], [45, 'icebeam'], [55, 'surf'], [65, 'hydropump'], [75, 'hyperbeam']],
     'Said to have summoned the rains that filled the oceans, it slumbers far beneath the deepest trench.',
-    { growth: SL, catchRate: 3 });
+    { growth: SL, catchRate: 30 });
 
   // 35. Groudon
   sp(383, 'groudon', 'Groudon', ['ground'], 'legendary', [100, 150, 140, 100, 90, 90], null, 0,
     [[1, 'mudslap'], [1, 'leer'], [15, 'magnitude'], [30, 'sunnyday'], [45, 'firepunch'], [55, 'earthquake'], [65, 'flamethrower'], [75, 'hyperbeam']],
     'Legends claim it raised the continents from the sea, scorching the land with searing daylight.',
-    { growth: SL, catchRate: 3 });
+    { growth: SL, catchRate: 30 });
 
   // 36. Rayquaza
   sp(384, 'rayquaza', 'Rayquaza', ['dragon', 'flying'], 'legendary', [105, 150, 90, 150, 90, 95], null, 0,
     [[1, 'twister'], [1, 'leer'], [15, 'dragonbreath'], [30, 'aerialace'], [45, 'dragonclaw'], [55, 'dragondance'], [65, 'fly'], [75, 'hyperbeam']],
     'It coils through the high ozone layer and descends only to calm a clash of land and sea.',
-    { growth: SL, catchRate: 3 });
+    { growth: SL, catchRate: 30 });
 
   // 37. Jirachi
   sp(385, 'jirachi', 'Jirachi', ['steel', 'psychic'], 'legendary', [100, 100, 100, 100, 100, 100], null, 0,
