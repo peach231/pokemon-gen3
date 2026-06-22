@@ -423,13 +423,37 @@
       for (var i = 0; i < G.player.party.length; i++) G.healMon(G.player.party[i]);
       if (G.audio.playJingle) G.audio.playJingle('jingle_heal'); else G.audio.sfx('heal');
     } };
-    yield { t: 'text', s: "Remy: There — good as new! Find me right here whenever your team needs a rest." };
+    yield { t: 'text', s: "Remy: There — good as new! Just holler whenever your team needs another rest." };
+  };
+  // Remy greets you the instant you set foot on Route 1, then tags along (follows
+  // the player) so you can heal any time without trekking back to him.
+  G.EVENTS.remyGreet = function* () {
+    yield { t: 'fn', fn: function () { G.flags.remyGreetSeen = 1; if (G.attachFollower) G.attachFollower('boy', 'friendHeal', 'Remy'); } };
+    yield { t: 'text', s: 'Remy: There you are! Told you I would catch up with you out on Route 1.' };
+    yield { t: 'text', s: "Remy: I'll tag right along and patch up your team whenever you need — just turn and talk to me. Let's go!" };
   };
   G.EVENTS.friendFarewell = function* () {
     yield { t: 'text', s: 'Remy: Hey — you made it to Cobblemarch! Your very first gym town. Nice going.' };
     yield { t: 'text', s: "Remy: This is where I peel off, though. I want to take on the gyms my own way, y'know?" };
     yield { t: 'text', s: "Remy: You've got this. Next time we cross paths, let's see how strong we've both gotten!" };
-    yield { t: 'fn', fn: function () { G.flags.friendGone = 1; } };
+    yield { t: 'fn', fn: function () { G.flags.friendGone = 1; if (G.clearFollower) G.clearFollower(); } };
+  };
+
+  // Mom tags along in Hearthvale: heals on request, and (before you have a
+  // partner) nudges you to Prof. Birch's lab — but never nags once you've chosen.
+  G.EVENTS.momTalk = function* () {
+    if (!G.flags.starter) {
+      yield { t: 'text', s: "Mom: Before you head off, sweetheart — go see Prof. Birch at the lab to the south and pick a partner!" };
+      yield { t: 'text', s: "Mom: I'll keep you company around town until then. Just ask if your team needs a rest." };
+      return;
+    }
+    yield { t: 'text', s: 'Mom: Let me freshen up your team before you go, dear.' };
+    yield { t: 'fn', fn: function () {
+      for (var i = 0; i < G.player.party.length; i++) G.healMon(G.player.party[i]);
+      G.player.respawn = { mapId: 'hearthvale', x: 5, y: 6 };
+      if (G.audio.playJingle) G.audio.playJingle('jingle_heal'); else G.audio.sfx('heal');
+    } };
+    yield { t: 'text', s: 'Mom: All rested! Be careful out there — and come home now and then. I love you!' };
   };
 
   // generic heal-center nurse: full heal + set respawn to this center

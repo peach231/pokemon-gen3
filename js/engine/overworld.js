@@ -25,6 +25,26 @@
     };
   }
 
+  // A tag-along follower (Mom in the home town, Remy on Route 1): it trails one
+  // tile behind the player and is talkable (its onTalkEvent runs heal/guidance).
+  // G.updateFollower decides who follows on each map load.
+  G.attachFollower = function (sprite, eventId, name) {
+    var p = G.world.player;
+    var bd = G.DIRS[G.OPPOSITE_DIR[p.dir] || 'down'];   // start one tile behind the player
+    var bx = p.x + bd.dx, by = p.y + bd.dy;
+    if (G.world.isBlocked(bx, by)) { bx = p.x; by = p.y; }
+    var f = makeActor(sprite, bx, by, p.dir);
+    f.onTalkEvent = eventId; f.name = name;
+    G.world.follower = f;
+  };
+  G.clearFollower = function () { G.world.follower = null; };
+  G.updateFollower = function () {
+    G.world.follower = null;
+    var id = G.world.mapId;
+    if (id === 'hearthvale') G.attachFollower('mom', 'momTalk', 'Mom');
+    else if (id === 'route1' && G.flags.starter && !G.flags.friendGone && G.flags.remyGreetSeen) G.attachFollower('boy', 'friendHeal', 'Remy');
+  };
+
   // -------------------------------------------------------------------------
   // Procedural scenery: scatter non-colliding decorations (flowers, tufts,
   // pebbles, bushes) over PLAIN grass so outdoor maps read as designed places
@@ -132,6 +152,7 @@
     mapId: null, map: null,
     player: makeActor('player', 0, 0, 'down'),
     npcs: [],
+    follower: null,
 
     loadMap: function (id, x, y, dir) {
       var map = G.MAPS[id];
@@ -158,6 +179,7 @@
         this.npcs.push(a);
       }
       if (map.music) G.audio.playMusic(map.music);
+      if (G.updateFollower) G.updateFollower();
     },
 
     tileNameAt: function (layer, x, y) {
@@ -263,6 +285,7 @@
 
     update: function () {
       var w = G.world, p = w.player;
+      this._advanceFollower();
 
       if (p.hop > 0) {
         p.hop--;
@@ -312,6 +335,7 @@
         p.hopTotal = p.hop = 22;
         p.stride = !p.stride;
         G.audio.sfx('ledgeHop');
+        this._followerStepTo(p.fromX, p.fromY);
         return;
       }
 
@@ -335,6 +359,25 @@
       p.moving = true;
       p.step = 0;
       p.stride = !p.stride;
+      this._followerStepTo(p.fromX, p.fromY);
+    },
+
+    // follower trails one tile behind: when the player vacates a tile, the
+    // follower walks into it, animated in step with the player.
+    _advanceFollower: function () {
+      var f = G.world.follower;
+      if (!f || !f.moving) return;
+      var spd = 1 + (G.input.held.run ? 1 : 0) + ((G.player && G.player.bag && G.player.bag.skates) ? 1 : 0);
+      f.step += spd;
+      if (f.step >= 16) { f.moving = false; f.step = 0; }
+    },
+    _followerStepTo: function (tx, ty) {
+      var f = G.world.follower;
+      if (!f || (f.x === tx && f.y === ty)) return;
+      f.fromX = f.x; f.fromY = f.y;
+      f.dir = tx > f.x ? 'right' : tx < f.x ? 'left' : ty > f.y ? 'down' : 'up';
+      f.x = tx; f.y = ty;
+      f.moving = true; f.step = 0; f.stride = !f.stride;
     },
 
     _stepDone: function () {
@@ -462,6 +505,13 @@
       var d = G.DIRS[p.dir];
       var fx = p.x + d.dx, fy = p.y + d.dy;
 
+      // a tag-along follower (Mom / Remy): talk to them by turning to face them
+      if (w.follower && fx === w.follower.x && fy === w.follower.y && w.follower.onTalkEvent) {
+        w.follower.dir = G.OPPOSITE_DIR[p.dir];
+        G.runEvent(w.follower.onTalkEvent);
+        return;
+      }
+
       // talking is forgiving: the faced tile first, then any adjacent side
       var npc = w.npcAt(fx, fy);
       if (!npc) {
@@ -574,6 +624,7 @@
 
       // entities, y-sorted
       var ents = [w.player].concat(w.npcs);
+      if (w.follower) ents.push(w.follower);
       var self = this;
       ents.sort(function (a, b) { return w.pixelPos(a).y - w.pixelPos(b).y; });
       for (var i = 0; i < ents.length; i++) self._drawActor(ctx, ents[i], cam);
