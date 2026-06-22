@@ -436,7 +436,8 @@
     }
 
     yield { t: 'text', s: name + ' used ' + move.name + '!' };
-    yield { t: 'anim', kind: 'attack', side: side };
+    var physical = move.power > 0 && G.isPhysical(move.type);
+    if (physical) yield { t: 'anim', kind: 'attack', side: side }; // contact lunge
 
     // accuracy
     var hitChance = move.acc * accMul(this.stages[side].acc - this.stages[other].eva);
@@ -446,11 +447,16 @@
     }
 
     if (move.power === 0) {
+      // a type-themed aura for the status/buff move, then apply it
+      var fxCat = (move.effect && move.effect.kind === 'stages' && move.effect.target === 'self') ? 'buff'
+        : (move.effect && move.effect.kind === 'weather') ? 'buff' : 'debuff';
+      yield { t: 'anim', kind: 'moveFx', side: side, type: move.type, category: fxCat };
       yield* this.applyEffect(side, other, move.effect, true);
       return;
     }
 
-    // damaging move
+    // damaging move — a type-themed projectile (special) or impact (physical)
+    yield { t: 'anim', kind: 'moveFx', side: side, type: move.type, category: physical ? 'phys' : 'spec' };
     var foe = this.active(other);
     var hits = 1;
     if (move.effect && move.effect.kind === 'multiHit') {
@@ -633,16 +639,21 @@
       if (!mon || mon.curHp <= 0) continue;
       yield { t: 'text', s: G.monName(mon) + ' gained ' + amount + ' EXP!' };
       if (Number(idx) === this.activeP) yield { t: 'expbar', mon: mon, exp: mon.exp + amount };
+      var before = G.monStats(mon);          // snapshot to diff stat growth
       var events = G.gainExp(mon, amount);
+      var learns = [], leveled = false;
       for (var e = 0; e < events.length; e++) {
         var ev = events[e];
         if (ev.type === 'level') {
+          leveled = true;
           yield { t: 'sfx', id: 'levelUp' };
           yield { t: 'text', s: G.monName(mon) + ' grew to level ' + ev.level + '!' };
         } else if (ev.type === 'learn') {
-          yield* this.learnMove(mon, ev.moveId);
+          learns.push(ev.moveId); // deferred so the stat panel shows first
         }
       }
+      if (leveled) yield { t: 'levelstats', mon: mon, before: before, after: G.monStats(mon) };
+      for (var li = 0; li < learns.length; li++) yield* this.learnMove(mon, learns[li]);
       var evo = G.evolutionDue(mon);
       if (evo && !this.pendingEvolutions.some(function (p) { return p.mon === mon; })) {
         this.pendingEvolutions.push({ mon: mon, to: evo });

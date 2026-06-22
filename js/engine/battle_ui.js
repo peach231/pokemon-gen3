@@ -148,7 +148,8 @@
     var hpTarget = { p: 1, f: 1 };
     var expShown = 0, expTarget = 0;
     var orb = { visible: false, x: 0, y: 0, t: 0, mode: null }; // throw/shake/rest
-    var particles = [];                  // {x,y,vx,vy,life,ch}
+    var sendBall = { visible: false, side: null, t: 0 };       // send-out ball toss
+    var particles = [];                  // {x,y,vx,vy,life,col?,size?,delay?,grav?}
     var weatherFx = battle.weather || null;  // 'rain' | 'sun' | 'sand' | null
 
     var gen = null;          // active generator being pumped
@@ -201,6 +202,10 @@
           } else if (step.kind === 'orbThrow') {
             orb.visible = true; orb.mode = 'throw'; orb.t = 0;
             task = { kind: 'orbThrow', t: 0, frames: 26 };
+          } else if (step.kind === 'moveFx') {
+            spawnMoveFx(step.side, step.type, step.category);
+            var fr = step.category === 'spec' ? 20 : step.category === 'buff' ? 22 : 14;
+            task = { kind: 'wait', t: 0, frames: fr };
           } else {
             task = null;
           }
@@ -213,24 +218,40 @@
           expTarget = expFrac(step.mon);
           task = { kind: 'exp', mon: step.mon };
           break;
-        case 'sendOut':
-          if (step.side === 'f') trainerShown = false; // portrait steps aside
-          if (step.side === 'p') playerShown = false;   // player throws — back sprite exits
+        case 'sendOut': {
           if (step.mon.shiny && G.gfx.ensureShiny) G.gfx.ensureShiny(step.mon.sp, G.SPECIES[step.mon.sp].id);
-          sprites[step.side].mon = step.mon;
-          sprites[step.side].visible = true;
-          sprites[step.side].scale = 0;
-          sprites[step.side].dropY = 0;
+          var so = sprites[step.side];
+          so.mon = step.mon;
+          so.scale = 0;
+          so.dropY = 0;
+          so.offX = 0;
+          so.flicker = 0;
           hpShown[step.side] = hpTarget[step.side] = step.mon.curHp / G.monStats(step.mon).hp;
           if (step.side === 'p') { expShown = expTarget = expFrac(step.mon); }
-          task = { kind: 'grow', side: step.side, t: 0, frames: 14 };
+          // a trainer (you, or the opposing trainer) lobs the ball; wild mons
+          // simply rise onto the field.
+          var toss = (step.side === 'p') || (step.side === 'f' && !!battle.trainer);
+          if (toss) {
+            so.visible = false;                 // hidden until the ball pops
+            sendBall.visible = true; sendBall.side = step.side; sendBall.t = 0;
+            G.audio.sfx('confirm');
+            task = { kind: 'sendOut', side: step.side, phase: 'toss', t: 0 };
+          } else {
+            if (step.side === 'f') trainerShown = false;
+            so.visible = true;
+            task = { kind: 'sendOut', side: step.side, phase: 'grow', t: 0 };
+          }
           break;
+        }
         case 'recall':
           sprites[step.side].visible = false;
           task = null;
           break;
         case 'status':
           task = null;
+          break;
+        case 'levelstats':
+          task = { kind: 'levelstats', before: step.before, after: step.after, mon: step.mon, t: 0 };
           break;
         case 'weather':
           weatherFx = step.weather;
@@ -363,11 +384,31 @@
           }
           return false;
         }
-        case 'grow': {
+        case 'sendOut': {
           task.t++;
-          sprites[task.side].scale = Math.min(1, task.t / task.frames);
-          return task.t >= task.frames;
+          var ss = sprites[task.side];
+          if (task.phase === 'toss') {
+            sendBall.t = task.t;
+            if (task.t >= 16) {
+              // the ball lands and bursts open — thrower steps off, mon rises
+              if (task.side === 'f') trainerShown = false;
+              if (task.side === 'p') playerShown = false;
+              sendBall.visible = false;
+              ss.visible = true;
+              var anc = task.side === 'p' ? PLY : FOE;
+              releaseBurst(anc.x, anc.y - 10);
+              G.audio.sfx('confirm');
+              task.phase = 'grow'; task.t = 0;
+            }
+            return false;
+          }
+          ss.scale = Math.min(1, task.t / 14);
+          return task.t >= 14;
         }
+        case 'levelstats':
+          task.t++;
+          if (task.t > 10 && (G.input.justPressed('A') || G.input.justPressed('B'))) return true;
+          return task.t >= 120; // auto-advance (soak/autoplay never press keys)
         case 'orbThrow':
           task.t++;
           orb.t = task.t;
@@ -568,6 +609,15 @@
       }
     }
 
+    // tiny capture/poké ball: red top, white bottom, dark seam
+    function drawBall(ctx, x, y) {
+      x = Math.round(x); y = Math.round(y);
+      ctx.fillStyle = G.C.ink; ctx.fillRect(x - 4, y - 4, 9, 9);
+      ctx.fillStyle = G.C.red2; ctx.fillRect(x - 3, y - 3, 7, 3);
+      ctx.fillStyle = G.C.white; ctx.fillRect(x - 3, y + 1, 7, 3);
+      ctx.fillStyle = G.C.ink; ctx.fillRect(x - 3, y, 7, 1);
+    }
+
     function drawOrb(ctx) {
       if (!orb.visible) return;
       var x = FOE.x, y = FOE.y - 8;
@@ -579,11 +629,75 @@
         x += Math.round(Math.sin(orb.t * 0.5) * 3);
         orb.t++;
       }
-      // tiny orb: red top, white bottom
-      ctx.fillStyle = G.C.ink; ctx.fillRect(x - 4, y - 4, 9, 9);
-      ctx.fillStyle = G.C.red2; ctx.fillRect(x - 3, y - 3, 7, 3);
-      ctx.fillStyle = G.C.white; ctx.fillRect(x - 3, y + 1, 7, 3);
-      ctx.fillStyle = G.C.ink; ctx.fillRect(x - 3, y, 7, 1);
+      drawBall(ctx, x, y);
+    }
+
+    // the send-out ball arcs from the thrower's hand onto their platform
+    function drawSendBall(ctx) {
+      if (!sendBall.visible) return;
+      var anchor = sendBall.side === 'p' ? PLY : FOE;
+      var start = sendBall.side === 'p' ? { x: PLY.x - 10, y: PLY.y - 22 } : { x: FOE.x + 10, y: FOE.y - 30 };
+      var end = { x: anchor.x, y: anchor.y - 10 };
+      var t = Math.min(1, sendBall.t / 16);
+      var x = G.lerp(start.x, end.x, t);
+      var y = G.lerp(start.y, end.y, t) - Math.sin(t * Math.PI) * 26;
+      drawBall(ctx, x, y);
+    }
+
+    // ---- move / send-out particle spawners ----------------------------------
+    function burstAt(x, y, col, n, spd, life) {
+      for (var i = 0; i < n; i++) {
+        var a = (i / n) * Math.PI * 2, s = spd * (0.7 + (i % 3) * 0.3);
+        particles.push({ x: x, y: y, vx: Math.cos(a) * s, vy: Math.sin(a) * s, life: life, maxLife: life, grav: false, col: col, size: 2 });
+      }
+    }
+    function releaseBurst(x, y) {
+      for (var i = 0; i < 10; i++) {
+        var a = (i / 10) * Math.PI * 2;
+        particles.push({ x: x, y: y, vx: Math.cos(a) * 1.3, vy: Math.sin(a) * 1.3 - 0.3, life: 12, maxLife: 12, grav: false, col: i % 2 ? G.C.white : G.C.red3, size: 2 });
+      }
+    }
+    // a type-themed effect from attacker -> target (projectile / impact / aura)
+    function spawnMoveFx(side, type, category) {
+      var self = side === 'p' ? PLY : FOE;
+      var foe = side === 'p' ? FOE : PLY;
+      var col = (G.TYPE_COLORS && G.TYPE_COLORS[type]) || G.C.white;
+      var sx = self.x, sy = self.y - 20, tx = foe.x, ty = foe.y - 20;
+      if (category === 'spec') {
+        var dx = tx - sx, dy = ty - sy, dist = Math.max(1, Math.sqrt(dx * dx + dy * dy));
+        var ux = dx / dist, uy = dy / dist, speed = dist / 12;
+        for (var i = 0; i < 12; i++) {
+          var spread = (i % 3 - 1);
+          particles.push({ x: sx - uy * spread * 5, y: sy + ux * spread * 5, vx: ux * speed, vy: uy * speed, life: 14, maxLife: 14, grav: false, col: col, size: 2, delay: i });
+        }
+        for (var k = 0; k < 6; k++) {
+          var a = (k / 6) * Math.PI * 2;
+          particles.push({ x: tx, y: ty, vx: Math.cos(a) * 1.1, vy: Math.sin(a) * 1.1, life: 10, maxLife: 10, grav: false, col: col, size: 2, delay: 12 });
+        }
+      } else if (category === 'phys') {
+        burstAt(tx, ty, col, 9, 1.5, 12);
+        particles.push({ x: tx, y: ty, vx: 0, vy: 0, life: 8, maxLife: 8, grav: false, col: G.C.white, size: 3 });
+      } else if (category === 'buff') {
+        for (var b = 0; b < 9; b++) {
+          particles.push({ x: sx + (b % 5 - 2) * 5, y: self.y - 2, vx: (b % 3 - 1) * 0.15, vy: -0.7 - (b % 3) * 0.25, life: 22, maxLife: 22, grav: false, col: col, size: 2 });
+        }
+      } else { // debuff
+        burstAt(tx, ty, col, 8, 1.1, 14);
+      }
+    }
+
+    // the post-level-up stat-gain window (Gen-III style)
+    function drawLevelStats(ctx, t) {
+      var rows = [['HP', 'hp'], ['ATTACK', 'atk'], ['DEFENSE', 'def'], ['SP.ATK', 'spa'], ['SP.DEF', 'spd'], ['SPEED', 'spe']];
+      var bx = 132, by = 6, bw = 104, bh = 72;
+      G.nineSlice(ctx, G.IMG.ui_box, bx, by, bw, bh, 4);
+      G.text(ctx, 'LEVEL UP!', bx + 8, by + 6, '#e8c038', G.UI.textShadow);
+      for (var i = 0; i < rows.length; i++) {
+        var k = rows[i][1], yy = by + 18 + i * 9;
+        G.text(ctx, rows[i][0], bx + 6, yy, G.UI.text, G.UI.textShadow);
+        G.text(ctx, '+' + (t.after[k] - t.before[k]), bx + 56, yy, '#3fa757', G.UI.textShadow);
+        G.text(ctx, '' + t.after[k], bx + 80, yy, G.UI.text, G.UI.textShadow);
+      }
     }
 
     function drawPanels(ctx) {
@@ -728,20 +842,32 @@
         drawSprite(ctx, 'f');
         drawSprite(ctx, 'p');
         drawOrb(ctx);
-        // catch celebration stars
+        drawSendBall(ctx);
+        // particles: catch-celebration stars (no col) + colored move/send FX
         for (var pi = particles.length - 1; pi >= 0; pi--) {
           var pt = particles[pi];
-          pt.x += pt.vx; pt.y += pt.vy; pt.vy += 0.04; pt.life--;
+          if (pt.delay > 0) { pt.delay--; continue; }   // staggered emit (streams)
+          pt.x += pt.vx; pt.y += pt.vy;
+          if (pt.grav !== false) pt.vy += 0.04;
+          pt.life--;
           if (pt.life <= 0) { particles.splice(pi, 1); continue; }
-          ctx.fillStyle = (pt.life >> 2) % 2 ? '#f8e878' : '#f4f4f4';
-          ctx.fillRect(Math.round(pt.x), Math.round(pt.y), 2, 2);
-          if (pt.life > 16) {
-            ctx.fillRect(Math.round(pt.x) - 1, Math.round(pt.y), 1, 1);
-            ctx.fillRect(Math.round(pt.x) + 2, Math.round(pt.y), 1, 1);
+          var px = Math.round(pt.x), py = Math.round(pt.y);
+          if (pt.col) {
+            ctx.fillStyle = pt.col;
+            ctx.fillRect(px, py, pt.size || 2, pt.size || 2);
+            if (pt.life > (pt.maxLife || 14) * 0.55) { ctx.fillStyle = '#f4f4f4'; ctx.fillRect(px, py, 1, 1); }
+          } else {
+            ctx.fillStyle = (pt.life >> 2) % 2 ? '#f8e878' : '#f4f4f4';
+            ctx.fillRect(px, py, 2, 2);
+            if (pt.life > 16) {
+              ctx.fillRect(px - 1, py, 1, 1);
+              ctx.fillRect(px + 2, py, 1, 1);
+            }
           }
         }
         drawPanels(ctx);
         drawTextbox(ctx);
+        if (task && task.kind === 'levelstats') drawLevelStats(ctx, task);
       }
     };
   };
