@@ -17,3 +17,6 @@ assets/sprites/pokemon/back/*.png
 assets/sprites/pokemon/icon/*.png
 # user-supplied trainer/player sprites are NOT committed either (bring your own)
 assets/sprites/trainers/*.png
+
+# headless-Edge review profiles / scratch screenshots
+tools/critique/
