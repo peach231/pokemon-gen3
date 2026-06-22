@@ -10,25 +10,25 @@
 
   // ------------------------------------------------------------- rival -----
   tr('rival1', {
-    name: 'Brendan', cls: 'Rival', sprite: 'trainer_kai', ai: 'basic', money: 200,
+    name: 'Kai', cls: 'Rival', sprite: 'trainer_kai', ai: 'basic', money: 200,
     party: [{ sp: '_starter', level: 3 }],
     intro: "Heading out already? Let's see what that starter can do!",
     defeat: 'Not bad. Mine just needs more training.', music: 'battle'
   });
   tr('rival2', {
-    name: 'Brendan', cls: 'Rival', sprite: 'trainer_kai', ai: 'basic', money: 500,
+    name: 'Kai', cls: 'Rival', sprite: 'trainer_kai', ai: 'basic', money: 500,
     party: [{ sp: 'zigzagoon', level: 10 }, { sp: '_starter', level: 12 }],
     intro: "Perfect timing. I've been itching for a rematch!",
     defeat: 'Argh, so close! Next time for sure.', music: 'battle'
   });
   tr('rival3', {
-    name: 'Brendan', cls: 'Rival', sprite: 'trainer_kai', ai: 'smart', money: 900,
+    name: 'Kai', cls: 'Rival', sprite: 'trainer_kai', ai: 'smart', money: 900,
     party: [{ sp: 'swellow', level: 22 }, { sp: 'lombre', level: 23 }, { sp: '_starter2', level: 25 }],
     intro: 'Two badges and a real team now. Show me yours!',
     defeat: 'You keep getting stronger. So will I.', music: 'battle'
   });
   tr('rival4', {
-    name: 'Brendan', cls: 'Rival', sprite: 'trainer_kai', ai: 'smart', money: 1800,
+    name: 'Kai', cls: 'Rival', sprite: 'trainer_kai', ai: 'smart', money: 1800,
     party: [{ sp: 'swellow', level: 34 }, { sp: 'magneton', level: 34 }, { sp: 'ludicolo', level: 35 }, { sp: '_starter3', level: 37 }],
     intro: 'The League is just ahead. One more battle before you go!',
     defeat: '...Go on. Become Champion. I’ll be right behind you.', music: 'battle'
