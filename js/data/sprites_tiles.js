@@ -861,22 +861,25 @@
     'ssssssssssssssss',
     'oooooooooooooooo'
   ]);
-  T('t_door', { o: C.ink, w: C.pale, l: C.lgry, D: C.brn2, d: C.brn1, k: C.yel1, s: C.gry }, [
+  // Automatic glass double-door (Center / Mart / shop entrance look): twin
+  // light-blue glass panels with a central stile, set in a dark frame above a
+  // pale threshold step.
+  T('t_door', { o: C.ink, w: C.pale, l: C.lgry, g: C.blu3, G: C.ice2, s: C.gry }, [
     'ssssssssssssssss',
     'wwwwwwwwwwwwwwww',
-    'wwwwwwwwwwwwwwww',
-    'wwwoooooooooowww',
-    'wwwoDDDDDDDDowww',
-    'wwwoDddddddDowww',
-    'wwwoDdDDDDdDowww',
-    'wwwoDdDDDDdDowww',
-    'wwwoDdDDDDdDowww',
-    'wwwoDddddddDowww',
-    'wwwoDDDDDDkDowww',
-    'wwwoDDDDDDDDowww',
-    'wwwoDDDDDDDDowww',
-    'wwwoDDDDDDDDowww',
-    'lllooooooooollll',
+    'wwooooooooooooww',
+    'wwoGgggooGgggoww',
+    'wwoggggooggggoww',
+    'wwoGgggooGgggoww',
+    'wwoggggooggggoww',
+    'wwoGgggooGgggoww',
+    'wwoggggooggggoww',
+    'wwoGgggooGgggoww',
+    'wwoggggooggggoww',
+    'wwoGgggooGgggoww',
+    'wwooooooooooooww',
+    'wwllllllllllllww',
+    'llllllllllllllll',
     'oooooooooooooooo'
   ]);
 
@@ -1373,22 +1376,25 @@
   ]);
 
   // ------------------------------ rooftop markers (heal / shop / gym) -------
-  T('t_hroofx', { o: C.ink, R: C.red1, r: C.red0, w: C.white }, [
-    'RRRRRRRRRRRRRRRR',
+  // Center rooftop placard: a proper Poké Ball — bright-red top half, white
+  // bottom, ink equator with a white release button — reading clearly against
+  // the deep-red Center roof.
+  T('t_hroofx', { o: C.ink, R: C.red1, q: C.red3, w: C.white }, [
     'RRRRRRRRRRRRRRRR',
     'RRRRRooooooRRRRR',
-    'RRRRRowwwwoRRRRR',
+    'RRRooqqqqqqooRRR',
+    'RRoqqqqqqqqqqoRR',
+    'RRoqqqqqqqqqqoRR',
+    'RRoqqqqqqqqqqoRR',
+    'RRooooooooooooRR',
     'RRoooowwwwooooRR',
-    'RRowwwwwwwwwwoRR',
-    'RRowwwwwwwwwwoRR',
-    'RRowwwwwwwwwwoRR',
-    'RRowwwwwwwwwwoRR',
     'RRoooowwwwooooRR',
-    'RRRRRowwwwoRRRRR',
-    'RRRRRowwwwoRRRRR',
+    'RRooooooooooooRR',
+    'RRowwwwwwwwwwoRR',
+    'RRowwwwwwwwwwoRR',
+    'RRoowwwwwwwwooRR',
+    'RRRoowwwwwwooRRR',
     'RRRRRooooooRRRRR',
-    'rrrrrrrrrrrrrrrr',
-    'RRRRRRRRRRRRRRRR',
     'RRRRRRRRRRRRRRRR'
   ]);
   T('t_sroofx', { o: C.ink, R: C.blu1, r: C.blu0, y: C.yel1, Y: C.yel2 }, [
@@ -1483,22 +1489,24 @@
     'wwwwwwwwwwwwwwww',
     'oooooooooooooooo'
   ]);
+  // Grand gym entrance: tall stone double-doors split by a central stile, with
+  // gold accent bands — reads as a civic landmark, not a house door.
   T('t_gymdoor', { o: C.ink, w: C.stn3, l: C.stn2, s: C.stn1, y: C.yel1 }, [
     'llllllllllllllll',
     'wwooooooooooooww',
-    'wwossssssssssoww',
-    'wwossyssssyssoww',
-    'wwossssssssssoww',
-    'wwossssyyssssoww',
-    'wwosssyyyysssoww',
-    'wwossssyyssssoww',
-    'wwossssssssssoww',
-    'wwossossossssoww',
-    'wwossossossssoww',
-    'wwossossossssoww',
-    'wwossossossssoww',
-    'wwossossossssoww',
-    'wwossossossssoww',
+    'wwossssoossssoww',
+    'wwosyysoosyysoww',
+    'wwossssoossssoww',
+    'wwossssoossssoww',
+    'wwosyysoosyysoww',
+    'wwossssoossssoww',
+    'wwossssoossssoww',
+    'wwosyysoosyysoww',
+    'wwossssoossssoww',
+    'wwossssoossssoww',
+    'wwosyysoosyysoww',
+    'wwossssoossssoww',
+    'wwooooooooooooww',
     'oooooooooooooooo'
   ]);
 
