@@ -11,42 +11,46 @@
   // ---------------------------------------------------------------- grass --
   var GR = { a: C.leaf1, b: C.leaf2, c: C.leaf3 };
 
+  // base grass: a calm leaf2 field stippled with small blades — a light tip (c)
+  // over a shadowed base (a) — so a tiled field reads as textured turf, not a
+  // flat slab, while staying quiet enough not to fight sprites/deco on top.
   T('t_grass', GR, [
+    'bbbbbbbbbbbbbbbb',
+    'bbcbbbbbbbcbbbbb',
+    'bbabbbbbbbabbbbb',
     'bbbbbbbbbbbbbbbb',
     'bbbbbbbbbbbbbbbb',
     'bbbbbbcbbbbbbbbb',
+    'bbbbbbabbbbbbbbb',
     'bbbbbbbbbbbbbbbb',
+    'bbbbbbbbbbbbbcbb',
     'bbbbbbbbbbbbbabb',
     'bbbbbbbbbbbbbbbb',
-    'bbcbbbbbbbbbbbbb',
-    'bbbbbbbbbbbbcbbb',
-    'bbbbbbbbbbbbbbbb',
-    'bbbbbbbbbabbbbbb',
-    'bbbbbbbbbbbbbbbb',
-    'bbbbbbbbcbbbbbbb',
-    'bbbbbbbbbbbbbbbb',
     'bbbbcbbbbbbbbbbb',
-    'babbbbbbbbbbbbbb',
-    'bbbbbbbbbbbbbbbb'
+    'bbbbabbbbbbbbbbb',
+    'bbbbbbbbbbbbbbbb',
+    'bbbbbbbbbbbcbbbb',
+    'bbbbbbbbbbbabbbb'
   ]);
 
+  // grass variant — same blades in different spots so adjacent tiles vary.
   T('t_grass2', GR, [
     'bbbbbbbbbbbbbbbb',
     'bbbbbbbbbbbbbbbb',
+    'bbbbbcbbbbbbbcbb',
+    'bbbbbabbbbbbbabb',
+    'bbbbbbbbbbbbbbbb',
+    'bcbbbbbbbbbbbbbb',
+    'babbbbbbbbbbbbbb',
+    'bbbbbbbbbbbbbbbb',
+    'bbbbbbbbbcbbbbbb',
+    'bbbbbbbbbabbbbbb',
+    'bbbbbbbbbbbbbbbb',
+    'bbbbbbbbbbbbbbbb',
     'bbbcbbbbbbbbbbbb',
-    'bbacabbbbbbbbbbb',
+    'bbbabbbbbbbbbbbb',
     'bbbbbbbbbbbbbbbb',
-    'bbbbbbbbbbbbbbbb',
-    'bbbbbbbbbbbbbbbb',
-    'bbbbbbbbbbbbbbbb',
-    'bbbbbbbbbbbbbbbb',
-    'bbbbbbbbbbbcbbbb',
-    'bbbbbbbbbbacabbb',
-    'bbbbbbbbbbbbbbbb',
-    'bbbbbbbbbbbbbbbb',
-    'bbbbbbbbbbbbbbbb',
-    'bbbbbbbbbbbbbbbb',
-    'bbbbbbbcbbbbbbbb'
+    'bbbbbbbbbbbbbbbb'
   ]);
 
   // tall grass (wild encounters) — lit blade clumps, not a flat dark block.
@@ -648,20 +652,22 @@
   ]);
 
   // ---------------------------------------------------------------- ledge --
+  // ledge: turf above, a clearly 3D drop you hop down (a sun-lit top lip, a
+  // tan→brown vertical face), then a cast shadow on the grass you land on.
   T('t_ledge', { a: C.leaf1, b: C.leaf2, c: C.leaf3, g: C.brn2, h: C.brn1, d: C.tan0 }, [
     'bbbbbbbbbbbbbbbb',
-    'bbbabbbbbbabbbbb',
+    'bbbabbbbbbcbbbbb',
     'bbbbbbcbbbbbbbbb',
     'abbbbbbbbbbbbabb',
-    'bbbbabbbbbbbbbbb',
+    'bbbbbbbbbbbbbbbb',
     'bbbbbbbbbcbbbbab',
     'bbcbbbbbbbbbbbbb',
-    'bbbbbbabbbbbcbbb',
+    'cccccccccccccccc',
     'dddddddddddddddd',
     'ddgddddgdddddgdd',
     'gggggggggggggggg',
     'hhhhhhhhhhhhhhhh',
-    'bbbbbbbbbbbbbbbb',
+    'aaaaaaaaaaaaaaaa',
     'babbbbbbbcbbbbbb',
     'bbbbabbbbbbbabbb',
     'bbbbbbbbbbbbbbbb'
