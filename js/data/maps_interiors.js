@@ -116,31 +116,34 @@
   healCenter('heal_mossdeep', 'Mossdeep', { map: 'mossdeep', x: 14, y: 6 });
   healCenter('heal_sootopolis', 'Sootopolis', { map: 'sootopolis', x: 14, y: 6 });
 
+  // Poké Mart: a clerk behind a sales counter (buy by talking across it) with
+  // stocked shelves lining the walls, and a move tutor browsing the aisle.
+  // Entrance stays at (4,7) so the town warps that point here are unaffected.
   function shop(id, exit, inventory) {
     G.MAPS[id] = {
-      id: id, name: 'Goods Shop', w: 9, h: 8,
+      id: id, name: 'Poké Mart', w: 11, h: 8,
       music: 'town', battleBg: 'indoor', base: 'ifloor',
       legend: G.LEG_INT,
       ground: pad([
-        'IIIIIIIII',
-        '.B.....P.',
-        '..CCCCC..',
-        '.........',
-        'TT.....TT',
-        'TT.....TT',
-        '...P.....',
-        '....m....'
-      ], 9, 8),
+        'IIIIIIIIIII',
+        '.B.......B.',
+        '...CCCCC...',
+        '...........',
+        'TT.......TT',
+        'TT.......TT',
+        '...........',
+        '....m......'
+      ], 11, 8),
       warps: [{ x: 4, y: 7, to: exit.map, tx: exit.x, ty: exit.y, dir: 'down' }],
       signs: [
         { x: 1, y: 1, text: 'Travel gear, neatly stocked behind the clerk.' },
         { x: 0, y: 4, text: 'Shelves of Potions and Poké Balls.' },
-        { x: 8, y: 4, text: 'Shelves of candies and field gear.' }
+        { x: 10, y: 4, text: 'Shelves of candies and field gear.' }
       ],
       shopInventory: inventory,
       npcs: [
-        { x: 3, y: 1, sprite: 'prof', dir: 'down', event: 'shopBuy' },
-        { x: 5, y: 1, sprite: 'boy', dir: 'down', event: 'moveTutor' }
+        { x: 5, y: 1, sprite: 'prof', dir: 'down', event: 'shopBuy' },
+        { x: 3, y: 6, sprite: 'boy', dir: 'down', event: 'moveTutor' }
       ]
     };
   }
@@ -164,34 +167,36 @@
       legend: G.LEG_INT,
       gymTint: type ? G.TYPE_COLORS[type] : null,         // type-colored floor
       gymEmblem: type ? { x: 5, y: 6, type: type, big: true } : null,
-      // a carpet runway leads from the door up to the leader, statues flanking
+      // a serpentine pillar maze: barrier rows with alternating gaps force the
+      // challenger to weave left-right up to the Leader waiting at the back.
       ground: pad([
         'IIIIIIIIIII',
         'GGGGGGGGGGG',
-        'GGGGGRGGGGG',
-        'GGGGGRGGGGG',
-        'GUGGGRGGGUG',
-        'GGGGGRGGGGG',
-        'GGGGGRGGGGG',
-        'GGGGGRGGGGG',
-        'GUGGGRGGGUG',
-        'GGGGGRGGGGG',
-        'GGGGGRGGGGG',
+        'GGGGGGGGGGG',
+        'UUUUUUUGGGG',
+        'GGGGGGGGGGG',
+        'GGGGUUUUUUU',
+        'GGGGGGGGGGG',
+        'UUUUUUUGGGG',
+        'GGGGGGGGGGG',
+        'GGGGUUUUUUU',
+        'GGGGGGGGGGG',
         'GGGGGmGGGGG'
       ], 11, 12, 'G'),
       warps: [{ x: 5, y: 11, to: exit.map, tx: exit.x, ty: exit.y, dir: 'down' }],
       signs: [
-        { x: 1, y: 4, text: statueText },
-        { x: 9, y: 8, text: 'CHALLENGERS: heal up before approaching the Leader.' }
+        { x: 2, y: 10, text: statueText },
+        { x: 8, y: 8, text: 'CHALLENGERS: heal up before weaving in to the Leader.' }
       ],
       npcs: [
-        { x: 7, y: 10, sprite: 'boy', dir: 'left', dialog: [
+        { x: 8, y: 10, sprite: 'boy', dir: 'left', dialog: [
           'Welcome to the ' + (type ? type.charAt(0).toUpperCase() + type.slice(1) : '') + ' Gym!',
-          'The Leader fields only ' + (type ? type.toUpperCase() : '') + '-types. Bring moves that counter them!'
+          'Weave through the pillars — there is only one path up to the Leader.',
+          'They field only ' + (type ? type.toUpperCase() : '') + '-types. Bring moves that counter them!'
         ] }
       ],
       trainers: [
-        { id: leaderId, trainer: leaderId, x: 5, y: 2, sprite: leaderSprite, dir: 'down', sight: 6, after: 'Go on — the region is waiting for you.' }
+        { id: leaderId, trainer: leaderId, x: 5, y: 1, sprite: leaderSprite, dir: 'down', sight: 6, after: 'Go on — the region is waiting for you.' }
       ]
     };
   }
