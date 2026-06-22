@@ -725,6 +725,20 @@
         if (G.IMG.fx_boat) ctx.drawImage(G.IMG.fx_boat, sx, sy + bob);
         yoff = -8 + bob; // sit in the boat
       }
+      // water reflection: when water sits directly south, mirror the actor down
+      // into it — vertically flipped with feet at the shoreline, translucent so
+      // the water tints it, and gently swaying like the GBA reflections.
+      var below = w.tileDefAt(a.x, a.y + 1);
+      if (img && a.hop === 0 && below && below.water) {
+        var sway = Math.sin(G.frame * 0.06 + a.x) * 1.1;
+        ctx.save();
+        ctx.globalAlpha = 0.4;
+        ctx.translate(0, 2 * (sy + 16));
+        ctx.scale(1, -1);
+        ctx.drawImage(img, sx + sway, sy + yoff);
+        ctx.restore();
+      }
+
       if (img) ctx.drawImage(img, sx, sy + yoff);
 
       // ledge-hop landing dust: a little tan puff kicked up at the touch-down
