@@ -386,6 +386,7 @@
         ctx.fillStyle = '#2a3040';
         ctx.fillRect(0, 0, W, H);
         var sp = G.SPECIES[mon.sp];
+        var nat = G.natureOf(mon);
         // left: sprite + identity
         panel(ctx, 6, 6, 96, 104);
         var img = G.IMG['mon_' + mon.sp];
@@ -398,13 +399,16 @@
           G.text(ctx, sp.types[t].toUpperCase().slice(0, 8), 16 + t * 42, 80, G.C.white);
         }
         G.text(ctx, 'No.' + (sp.id < 10 ? '00' : sp.id < 100 ? '0' : '') + sp.id, 14, 94, G.UI.text, G.UI.textShadow);
-        // right: stats
+        G.text(ctx, nat.name + ' nature', 14, 102, '#e8c038', G.UI.textShadow);
+        // right: stats — the nature's raised stat shows red, its lowered stat blue
         panel(ctx, 108, 6, 126, 70);
         var stats = G.monStats(mon);
+        var natKeys = ['hp', 'atk', 'def', 'spa', 'spd', 'spe'];
         var rows = [['HP', mon.curHp + '/' + stats.hp], ['Attack', stats.atk], ['Defense', stats.def], ['Sp. Atk', stats.spa], ['Sp. Def', stats.spd], ['Speed', stats.spe]];
         for (var i = 0; i < rows.length; i++) {
-          G.text(ctx, rows[i][0], 116, 12 + i * 10, G.UI.text, G.UI.textShadow);
-          G.text(ctx, String(rows[i][1]), 196, 12 + i * 10, G.UI.text, G.UI.textShadow);
+          var sc = natKeys[i] === nat.up ? '#d04a48' : natKeys[i] === nat.down ? '#4a90e0' : G.UI.text;
+          G.text(ctx, rows[i][0], 116, 12 + i * 10, sc, G.UI.textShadow);
+          G.text(ctx, String(rows[i][1]), 196, 12 + i * 10, sc, G.UI.textShadow);
         }
         // moves
         panel(ctx, 108, 80, 126, 56);

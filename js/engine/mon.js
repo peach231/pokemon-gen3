@@ -61,6 +61,38 @@
     });
   };
 
+  // ----- natures ----------------------------------------------------------
+  // The 25 Gen-3 natures. Each raises one stat 10% and lowers another 10%
+  // (HP is never touched); five are neutral. Stored on a mon as an index 0-24.
+  G.NATURES = [
+    { name: 'Hardy' },                                  // 0  (neutral)
+    { name: 'Lonely',  up: 'atk', down: 'def' },        // 1
+    { name: 'Brave',   up: 'atk', down: 'spe' },        // 2
+    { name: 'Adamant', up: 'atk', down: 'spa' },        // 3
+    { name: 'Naughty', up: 'atk', down: 'spd' },        // 4
+    { name: 'Bold',    up: 'def', down: 'atk' },        // 5
+    { name: 'Docile' },                                 // 6  (neutral)
+    { name: 'Relaxed', up: 'def', down: 'spe' },        // 7
+    { name: 'Impish',  up: 'def', down: 'spa' },        // 8
+    { name: 'Lax',     up: 'def', down: 'spd' },        // 9
+    { name: 'Timid',   up: 'spe', down: 'atk' },        // 10
+    { name: 'Hasty',   up: 'spe', down: 'def' },        // 11
+    { name: 'Serious' },                                // 12 (neutral)
+    { name: 'Jolly',   up: 'spe', down: 'spa' },        // 13
+    { name: 'Naive',   up: 'spe', down: 'spd' },        // 14
+    { name: 'Modest',  up: 'spa', down: 'atk' },        // 15
+    { name: 'Mild',    up: 'spa', down: 'def' },        // 16
+    { name: 'Quiet',   up: 'spa', down: 'spe' },        // 17
+    { name: 'Bashful' },                                // 18 (neutral)
+    { name: 'Rash',    up: 'spa', down: 'spd' },        // 19
+    { name: 'Calm',    up: 'spd', down: 'atk' },        // 20
+    { name: 'Gentle',  up: 'spd', down: 'def' },        // 21
+    { name: 'Sassy',   up: 'spd', down: 'spe' },        // 22
+    { name: 'Careful', up: 'spd', down: 'spa' },        // 23
+    { name: 'Quirky' }                                  // 24 (neutral)
+  ];
+  G.natureOf = function (mon) { return G.NATURES[mon && mon.nature || 0] || G.NATURES[0]; };
+
   G.makeMon = function (spKey, level, opts) {
     opts = opts || {};
     var mon = {
@@ -69,6 +101,7 @@
       level: level,
       exp: G.expForLevel(level, (G.SPECIES[spKey] || {}).growth),
       ivs: opts.ivs || rollIvs(),
+      nature: opts.nature !== undefined ? opts.nature : G.irand(25),
       shiny: opts.shiny !== undefined ? opts.shiny : (G.rand() < 1 / 600), // 1-in-600, no quota
       status: null,
       slpTurns: 0,
@@ -128,7 +161,7 @@
     var sp = G.SPECIES[mon.sp];
     var L = mon.level, iv = mon.ivs;
     function stat(b, i) { return Math.floor((2 * b + i) * L / 100) + 5; }
-    return {
+    var out = {
       hp: Math.floor((2 * sp.base.hp + iv.hp) * L / 100) + L + 10,
       atk: stat(sp.base.atk, iv.atk),
       def: stat(sp.base.def, iv.def),
@@ -136,6 +169,13 @@
       spd: stat(sp.base.spd, iv.spd),
       spe: stat(sp.base.spe, iv.spe)
     };
+    // nature: +10% to one stat, -10% to another (never HP)
+    var nat = G.NATURES[mon.nature || 0];
+    if (nat && nat.up && nat.up !== nat.down) {
+      out[nat.up] = Math.floor(out[nat.up] * 1.1);
+      out[nat.down] = Math.floor(out[nat.down] * 0.9);
+    }
+    return out;
   };
 
   G.monName = function (mon) { return mon.nick || G.SPECIES[mon.sp].name; };
