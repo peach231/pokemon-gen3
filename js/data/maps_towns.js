@@ -154,8 +154,8 @@
     warps: [
       { x: 10, y: 27, to: 'route1', tx: 8, ty: 1, dir: 'down' },
       { x: 11, y: 27, to: 'route1', tx: 9, ty: 1, dir: 'down' },
-      { x: 23, y: 8, to: 'route2', tx: 1, ty: 8, dir: 'right' },
-      { x: 23, y: 9, to: 'route2', tx: 1, ty: 9, dir: 'right' },
+      { x: 23, y: 8, to: 'route2', tx: 1, ty: 9, dir: 'right' },
+      { x: 23, y: 9, to: 'route2', tx: 1, ty: 10, dir: 'right' },
       { x: 5, y: 5, to: 'gym1', tx: 5, ty: 10, dir: 'up' },
       { x: 6, y: 5, to: 'gym1', tx: 5, ty: 10, dir: 'up' },
       { x: 14, y: 6, to: 'heal_cobblemarch', tx: 4, ty: 7, dir: 'up' },
