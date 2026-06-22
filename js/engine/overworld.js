@@ -727,6 +727,19 @@
       }
       if (img) ctx.drawImage(img, sx, sy + yoff);
 
+      // ledge-hop landing dust: a little tan puff kicked up at the touch-down
+      // tile over the last few frames of the hop (the Emerald hop-land beat).
+      if (a.hop > 0 && a.hop <= 9) {
+        var dt = (9 - a.hop) / 9;                       // 0 -> 1 as you settle
+        var dxp = a.x * TILE - cam.x + 8, dyp = a.y * TILE - cam.y + 15;
+        var sp = 2 + dt * 6;
+        ctx.fillStyle = 'rgba(236,228,196,' + (0.55 * (1 - dt)).toFixed(2) + ')';
+        ctx.fillRect(Math.round(dxp - sp), dyp, 2, 1);
+        ctx.fillRect(Math.round(dxp + sp - 2), dyp, 2, 1);
+        ctx.fillRect(Math.round(dxp - sp * 0.5), dyp - 1, 1, 1);
+        ctx.fillRect(Math.round(dxp + sp * 0.5 - 1), dyp - 1, 1, 1);
+      }
+
       // grass rustle over feet
       var def = w.tileDefAt(a.x, a.y);
       if (def && def.grass && !a.moving && a.hop === 0) {
