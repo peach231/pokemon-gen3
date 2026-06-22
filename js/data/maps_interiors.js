@@ -74,31 +74,35 @@
   // ------------------------------------------------------------------------
   // HEAL CENTERS + SHOPS — stamped per town.
   // ------------------------------------------------------------------------
+  // Emerald-style Pokémon Center: nurse behind a healing counter (machine beside
+  // her), a separate PC station on the right with its own counter, plants framing
+  // the room, and a welcome mat at the door. Entrance stays at (4,7) so the town
+  // warps that point here are unaffected.
   function healCenter(id, town, exit) {
     G.MAPS[id] = {
-      id: id, name: 'Heal House', w: 9, h: 8,
+      id: id, name: 'Pokémon Center', w: 11, h: 8,
       music: 'town', battleBg: 'indoor', base: 'ifloor',
       legend: G.LEG_INT,
       ground: pad([
-        'IIIIIIIII',
-        '.E.....H.',
-        '.CCCCCCC.',
-        '.........',
-        '.P.....P.',
-        '.........',
-        '.o.....o.',
-        '....m....'
-      ], 9, 8),
+        'IIIIIIIIIII',
+        '.E.....H.B.',
+        '.CCC...CC..',
+        '...........',
+        '.P.......P.',
+        '...........',
+        '.o.......o.',
+        '....m......'
+      ], 11, 8),
       warps: [{ x: 4, y: 7, to: exit.map, tx: exit.x, ty: exit.y, dir: 'down' }],
       signs: [
-        { x: 1, y: 1, text: 'The heal machine chimes a soft, ready note.' },
-        { x: 6, y: 1, text: "BIRCH'S LAB PC — store and retrieve your Pokémon." }
+        { x: 1, y: 1, text: 'The healing machine hums, ready to mend tired Pokémon.' },
+        { x: 9, y: 1, text: 'A shelf of regional guides for weary travelers.' }
       ],
       respawnPoint: { mapId: id, x: 4, y: 5 },
       npcs: [
-        { x: 3, y: 1, sprite: 'mom', dir: 'down', event: 'nurseHeal' },
-        { x: 5, y: 1, sprite: 'egglady', dir: 'down', event: 'nursery' },
-        { x: 6, y: 1, sprite: 'prof', dir: 'down', event: 'birchPC' }
+        { x: 2, y: 1, sprite: 'mom', dir: 'down', event: 'nurseHeal' },
+        { x: 8, y: 1, sprite: 'prof', dir: 'down', event: 'birchPC' },
+        { x: 9, y: 5, sprite: 'egglady', dir: 'down', event: 'nursery' }
       ]
     };
   }

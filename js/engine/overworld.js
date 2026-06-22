@@ -555,6 +555,7 @@
 
       this._drawLayer(ctx, 'ground', x0, y0, x1, y1, cam);
       this._drawLayer(ctx, 'deco', x0, y0, x1, y1, cam);
+      this._drawShadows(ctx, x0, y0, x1, y1, cam);
 
       // gym interiors are tinted their specialty type's color
       if (map.gymTint) {
@@ -625,6 +626,25 @@
       ctx.fillRect(0, G.SCREEN_H - 19, hw, 19);
       G.text(ctx, hl1, 3, G.SCREEN_H - 17, G.C.lgry);
       G.text(ctx, hl2, 3, G.SCREEN_H - 8, G.C.lgry);
+    },
+
+    // Soft contact shadows: any solid object (building, tree, cliff, fence, sign)
+    // casts a short shadow onto the open tile to its south and east — light is
+    // upper-left — so things sit ON the ground instead of being pasted onto it.
+    _drawShadows: function (ctx, x0, y0, x1, y1, cam) {
+      var w = G.world;
+      ctx.fillStyle = 'rgba(18,20,34,0.20)';
+      for (var y = y0; y <= y1; y++) {
+        for (var x = x0; x <= x1; x++) {
+          var here = w.tileDefAt(x, y);
+          if (here && here.solid) continue;            // shadow only falls on open ground
+          var px = x * TILE - cam.x, py = y * TILE - cam.y;
+          var north = w.tileDefAt(x, y - 1);
+          var west = w.tileDefAt(x - 1, y);
+          if (north && north.solid) ctx.fillRect(px, py, TILE, 3);
+          if (west && west.solid) ctx.fillRect(px, py, 3, TILE);
+        }
+      }
     },
 
     _drawLayer: function (ctx, layer, x0, y0, x1, y1, cam) {

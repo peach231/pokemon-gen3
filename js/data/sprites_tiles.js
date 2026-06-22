@@ -49,24 +49,26 @@
     'bbbbbbbcbbbbbbbb'
   ]);
 
-  // tall grass (wild encounters)
-  T('t_tallgrass', { a: C.grn0, b: C.grn1, c: C.grn2, e: C.leaf2 }, [
-    'eebeeebeeebeeebe',
-    'ebbecbbeebbecbbe',
-    'ebbbbbbcbbbbbbbe',
-    'bbcbbbbbbbcbbbbb',
-    'bbbbabbbbbbbabbb',
-    'bcbbbbbcbbbbbbcb',
-    'bbbabbbbbbabbbbb',
-    'bbbbbbcbbbbbbbab',
-    'babbbbbbbcbbbbbb',
-    'bbbcbbabbbbbacbb',
-    'bbbbbbbbcbbbbbbb',
-    'babbbcbbbabbbcbb',
-    'bbbbabbbbbbabbbb',
-    'abbabbbababbabba',
-    'aabbaabbaaabbaab',
-    'aaaaaaaaaaaaaaaa'
+  // tall grass (wild encounters) — lit blade clumps, not a flat dark block.
+  // Light upper-left: each tuft is lit (e/c) on its left edge, shadowed (b/a) on
+  // the right; tips break the top edge (transparent gaps show the grass underneath).
+  T('t_tallgrass', { a: C.grn0, b: C.grn1, c: C.grn2, e: C.grn3 }, [
+    '.e....e.....e...',
+    '.ec..cec...cec..',
+    'eec..cecb.eceb..',
+    'cecb.cecb.cecbe.',
+    'cecb.cecbececbce',
+    'cecbbcecbbcecbce',
+    'becbacecbacecbac',
+    'becababcbabcbbac',
+    'bbcaabbbaabbcaab',
+    'bbaaabbaaabbaaab',
+    'abaaababaaababaa',
+    'aababaaababaabab',
+    'aaabaaaaabaaaaba',
+    'aaaaaaaaaaaaaaaa',
+    'aaaaaaaaaaaaaaaa',
+    '.aaa..aaa..aaa..'
   ]);
 
   // flowers (2-frame animation on grass)
@@ -707,137 +709,142 @@
 
   // ---------------------------------------------------------------- house --
   // red-roof cottage; the lab reuses these grids with a blue/stone palette
-  var RF = { o: C.ink, q: C.red3, R: C.red2, r: C.red1 };
+  // shingled roof: lit ridge (q) at the top, staggered shingle seams (r), course
+  // shadow lines, and a dark overhanging eave (s) on the bottom row so the building
+  // front reads as sticking out instead of a flat slab.
+  var RF = { o: C.ink, q: C.red3, R: C.red2, r: C.red1, s: C.red0 };
   T('t_roof_tl', RF, [
     '..oooooooooooooo',
     '.oqqqqqqqqqqqqqq',
     'oqRRRRRRRRRRRRRR',
-    'oqRRRRRRRRRRRRRR',
-    'oqRRRRRRRRRRRRRR',
-    'oqRRRRRRRRRRRRRR',
+    'oqRRrRRRRrRRRRrR',
     'oqrrrrrrrrrrrrrr',
     'oqRRRRRRRRRRRRRR',
-    'oqRRRRRRRRRRRRRR',
-    'oqRRRRRRRRRRRRRR',
-    'oqRRRRRRRRRRRRRR',
+    'oqRRRRrRRRRrRRRR',
     'oqrrrrrrrrrrrrrr',
     'oqRRRRRRRRRRRRRR',
+    'oqRRrRRRRrRRRRrR',
+    'oqrrrrrrrrrrrrrr',
     'oqRRRRRRRRRRRRRR',
+    'oqRRRRrRRRRrRRRR',
+    'oqrrrrrrrrrrrrrr',
     'oqRRRRRRRRRRRRRR',
-    'oqRRRRRRRRRRRRRR'
+    'oqRRrRRRRrRRRRrR'
   ]);
   T('t_roof_tm', RF, [
     'oooooooooooooooo',
     'qqqqqqqqqqqqqqqq',
     'RRRRRRRRRRRRRRRR',
-    'RRRRRRRRRRRRRRRR',
-    'RRRRRRRRRRRRRRRR',
-    'RRRRRRRRRRRRRRRR',
+    'RRrRRRRrRRRRrRRR',
     'rrrrrrrrrrrrrrrr',
     'RRRRRRRRRRRRRRRR',
-    'RRRRRRRRRRRRRRRR',
-    'RRRRRRRRRRRRRRRR',
-    'RRRRRRRRRRRRRRRR',
+    'RRRRrRRRRrRRRRrR',
     'rrrrrrrrrrrrrrrr',
     'RRRRRRRRRRRRRRRR',
+    'RRrRRRRrRRRRrRRR',
+    'rrrrrrrrrrrrrrrr',
     'RRRRRRRRRRRRRRRR',
+    'RRRRrRRRRrRRRRrR',
+    'rrrrrrrrrrrrrrrr',
     'RRRRRRRRRRRRRRRR',
-    'RRRRRRRRRRRRRRRR'
+    'RRrRRRRrRRRRrRRR'
   ]);
   T('t_roof_tr', RF, [
     'ooooooooooooooo.',
     'qqqqqqqqqqqqqqro',
     'RRRRRRRRRRRRRRro',
-    'RRRRRRRRRRRRRRro',
-    'RRRRRRRRRRRRRRro',
-    'RRRRRRRRRRRRRRro',
+    'RRrRRRRrRRRRrRro',
     'rrrrrrrrrrrrrrro',
     'RRRRRRRRRRRRRRro',
-    'RRRRRRRRRRRRRRro',
-    'RRRRRRRRRRRRRRro',
-    'RRRRRRRRRRRRRRro',
+    'RRRRrRRRRrRRRRro',
     'rrrrrrrrrrrrrrro',
     'RRRRRRRRRRRRRRro',
+    'RRrRRRRrRRRRrRro',
+    'rrrrrrrrrrrrrrro',
     'RRRRRRRRRRRRRRro',
+    'RRRRrRRRRrRRRRro',
+    'rrrrrrrrrrrrrrro',
     'RRRRRRRRRRRRRRro',
-    'RRRRRRRRRRRRRRro'
+    'RRrRRRRrRRRRrRro'
   ]);
   T('t_roof_bl', RF, [
     'oqRRRRRRRRRRRRRR',
-    'oqRRRRRRRRRRRRRR',
     'oqrrrrrrrrrrrrrr',
     'oqRRRRRRRRRRRRRR',
-    'oqRRRRRRRRRRRRRR',
-    'oqRRRRRRRRRRRRRR',
-    'oqRRRRRRRRRRRRRR',
+    'oqRRRRrRRRRrRRRR',
     'oqrrrrrrrrrrrrrr',
     'oqRRRRRRRRRRRRRR',
-    'oqRRRRRRRRRRRRRR',
-    'oqRRRRRRRRRRRRRR',
-    'oqRRRRRRRRRRRRRR',
+    'oqRRrRRRRrRRRRrR',
     'oqrrrrrrrrrrrrrr',
     'oqRRRRRRRRRRRRRR',
-    'oorrrrrrrrrrrrrr',
+    'oqRRRRrRRRRrRRRR',
+    'oqrrrrrrrrrrrrrr',
+    'oqRRRRRRRRRRRRRR',
+    'oqrrrrrrrrrrrrrr',
+    'osssssssssssssss',
+    'osssssssssssssss',
     'oooooooooooooooo'
   ]);
   T('t_roof_bm', RF, [
     'RRRRRRRRRRRRRRRR',
-    'RRRRRRRRRRRRRRRR',
     'rrrrrrrrrrrrrrrr',
     'RRRRRRRRRRRRRRRR',
-    'RRRRRRRRRRRRRRRR',
-    'RRRRRRRRRRRRRRRR',
-    'RRRRRRRRRRRRRRRR',
+    'RRRRrRRRRrRRRRrR',
     'rrrrrrrrrrrrrrrr',
     'RRRRRRRRRRRRRRRR',
+    'RRrRRRRrRRRRrRRR',
+    'rrrrrrrrrrrrrrrr',
     'RRRRRRRRRRRRRRRR',
-    'RRRRRRRRRRRRRRRR',
-    'RRRRRRRRRRRRRRRR',
+    'RRRRrRRRRrRRRRrR',
     'rrrrrrrrrrrrrrrr',
     'RRRRRRRRRRRRRRRR',
     'rrrrrrrrrrrrrrrr',
+    'ssssssssssssssss',
+    'ssssssssssssssss',
     'oooooooooooooooo'
   ]);
   T('t_roof_br', RF, [
     'RRRRRRRRRRRRRRro',
-    'RRRRRRRRRRRRRRro',
     'rrrrrrrrrrrrrrro',
     'RRRRRRRRRRRRRRro',
-    'RRRRRRRRRRRRRRro',
-    'RRRRRRRRRRRRRRro',
-    'RRRRRRRRRRRRRRro',
+    'RRRRrRRRRrRRRRro',
     'rrrrrrrrrrrrrrro',
     'RRRRRRRRRRRRRRro',
-    'RRRRRRRRRRRRRRro',
-    'RRRRRRRRRRRRRRro',
-    'RRRRRRRRRRRRRRro',
+    'RRrRRRRrRRRRrRro',
     'rrrrrrrrrrrrrrro',
     'RRRRRRRRRRRRRRro',
-    'rrrrrrrrrrrrrroo',
+    'RRRRrRRRRrRRRRro',
+    'rrrrrrrrrrrrrrro',
+    'RRRRRRRRRRRRRRro',
+    'rrrrrrrrrrrrrrro',
+    'ssssssssssssssro',
+    'ssssssssssssssso',
     'oooooooooooooooo'
   ]);
 
-  var WA = { o: C.ink, w: C.pale, l: C.lgry };
+  // wall: a shadow band at the top (cast by the roof eave overhang), horizontal
+  // clapboard courses, and a base shadow where it meets the ground.
+  var WA = { o: C.ink, w: C.pale, l: C.lgry, g: C.gry };
   T('t_wall', WA, [
-    'llllllllllllllll',
-    'wwwwwwwwwwwwwwww',
-    'wwwwwwwwwwwwwwww',
-    'wwwwwwwwwwwwwwww',
-    'llllllllllllllll',
-    'wwwwwwwwwwwwwwww',
+    'gggggggggggggggg',
     'wwwwwwwwwwwwwwww',
     'wwwwwwwwwwwwwwww',
     'llllllllllllllll',
     'wwwwwwwwwwwwwwww',
     'wwwwwwwwwwwwwwww',
+    'llllllllllllllll',
+    'wwwwwwwwwwwwwwww',
     'wwwwwwwwwwwwwwww',
     'llllllllllllllll',
     'wwwwwwwwwwwwwwww',
     'wwwwwwwwwwwwwwww',
+    'llllllllllllllll',
+    'wwwwwwwwwwwwwwww',
+    'gggggggggggggggg',
     'oooooooooooooooo'
   ]);
-  T('t_window', { o: C.ink, w: C.pale, l: C.lgry, g: C.blu2, G: C.blu3 }, [
-    'llllllllllllllll',
+  T('t_window', { o: C.ink, w: C.pale, l: C.lgry, g: C.blu2, G: C.blu3, s: C.gry }, [
+    'ssssssssssssssss',
     'wwwwwwwwwwwwwwww',
     'wwwwwwwwwwwwwwww',
     'wwwwwwwwwwwwwwww',
@@ -851,11 +858,11 @@
     'wwwwoooooooowwww',
     'llllllllllllllll',
     'wwwwwwwwwwwwwwww',
-    'wwwwwwwwwwwwwwww',
+    'ssssssssssssssss',
     'oooooooooooooooo'
   ]);
-  T('t_door', { o: C.ink, w: C.pale, l: C.lgry, D: C.brn2, d: C.brn1, k: C.yel1 }, [
-    'llllllllllllllll',
+  T('t_door', { o: C.ink, w: C.pale, l: C.lgry, D: C.brn2, d: C.brn1, k: C.yel1, s: C.gry }, [
+    'ssssssssssssssss',
     'wwwwwwwwwwwwwwww',
     'wwwwwwwwwwwwwwww',
     'wwwoooooooooowww',
@@ -869,21 +876,21 @@
     'wwwoDDDDDDDDowww',
     'wwwoDDDDDDDDowww',
     'wwwoDDDDDDDDowww',
-    'wwwoDDDDDDDDowww',
+    'lllooooooooollll',
     'oooooooooooooooo'
   ]);
 
   // gym / lab building = sturdy stone-gray roof (gold trim via lroofx), stone
   // walls — distinct from the red homes/center and the blue Mart.
-  var LRF = { o: C.ink, q: C.stn3, R: C.stn2, r: C.stn1 };
+  var LRF = { o: C.ink, q: C.stn3, R: C.stn2, r: C.stn1, s: C.stn0 };
   G.ART.t_lroof_tl = { base: 't_roof_tl', pal: LRF };
   G.ART.t_lroof_tm = { base: 't_roof_tm', pal: LRF };
   G.ART.t_lroof_tr = { base: 't_roof_tr', pal: LRF };
   G.ART.t_lroof_bl = { base: 't_roof_bl', pal: LRF };
   G.ART.t_lroof_bm = { base: 't_roof_bm', pal: LRF };
   G.ART.t_lroof_br = { base: 't_roof_br', pal: LRF };
-  G.ART.t_lwall = { base: 't_wall', pal: { o: C.ink, w: C.stn3, l: C.stn2 } };
-  G.ART.t_lwindow = { base: 't_window', pal: { o: C.ink, w: C.stn3, l: C.stn2, g: C.blu2, G: C.blu3 } };
+  G.ART.t_lwall = { base: 't_wall', pal: { o: C.ink, w: C.stn3, l: C.stn2, g: C.stn1 } };
+  G.ART.t_lwindow = { base: 't_window', pal: { o: C.ink, w: C.stn3, l: C.stn2, g: C.blu2, G: C.blu3, s: C.stn1 } };
   T('t_ldoor', { o: C.ink, w: C.stn3, l: C.stn2, g: C.blu3, G: C.ice3, s: C.stn1 }, [
     'llllllllllllllll',
     'wwwwwwwwwwwwwwww',
@@ -1414,8 +1421,8 @@
 
   // ------------------------------------- heal / shop / gym facade pieces ----
   // Pokémon-Center red roof (classic look) + Poké Mart blue roof.
-  var HR = { o: C.ink, q: C.red2, R: C.red1, r: C.red0 };
-  var SR = { o: C.ink, q: C.blu2, R: C.blu1, r: C.blu0 };
+  var HR = { o: C.ink, q: C.red2, R: C.red1, r: C.red0, s: C.red0 };
+  var SR = { o: C.ink, q: C.blu2, R: C.blu1, r: C.blu0, s: C.blu0 };
   G.ART.t_hroof_tl = { base: 't_roof_tl', pal: HR };
   G.ART.t_hroof_tm = { base: 't_roof_tm', pal: HR };
   G.ART.t_hroof_tr = { base: 't_roof_tr', pal: HR };
