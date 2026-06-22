@@ -861,10 +861,28 @@
     'ssssssssssssssss',
     'oooooooooooooooo'
   ]);
-  // Automatic glass double-door (Center / Mart / shop entrance look): twin
-  // light-blue glass panels with a central stile, set in a dark frame above a
-  // pale threshold step.
-  T('t_door', { o: C.ink, w: C.pale, l: C.lgry, g: C.blu3, G: C.ice2, s: C.gry }, [
+  // House / generic wooden door: brown panelled door with a gold knob.
+  T('t_door', { o: C.ink, w: C.pale, l: C.lgry, D: C.brn2, d: C.brn1, k: C.yel1, s: C.gry }, [
+    'ssssssssssssssss',
+    'wwwwwwwwwwwwwwww',
+    'wwwwwwwwwwwwwwww',
+    'wwwoooooooooowww',
+    'wwwoDDDDDDDDowww',
+    'wwwoDddddddDowww',
+    'wwwoDdDDDDdDowww',
+    'wwwoDdDDDDdDowww',
+    'wwwoDdDDDDdDowww',
+    'wwwoDddddddDowww',
+    'wwwoDDDDDDkDowww',
+    'wwwoDDDDDDDDowww',
+    'wwwoDDDDDDDDowww',
+    'wwwoDDDDDDDDowww',
+    'lllooooooooollll',
+    'oooooooooooooooo'
+  ]);
+  // Automatic glass double-door (Center / Mart / shop entrance): twin light-
+  // blue glass panels split by a central stile in a dark frame over a step.
+  T('t_gdoor', { o: C.ink, w: C.pale, l: C.lgry, g: C.blu3, G: C.ice2, s: C.gry }, [
     'ssssssssssssssss',
     'wwwwwwwwwwwwwwww',
     'wwooooooooooooww',
@@ -1644,6 +1662,7 @@
     roof_bm: { img: 't_roof_bm', solid: true }, roof_br: { img: 't_roof_br', solid: true },
     wall:    { img: 't_wall', solid: true },    window: { img: 't_window', solid: true },
     door:    { img: 't_door' },
+    gdoor:   { img: 't_gdoor' },
 
     lroof_tl: { img: 't_lroof_tl', solid: true }, lroof_tm: { img: 't_lroof_tm', solid: true },
     lroof_tr: { img: 't_lroof_tr', solid: true }, lroof_bl: { img: 't_lroof_bl', solid: true },
