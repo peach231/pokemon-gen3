@@ -198,16 +198,16 @@
       'tu......7!89.q@rz.......tu',
       'vx......dmmh.ijjk.......vx',
       'tu......W+DW.W$DW.......tu',
-      'vx......................vx',
-      'tunnnnnnnnnnnnnnnnnnnnnntu',
-      'vxssssssssssssssssssssssvx',
-      'tu..........,...........tu',
-      'vx.AB&BBC...........f...pp',
-      'pp.abbbbc...............pp',
-      'pp.LMYYML......1223.....tu',
-      'tu.............4556.....vx',
-      'vx....f........WNDW.....tu',
-      'tu......................vx',
+      'vx........p....p........vx',
+      'tu.......pppppppp.......tu',
+      'vx.......pppppppp.......vx',
+      'tu..pppppppppppppppppp..tu',
+      'vx.AB&BBC..pp..........ppp',
+      'pppabbbbc..pp...........pp',
+      'pppLMYYML..pp..1223.....tu',
+      'tu...pppppppp..4556.FFF.vx',
+      'vx....f....pp..WNDW.FyF.tu',
+      'tu..P......ppppppp...P..vx',
       'vx%%%%%%%%%%%%%%%%%%%%%%tu',
       'tu%%%%%%%%%%%%%%%%%%%%%%vx',
       '^^^^^^^^^^^^^^^^^^^^^^^^^^',
@@ -227,8 +227,8 @@
       { x: 17, y: 13, to: 'house_brine', tx: 4, ty: 6, dir: 'up' }
     ],
     signs: [
-      { x: 12, y: 8, text: 'BRINEHOLLOW PORT — The sea remembers every sailor.' },
-      { x: 8, y: 11, text: "BRINEHOLLOW GYM — Leader Maris. 'Flow like the tide.'" }
+      { x: 3, y: 14, text: 'BRINEHOLLOW PORT — The sea remembers every sailor.' },
+      { x: 2, y: 12, text: "BRINEHOLLOW GYM — Leader Maris. 'Flow like the tide.'" }
     ],
     npcs: [
       { x: 6, y: 8, sprite: 'prof', dir: 'down', dialog: ['Old sailor wisdom: Water creatures fear Electric and Grass moves.', 'Maris herself? Swears by raw power. Bring bandages.'] },
