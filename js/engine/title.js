@@ -15,22 +15,111 @@
     return c;
   }
 
-  // Opening cinematic backdrop: a night sky with Prof. Birch presenting, behind
-  // his welcome monologue (the series' iconic intro). Pure backdrop — the text
-  // and flow are driven by the Textbox pushed over it.
+  function fillCircle(ctx, cx, cy, r) { ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fill(); }
+
+  // a low, dark mountain horizon for Groudon's ridge
+  function drawRidge(ctx) {
+    ctx.fillStyle = '#241a30';
+    var peaks = [-6, 34, 78, 120, 162, 206, 240];
+    for (var i = 0; i < peaks.length; i++) {
+      var px = peaks[i], ph = 16 + ((i * 7) % 12);
+      ctx.beginPath();
+      ctx.moveTo(px - 30, 70); ctx.lineTo(px, 70 - ph); ctx.lineTo(px + 30, 70); ctx.closePath(); ctx.fill();
+    }
+    ctx.fillStyle = '#2c2238'; ctx.fillRect(0, 68, W, 16);
+  }
+
+  // three scrolling wave-crest rows across the sea
+  function drawWaves(ctx, f) {
+    ctx.fillStyle = '#6aa8e8';
+    for (var row = 0; row < 3; row++) {
+      var y = 96 + row * 7;
+      var off = (((f >> 1) + row * 6) % 16);
+      for (var x = -16 + off; x < W; x += 16) ctx.fillRect(x, y, 8, 1);
+    }
+  }
+
+  // Opening cinematic backdrop behind Prof. Birch's welcome monologue: a living
+  // diorama of the weather trio — Rayquaza drifting through the stars, Groudon on
+  // a glowing volcanic ridge, Kyogre breaching the sea — with Wingull and a
+  // Poochyena for life. All animation is driven from G.frame in draw(), because
+  // the monologue Textbox sits on top and steals update().
   function introScene() {
+    var stars = [];
+    for (var i = 0; i < 70; i++) {
+      stars.push({ x: (i * 71 + 13) % W, y: (i * 41 + 7) % 58, ph: i % 6, sp: 0.03 + (i % 3) * 0.05, big: i % 11 === 0 });
+    }
+    var bubbles = [], embers = [], sparkles = [];
+
+    function step(f) {
+      if (f % 7 === 0 && bubbles.length < 22) bubbles.push({ x: 176 + (f % 44), y: 114, v: 0.4 + (f % 3) * 0.15, r: 1 + (f % 2) });
+      for (var b = bubbles.length - 1; b >= 0; b--) { bubbles[b].y -= bubbles[b].v; if (bubbles[b].y < 88) bubbles.splice(b, 1); }
+      if (f % 9 === 0 && embers.length < 18) embers.push({ x: 12 + (f % 38), y: 80, v: 0.3 + (f % 4) * 0.12, life: 42 });
+      for (var e = embers.length - 1; e >= 0; e--) { embers[e].y -= embers[e].v; embers[e].x += Math.sin(embers[e].y * 0.2) * 0.3; if (--embers[e].life <= 0) embers.splice(e, 1); }
+      if (f % 5 === 0 && sparkles.length < 16) {
+        var rcx = 120 + Math.sin(f * 0.012) * 78;
+        sparkles.push({ x: rcx - 18, y: 4 + Math.sin(f * 0.03) * 5 + 20, life: 22 });
+      }
+      for (var s = sparkles.length - 1; s >= 0; s--) { if (--sparkles[s].life <= 0) sparkles.splice(s, 1); }
+    }
+
     return {
       opaque: true,
       enter: function () { G.audio.playMusic('title'); },
       update: function () {},
-      render: function (ctx) {
-        ctx.fillStyle = '#241b3a'; ctx.fillRect(0, 0, W, H);
-        for (var i = 0; i < 50; i++) {
-          ctx.fillStyle = (i % 5) ? '#3e3660' : '#9a9ad0';
-          ctx.fillRect((i * 71 + 13) % W, (i * 37) % 92, 1, 1);
+      draw: function (ctx) {
+        var f = G.frame;
+        step(f);
+        ctx.imageSmoothingEnabled = false;
+
+        // ===== SPACE — gradient, moon, twinkling parallax stars =====
+        ctx.fillStyle = '#0a0820'; ctx.fillRect(0, 0, W, 16);
+        ctx.fillStyle = '#161038'; ctx.fillRect(0, 16, W, 16);
+        ctx.fillStyle = '#241a4e'; ctx.fillRect(0, 32, W, 14);
+        ctx.fillStyle = '#f0e8c8'; fillCircle(ctx, 38, 15, 9);
+        ctx.fillStyle = '#161038'; fillCircle(ctx, 33, 12, 8); // crescent cut
+        for (var i = 0; i < stars.length; i++) {
+          var st = stars[i];
+          var sx = (((st.x - f * st.sp) % W) + W) % W;
+          var on = (((f >> 4) + st.ph) % 6) !== 0;
+          ctx.fillStyle = on ? (st.big ? '#f8e878' : '#c8c8e8') : '#48486e';
+          ctx.fillRect(sx | 0, st.y, st.big ? 2 : 1, st.big ? 2 : 1);
         }
-        var pim = G.IMG.ch_prof_d0;
-        if (pim) ctx.drawImage(pim, (W >> 1) - 24, 34, 48, 72);
+        for (var sp = 0; sp < sparkles.length; sp++) {
+          ctx.fillStyle = (sparkles[sp].life >> 1) % 2 ? '#a0e0c0' : '#f4f4f4';
+          ctx.fillRect(sparkles[sp].x | 0, sparkles[sp].y | 0, 1, 1);
+        }
+        // Rayquaza weaves slowly across the upper sky — always on screen.
+        var ray = G.IMG.mon_rayquaza;
+        if (ray) { var rcx = 120 + Math.sin(f * 0.012) * 78; var ry = 2 + Math.sin(f * 0.03) * 5; ctx.drawImage(ray, (rcx - 23) | 0, ry | 0, 46, 46); }
+
+        // ===== LAND — dusk sky, pulsing horizon glow, ridge, Groudon =====
+        ctx.fillStyle = '#3a2240'; ctx.fillRect(0, 46, W, 10);
+        ctx.fillStyle = '#6e3038'; ctx.fillRect(0, 56, W, 8);
+        var glow = (0.28 + 0.20 * (0.5 + 0.5 * Math.sin(f * 0.05))).toFixed(3);
+        ctx.fillStyle = 'rgba(240,150,70,' + glow + ')'; ctx.fillRect(0, 60, W, 8);
+        drawRidge(ctx);
+        var gro = G.IMG.mon_groudon;
+        if (gro) { var gy = 40 + Math.sin(f * 0.045) * 1.5; ctx.drawImage(gro, 6, gy | 0, 46, 46); }
+        for (var em = 0; em < embers.length; em++) {
+          ctx.fillStyle = (embers[em].life >> 2) % 2 ? '#f09838' : '#d04a48';
+          ctx.fillRect(embers[em].x | 0, embers[em].y | 0, 1, 1);
+        }
+        var pch = G.IMG.mon_poochyena;
+        if (pch) { var px = 96 + ((f * 0.35) % 64); var py = 56 + (Math.floor(f * 0.25) % 2); ctx.drawImage(pch, px | 0, py | 0, 22, 22); }
+
+        // ===== SEA — gradient, scrolling waves, Wingull, Kyogre =====
+        ctx.fillStyle = '#16356a'; ctx.fillRect(0, 82, W, 12);
+        ctx.fillStyle = '#2860c0'; ctx.fillRect(0, 94, W, H - 94);
+        drawWaves(ctx, f);
+        var wg = G.IMG.mon_wingull;
+        if (wg) { var wx = ((f * 0.9) % (W + 50)) - 25; var wy = 68 + Math.sin(f * 0.07) * 3; ctx.drawImage(wg, wx | 0, wy | 0, 22, 22); }
+        var kyo = G.IMG.mon_kyogre;
+        if (kyo) { var ky = 74 + Math.sin(f * 0.05) * 4; ctx.drawImage(kyo, 168, ky | 0, 52, 52); }
+        for (var bb = 0; bb < bubbles.length; bb++) {
+          ctx.fillStyle = '#a0e0e8';
+          ctx.fillRect(bubbles[bb].x | 0, bubbles[bb].y | 0, bubbles[bb].r, bubbles[bb].r);
+        }
       }
     };
   }
