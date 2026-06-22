@@ -572,7 +572,7 @@
   // (player walks behind them), bottoms are solid deco. Transparent bg.
   // flatter, dustier GBA canopy: 2 muted greens (dark edge/dither + main fill)
   // instead of a smooth 4-green gradient. 'b' specks read as dither shading.
-  var TR = { o: C.ink, a: '#2f6b34', b: '#2f6b34', c: '#499140', d: '#499140', t: C.brn1, u: C.brn2 };
+  var TR = { o: C.ink, a: C.grn1, b: C.grn0, c: C.grn2, d: C.grn3, t: C.brn1, u: C.brn2 };
 
   T('t_tree_tl', TR, [
     '................',
@@ -714,8 +714,9 @@
   // front reads as sticking out instead of a flat slab.
   var RF = { o: C.ink, q: C.red3, R: C.red2, r: C.red1, s: C.red0 };
   T('t_roof_tl', RF, [
-    '..oooooooooooooo',
-    '.oqqqqqqqqqqqqqq',
+    '....oooooooooooo',
+    '..ooqqqqqqqqqqqq',
+    '.oqRRRRRRRRRRRRR',
     'oqRRRRRRRRRRRRRR',
     'oqRRrRRRRrRRRRrR',
     'oqrrrrrrrrrrrrrr',
@@ -728,8 +729,7 @@
     'oqRRRRRRRRRRRRRR',
     'oqRRRRrRRRRrRRRR',
     'oqrrrrrrrrrrrrrr',
-    'oqRRRRRRRRRRRRRR',
-    'oqRRrRRRRrRRRRrR'
+    'oqRRRRRRRRRRRRRR'
   ]);
   T('t_roof_tm', RF, [
     'oooooooooooooooo',
@@ -750,22 +750,22 @@
     'RRrRRRRrRRRRrRRR'
   ]);
   T('t_roof_tr', RF, [
-    'ooooooooooooooo.',
-    'qqqqqqqqqqqqqqro',
-    'RRRRRRRRRRRRRRro',
-    'RRrRRRRrRRRRrRro',
-    'rrrrrrrrrrrrrrro',
-    'RRRRRRRRRRRRRRro',
-    'RRRRrRRRRrRRRRro',
-    'rrrrrrrrrrrrrrro',
-    'RRRRRRRRRRRRRRro',
-    'RRrRRRRrRRRRrRro',
-    'rrrrrrrrrrrrrrro',
-    'RRRRRRRRRRRRRRro',
-    'RRRRrRRRRrRRRRro',
-    'rrrrrrrrrrrrrrro',
-    'RRRRRRRRRRRRRRro',
-    'RRrRRRRrRRRRrRro'
+    'oooooooooooo....',
+    'qqqqqqqqqqqqoo..',
+    'RRRRRRRRRRRRRqo.',
+    'RRRRRRRRRRRRRRqo',
+    'RrRRRRrRRRRrRRqo',
+    'rrrrrrrrrrrrrrqo',
+    'RRRRRRRRRRRRRRqo',
+    'RRRRrRRRRrRRRRqo',
+    'rrrrrrrrrrrrrrqo',
+    'RRRRRRRRRRRRRRqo',
+    'RRrRRRRrRRRRrRqo',
+    'rrrrrrrrrrrrrrqo',
+    'RRRRRRRRRRRRRRqo',
+    'RRRRrRRRRrRRRRqo',
+    'rrrrrrrrrrrrrrqo',
+    'RRRRRRRRRRRRRRqo'
   ]);
   T('t_roof_bl', RF, [
     'oqRRRRRRRRRRRRRR',
