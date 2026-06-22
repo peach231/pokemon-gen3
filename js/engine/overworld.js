@@ -246,10 +246,20 @@
 
     warpTo: function (warp) {
       var self = this;
-      G.audio.sfx('doorOpen');
-      G.pushScene(G.FadeScene(function () {
-        self.loadMap(warp.to, warp.tx, warp.ty, warp.dir || self.player.dir);
-      }));
+      var go = function () {
+        G.pushScene(G.FadeScene(function () {
+          self.loadMap(warp.to, warp.tx, warp.ty, warp.dir || self.player.dir);
+        }));
+      };
+      // stepping through an actual door plays the open beat first; route/cave
+      // edges just fade.
+      var here = this.tileDefAt(this.player.x, this.player.y);
+      if (here && here.door && G.DoorOpenScene) {
+        G.audio.sfx('doorOpen');
+        G.pushScene(G.DoorOpenScene(this.player.x, this.player.y, go));
+      } else {
+        go();
+      }
     },
 
     pixelPos: function (a) {
@@ -761,39 +771,28 @@
       }
     },
 
-    // Swim pose built from the standing sprite: clip to the head/shoulders so the
-    // body is submerged, then draw animated arms (always) and kicking legs.
+    // Surfing: the player rides on a rounded blue Water-type that bobs on the
+    // swell with a wake trailing behind — rather than swimming submerged.
     _drawSwimmer: function (ctx, img, sx, sy) {
-      var bob = Math.round(Math.sin(G.frame * 0.25));
-      var kicking = (G.frame % 28) < 9;
-      var waterY = sy + 4 + bob;
-      // expanding wake ripple
-      var rt = (G.frame % 26) / 26;
-      ctx.strokeStyle = 'rgba(240,248,255,' + (0.5 * (1 - rt)).toFixed(2) + ')';
+      var bob = Math.round(Math.sin(G.frame * 0.12) * 1.2);
+      var cx = sx + 8, my = sy + 10 + bob;
+      function el(x, y, rx, ry) { ctx.beginPath(); ctx.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2); ctx.fill(); }
+      // trailing wake ripple
+      var rt = (G.frame % 30) / 30;
+      ctx.strokeStyle = 'rgba(240,248,255,' + (0.45 * (1 - rt)).toFixed(2) + ')';
       ctx.lineWidth = 1;
-      ctx.beginPath(); ctx.ellipse(sx + 8, sy + 11 + bob, 5 + rt * 5, 2 + rt * 2, 0, 0, Math.PI * 2); ctx.stroke();
-      // head + shoulders only (rest clipped below the waterline)
+      ctx.beginPath(); ctx.ellipse(cx, my + 5, 7 + rt * 6, 2.5 + rt * 2, 0, 0, Math.PI * 2); ctx.stroke();
+      // the mount — ink outline, blue body, a lighter crest and a cyan glint
+      ctx.fillStyle = G.C.ink;  el(cx, my, 10.5, 6.5);
+      ctx.fillStyle = G.C.blu1; el(cx, my, 9.5, 5.5);
+      ctx.fillStyle = G.C.blu2; el(cx - 1, my - 1.5, 7, 3);
+      ctx.fillStyle = G.C.ice2; el(cx - 3.5, my - 2, 2.5, 1.3);
+      // the rider: head + torso seated on the mount, legs tucked behind its body
       if (img) {
         ctx.save();
-        ctx.beginPath(); ctx.rect(sx - 4, sy - 12, 24, waterY - (sy - 12)); ctx.clip();
-        ctx.drawImage(img, sx, sy - 8 + bob);
+        ctx.beginPath(); ctx.rect(sx - 4, sy - 12, 24, (my - 3) - (sy - 12)); ctx.clip();
+        ctx.drawImage(img, sx, sy - 9 + bob);
         ctx.restore();
-      }
-      // arms doing the stroke at the surface
-      var reach = Math.round(Math.sin(G.frame * 0.4) * 3);
-      ctx.fillStyle = '#e7b489';
-      ctx.fillRect(sx - 1 + Math.min(0, reach), waterY, 4, 2);
-      ctx.fillRect(sx + 13 - Math.max(0, reach), waterY, 4, 2);
-      ctx.fillStyle = 'rgba(255,255,255,0.7)';
-      ctx.fillRect(sx - 2 + Math.min(0, reach), waterY, 1, 1);
-      ctx.fillRect(sx + 16 - Math.max(0, reach), waterY, 1, 1);
-      // legs surface on the kick beat
-      if (kicking) {
-        ctx.fillStyle = '#e7b489';
-        ctx.fillRect(sx + 5, sy + 11 + bob, 2, 2);
-        ctx.fillRect(sx + 9, sy + 11 + bob, 2, 2);
-        ctx.fillStyle = 'rgba(255,255,255,0.85)';
-        ctx.fillRect(sx + 4, sy + 13 + bob, 8, 1);
       }
     },
 

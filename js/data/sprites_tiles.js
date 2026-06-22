@@ -1667,8 +1667,8 @@
     roof_tr: { img: 't_roof_tr', solid: true }, roof_bl: { img: 't_roof_bl', solid: true },
     roof_bm: { img: 't_roof_bm', solid: true }, roof_br: { img: 't_roof_br', solid: true },
     wall:    { img: 't_wall', solid: true },    window: { img: 't_window', solid: true },
-    door:    { img: 't_door' },
-    gdoor:   { img: 't_gdoor' },
+    door:    { img: 't_door', door: true },
+    gdoor:   { img: 't_gdoor', door: true },
 
     lroof_tl: { img: 't_lroof_tl', solid: true }, lroof_tm: { img: 't_lroof_tm', solid: true },
     lroof_tr: { img: 't_lroof_tr', solid: true }, lroof_bl: { img: 't_lroof_bl', solid: true },
@@ -1677,7 +1677,7 @@
     droof_tr: { img: 't_droof_tr', solid: true }, droof_bl: { img: 't_droof_bl', solid: true },
     droof_bm: { img: 't_droof_bm', solid: true }, droof_br: { img: 't_droof_br', solid: true },
     lwall:    { img: 't_lwall', solid: true },    lwindow: { img: 't_lwindow', solid: true },
-    ldoor:    { img: 't_ldoor' },
+    ldoor:    { img: 't_ldoor', door: true },
 
     ifloor: { img: 't_ifloor' },
     iwall:  { img: 't_iwall', solid: true },
@@ -1717,7 +1717,7 @@
     sroofx: { img: 't_sroofx', solid: true },
     lroofx: { img: 't_lroofx', solid: true },
     shopsign: { img: 't_shopsign', solid: true },
-    gymdoor:  { img: 't_gymdoor' },
+    gymdoor:  { img: 't_gymdoor', door: true },
 
     icounter: { img: 't_icounter', solid: true },
     ihealm:   { img: 't_ihealm', solid: true },

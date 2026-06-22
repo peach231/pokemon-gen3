@@ -68,6 +68,28 @@
   };
 
   // -------------------------------------------------------------------------
+  // Door entry: a short beat where the doorway darkens over the entrant (the
+  // door "opens" and they step inside) before the fade swaps the map. The
+  // overworld renders frozen underneath; we just shade the door tile.
+  // -------------------------------------------------------------------------
+  G.DoorOpenScene = function (dx, dy, onDone) {
+    var DUR = 13, TILE = 16;
+    return {
+      opaque: false,
+      t: 0,
+      update: function () { this.t++; if (this.t >= DUR) { G.popScene(); onDone(); } },
+      draw: function (ctx) {
+        if (!G.world || !G.world.camera) return;
+        var cam = G.world.camera();
+        var sx = dx * TILE - cam.x, sy = dy * TILE - cam.y;
+        var h = Math.round(25 * Math.min(1, this.t / DUR * 1.05)); // shade grows down over the doorway + entrant
+        ctx.fillStyle = '#0a0a14';
+        ctx.fillRect(sx + 2, sy - 8, 12, h);
+      }
+    };
+  };
+
+  // -------------------------------------------------------------------------
   // Battle intro: alternating screen flashes, then a closing spiral of black
   // tiles — the classic GBA encounter swirl. Calls onDone() at full black
   // (caller swaps in the battle scene underneath), then unwinds instantly.

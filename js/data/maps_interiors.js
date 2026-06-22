@@ -93,10 +93,10 @@
         '.B.E.E....HB.',
         '..CCCCC..CC..',
         '.P.........P.',
-        '....RRRR.....',
-        '.TT.RRRR.TT..',
-        '....RRRR.....',
-        '....mm.......'
+        '...RRR.......',
+        '.T.RRR.T..T..',
+        '...RRR.......',
+        '...mmm.......'
       ], 13, 8),
       warps: [{ x: 4, y: 7, to: exit.map, tx: exit.x, ty: exit.y, dir: 'down' }],
       signs: [
