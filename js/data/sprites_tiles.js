@@ -1373,7 +1373,7 @@
   ]);
 
   // ------------------------------ rooftop markers (heal / shop / gym) -------
-  T('t_hroofx', { o: C.ink, R: C.pnk1, r: C.pnk0, w: C.white }, [
+  T('t_hroofx', { o: C.ink, R: C.red1, r: C.red0, w: C.white }, [
     'RRRRRRRRRRRRRRRR',
     'RRRRRRRRRRRRRRRR',
     'RRRRRooooooRRRRR',
@@ -1391,7 +1391,7 @@
     'RRRRRRRRRRRRRRRR',
     'RRRRRRRRRRRRRRRR'
   ]);
-  T('t_sroofx', { o: C.ink, R: C.grn2, r: C.grn1, y: C.yel1, Y: C.yel2 }, [
+  T('t_sroofx', { o: C.ink, R: C.blu1, r: C.blu0, y: C.yel1, Y: C.yel2 }, [
     'RRRRRRRRRRRRRRRR',
     'RRRRRRRRRRRRRRRR',
     'RRRRRooooooRRRRR',
