@@ -451,24 +451,255 @@
   S('ch_egglady_s0', MO, G.ART.ch_mom_s0.px, true);
 
   // ----------------------------------------------------- gym leaders -------
-  // Eight distinct, type-themed overworld leaders. Original art: each pairs a
-  // proven body shape (prof coat / mom dress / boy tee) with a unique element-
-  // colored palette, so the leader waiting on the gym floor reads as their
-  // badge's type instead of a generic Birch/Mom/Boy clone.
-  function leader(name, base, pal) {
-    S('ch_' + name + '_d0', pal, G.ART['ch_' + base + '_d0'].px);
+  // Eight gym leaders, each with a BESPOKE front (down) silhouette — the frame
+  // the player sees them standing in on the gym floor: a hard hat, a headband,
+  // spiky hair, long hair, a shirt-and-tie, a winged cape, a robed child, a
+  // beret-and-cape. Their back/side frames are type-colored recolors of the
+  // base walker (only shown if a leader turns, which they don't in-gym).
+  function leaderBack(name, base, pal) {
     S('ch_' + name + '_u0', pal, G.ART['ch_' + base + '_u0'].px);
     S('ch_' + name + '_s0', pal, G.ART['ch_' + base + '_s0'].px, true);
   }
-  //       leader      shape   type-themed palette
-  leader('bram',   'prof', { o: C.ink, h: C.brn0, i: C.brn1, s: C.skn2, t: C.skn1, w: C.stn2,  l: C.stn1, p: C.stn0, e: C.brn0 }); // rock  — stone gray
-  leader('maris',  'mom',  { o: C.ink, h: C.dgry, i: C.gry,  s: C.skn2, t: C.skn1, w: C.red3,  r: C.red0, R: C.red1, e: C.brn0 }); // fight — crimson
-  leader('tess',   'mom',  { o: C.ink, h: C.yel1, i: C.yel2, s: C.skn2, t: C.skn1, w: C.white, r: C.yel0, R: C.yel1, e: C.brn1 }); // elec  — yellow
-  leader('vesper', 'mom',  { o: C.ink, h: C.org1, i: C.org2, s: C.skn2, t: C.skn1, w: C.org3,  r: C.org0, R: C.org1, e: C.brn0 }); // fire  — orange
-  leader('norman', 'prof', { o: C.ink, h: C.brn1, i: C.brn2, s: C.skn2, t: C.skn1, w: C.blu0,  l: C.stn0, p: C.stn0, e: C.ink  }); // norm  — navy
-  leader('winona', 'mom',  { o: C.ink, h: C.pur2, i: C.pur3, s: C.skn2, t: C.skn1, w: C.sky1,  r: C.blu1, R: C.blu2, e: C.stn0 }); // fly   — sky
-  leader('tate',   'boy',  { o: C.ink, h: C.pur1, i: C.pur2, s: C.skn2, t: C.skn1, y: C.pur2,  Y: C.pur3, g: C.pur0, e: C.dgry }); // psy   — purple
-  leader('wallace','prof', { o: C.ink, h: C.ice0, i: C.ice1, s: C.skn2, t: C.skn1, w: C.ice2,  l: C.ice0, p: C.blu0, e: C.ink  }); // water — cyan
+
+  // 1) BRAM — rock. Orange hard hat, stone work-coat. ----------------------
+  var P_bram = { o: C.ink, h: C.brn0, i: C.brn1, s: C.skn2, t: C.skn1, w: C.stn2, l: C.stn1, p: C.stn0, e: C.brn0, H: C.org2, J: C.org1 };
+  leaderBack('bram', 'prof', P_bram);
+  S('ch_bram_d0', P_bram, [
+    '................',
+    '......HHHH......',
+    '....HHHHHHHH....',
+    '...HHHHHHHHHH...',
+    '..oHHHHHHHHHHo..',
+    '..oJJJJJJJJJJo..',
+    '..ohssssssssho..',
+    '..osssssssssso..',
+    '..osssssssssso..',
+    '..ossossssosso..',
+    '..osssssssssso..',
+    '..osssssssssso..',
+    '...osssssssso...',
+    '....oossssoo....',
+    '...owwwsswwwo...',
+    '..owwwwwwwwwwo..',
+    '..owwwwllwwwwo..',
+    '..owwwwllwwwwo..',
+    '..oswwwllwwwso..',
+    '..oowwwwwwwwoo..',
+    '..owwwwwwwwwwo..',
+    '...oppoooppo....',
+    '....oeeooeeo....',
+    '....ooo..ooo....'
+  ]);
+
+  // 2) MARIS — fighting. Red headband + topknot, crimson gi. ---------------
+  var P_maris = { o: C.ink, h: C.dgry, i: C.gry, s: C.skn2, t: C.skn1, w: C.red3, r: C.red0, R: C.red1, e: C.brn0, b: C.red2 };
+  leaderBack('maris', 'mom', P_maris);
+  S('ch_maris_d0', P_maris, [
+    '.......hh.......',
+    '......hhhh......',
+    '....hhhhhhhh....',
+    '...hhhhhhhhhh...',
+    '..ohhhhhhhhhho..',
+    '..obbbbbbbbbbo..',
+    '..ohssssssssho..',
+    '..ohssssssssho..',
+    '..osssssssssso..',
+    '..ossossssosso..',
+    '..osssssssssso..',
+    '..osssssssssso..',
+    '...osssssssso...',
+    '....oossssoo....',
+    '...owwwsswwwo...',
+    '..owwwwwwwwwwo..',
+    '..owwwwwwwwwwo..',
+    '..oswwwwwwwwso..',
+    '..oRRRRRRRRRRo..',
+    '..oRRRRRRRRRRo..',
+    '..oRRRrrrrRRRo..',
+    '..oRRRRRRRRRRo..',
+    '...oeeooooeeo...',
+    '....oo....oo....'
+  ]);
+
+  // 3) TESS — electric. Spiky lightning hair, yellow dress. ----------------
+  var P_tess = { o: C.ink, h: C.yel1, i: C.yel2, s: C.skn2, t: C.skn1, w: C.white, r: C.yel0, R: C.yel1, e: C.brn1 };
+  leaderBack('tess', 'mom', P_tess);
+  S('ch_tess_d0', P_tess, [
+    '...o..o..o..o...',
+    '..ohohohohohho..',
+    '..ohhhhhhhhhho..',
+    '..ohihhhhhhiho..',
+    '..ohhhhhhhhhho..',
+    '..ohhhhhhhhhho..',
+    '..ohssssssssho..',
+    '..ohssssssssho..',
+    '..osssssssssso..',
+    '..ossossssosso..',
+    '..osssssssssso..',
+    '..osssssssssso..',
+    '...osssssssso...',
+    '....oossssoo....',
+    '...owwwsswwwo...',
+    '..owwwwwwwwwwo..',
+    '..owwwwwwwwwwo..',
+    '..oswwwwwwwwso..',
+    '..oRRRRRRRRRRo..',
+    '..oRRRRRRRRRRo..',
+    '..oRRRrrrrRRRo..',
+    '..oRRRRRRRRRRo..',
+    '...oeeooooeeo...',
+    '....oo....oo....'
+  ]);
+
+  // 4) VESPER — fire. Long flowing hair past the shoulders, orange dress. --
+  var P_vesper = { o: C.ink, h: C.org1, i: C.org2, s: C.skn2, t: C.skn1, w: C.org3, r: C.org0, R: C.org1, e: C.brn0 };
+  leaderBack('vesper', 'mom', P_vesper);
+  S('ch_vesper_d0', P_vesper, [
+    '......oooo......',
+    '....oohhhhoo....',
+    '...ohhhhhhhho...',
+    '..ohhhhhhhhhho..',
+    '..ohihhhhhhiho..',
+    '..ohhhhhhhhhho..',
+    '..ohshhhhhhsho..',
+    '..ohssssssssho..',
+    '..osssssssssso..',
+    '..ossossssosso..',
+    '..osssssssssso..',
+    '...osssssssso...',
+    '....oossssoo....',
+    '..howwwsswwwoh..',
+    '.howwwwwwwwwwoh.',
+    '.howwwwwwwwwwoh.',
+    '..oswwwwwwwwso..',
+    '..oRRRRRRRRRRo..',
+    '..oRRRRRRRRRRo..',
+    '..oRRRrrrrRRRo..',
+    '..oRRRRRRRRRRo..',
+    '..oRRRRRRRRRRo..',
+    '...oeeooooeeo...',
+    '....oo....oo....'
+  ]);
+
+  // 5) NORMAN — normal. Neat hair, navy suit with a red tie. ---------------
+  var P_norman = { o: C.ink, h: C.brn1, i: C.brn2, s: C.skn2, t: C.skn1, w: C.blu0, l: C.stn0, p: C.stn0, e: C.ink, T: C.red2 };
+  leaderBack('norman', 'prof', P_norman);
+  S('ch_norman_d0', P_norman, [
+    '................',
+    '......oooo......',
+    '....oohhhhoo....',
+    '...ohhhhhhhho...',
+    '..ohhhhhhhhhho..',
+    '..ohhhhhhhhhho..',
+    '..ohssssssssho..',
+    '..osssssssssso..',
+    '..osssssssssso..',
+    '..ossossssosso..',
+    '..osssssssssso..',
+    '..osssssssssso..',
+    '...osssssssso...',
+    '....oossssoo....',
+    '...owwwTTwwwo...',
+    '..owwwwTTwwwwo..',
+    '..owwwwTTwwwwo..',
+    '..owwwwllwwwwo..',
+    '..oswwwllwwwso..',
+    '..oowwwwwwwwoo..',
+    '..owwwwwwwwwwo..',
+    '...oppoooppo....',
+    '....oeeooeeo....',
+    '....ooo..ooo....'
+  ]);
+
+  // 6) WINONA — flying. Lavender bob, sky-blue winged cape. ----------------
+  var P_winona = { o: C.ink, h: C.pur2, i: C.pur3, s: C.skn2, t: C.skn1, w: C.sky1, r: C.blu1, R: C.blu2, e: C.stn0 };
+  leaderBack('winona', 'mom', P_winona);
+  S('ch_winona_d0', P_winona, [
+    '................',
+    '......oooo......',
+    '....oohhhhoo....',
+    '...ohhhhhhhho...',
+    '..ohhhhhhhhhho..',
+    '..ohhhhhhhhhho..',
+    '..ohssssssssho..',
+    '..osssssssssso..',
+    '..osssssssssso..',
+    '..ossossssosso..',
+    '..osssssssssso..',
+    '...osssssssso...',
+    '....oossssoo....',
+    '..owwwwwwwwwwo..',
+    '.owwwwwwwwwwwwo.',
+    'owwwwwwwwwwwwwwo',
+    'owwwwwwwwwwwwwwo',
+    'owwwRRRRRRRRwwwo',
+    '.owwwwwwwwwwwwo.',
+    '..owwwwwwwwwwo..',
+    '...orrrrrrrro...',
+    '....oeeooeeo....',
+    '.....o....o.....',
+    '................'
+  ]);
+
+  // 7) TATE — psychic. Round mushroom hair, long purple robe (a child). ----
+  var P_tate = { o: C.ink, h: C.pur1, i: C.pur2, s: C.skn2, t: C.skn1, y: C.pur2, Y: C.pur3, g: C.pur0, e: C.dgry };
+  leaderBack('tate', 'boy', P_tate);
+  S('ch_tate_d0', P_tate, [
+    '................',
+    '....oooooooo....',
+    '..oohhhhhhhhoo..',
+    '.ohhhhhhhhhhhho.',
+    '.ohhhhhhhhhhhho.',
+    '.ohhhhhhhhhhhho.',
+    '..ohhhhhhhhhho..',
+    '..ohshhhhhhsho..',
+    '..ohssssssssho..',
+    '..osssssssssso..',
+    '..ossossssosso..',
+    '...osssssssso...',
+    '....oossssoo....',
+    '...oyyyssyyyo...',
+    '..oyyyyyyyyyyo..',
+    '..oyyyYYYYyyyo..',
+    '..oyyyyyyyyyyo..',
+    '..oyyyyyyyyyyo..',
+    '..oyyyyyyyyyyo..',
+    '..oyyyyyyyyyyo..',
+    '..oyyyyyyyyyyo..',
+    '..oyyyyyyyyyyo..',
+    '...oeeeeeeeeo...',
+    '....oo..oo......'
+  ]);
+
+  // 8) WALLACE — water. Cyan beret + long flowing cape. --------------------
+  var P_wallace = { o: C.ink, h: C.ice0, i: C.ice1, s: C.skn2, t: C.skn1, w: C.ice2, l: C.ice0, p: C.blu0, e: C.ink, B: C.ice1 };
+  leaderBack('wallace', 'prof', P_wallace);
+  S('ch_wallace_d0', P_wallace, [
+    '................',
+    '.....BBBBBB.....',
+    '...BBBBBBBBBo...',
+    '..oBBBBBBBBBho..',
+    '..ohhhhhhhhhho..',
+    '..ohhhhhhhhhho..',
+    '..ohssssssssho..',
+    '..osssssssssso..',
+    '..osssssssssso..',
+    '..ossossssosso..',
+    '..osssssssssso..',
+    '...osssssssso...',
+    '....oossssoo....',
+    '..owwwwwwwwwwo..',
+    '.owwwwwwwwwwwwo.',
+    'owwwwwwwwwwwwwwo',
+    'owwwwllllllwwwwo',
+    'owwwwwwwwwwwwwwo',
+    '.owwwwwwwwwwwwo.',
+    '..owwwwwwwwwwo..',
+    '...owwwwwwwwo...',
+    '....oppppppo....',
+    '....oeeooeeo....',
+    '....ooo..ooo....'
+  ]);
 
   // -------------------------------------------------------- starter orb -----
   // A capture orb resting on a stand (interactable in the lab).
