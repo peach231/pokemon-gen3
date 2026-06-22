@@ -310,16 +310,16 @@
       'vx..7!89....AB&BBC....vx',
       'tu..dmmh....abbbbc....tu',
       'vx..W+DW....LMYYML....vx',
-      'tu....................tu',
-      'vxnnnnnnnnnnnnnnnnnnnnvx',
-      'tussssssssssssssssssspp',
-      'vx........pp..........pp',
+      'tu....p...pp..pp......tu',
+      'vx....pppppppppp......vx',
+      'tu....pppppppppppppppppp',
+      'vx........pp....pppppppp',
       'tu..q@rz..pp..1223....tu',
       'vx..ijjk..pp..4556....vx',
       'tu..W$DW..pp..WNDW....tu',
       'vx........pp....,.....vx',
-      'tu...f....pp..........tu',
-      'vx........pp.......f..vx',
+      'tuFFF.....pp.......FFFtu',
+      'vxFyF.....pp.......FyFvx',
       'tu........pp..........tu',
       'vx........pp..........vx',
       'tutututuvxppvxtututututu',
@@ -338,8 +338,8 @@
       { x: 16, y: 12, to: 'house_aure', tx: 4, ty: 6, dir: 'up' }
     ],
     signs: [
-      { x: 12, y: 7, text: 'AURELUNE CITY — The moon lingers here a little longer.' },
-      { x: 17, y: 5, text: "AURELUNE GYM — Leader Vesper. 'I dreamed you would read this.'" }
+      { x: 12, y: 9, text: 'AURELUNE CITY — The moon lingers here a little longer.' },
+      { x: 16, y: 6, text: "AURELUNE GYM — Leader Vesper. 'I dreamed you would read this.'" }
     ],
     npcs: [
       { x: 21, y: 10, sprite: 'prof', dir: 'left', unlessFlag: 'badge4', dialog: ['Summit Path demands all four badges.', 'Vesper holds the last one. Sleep well before you face her.'] },
