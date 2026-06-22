@@ -380,7 +380,7 @@
       { x: 8, y: 17, to: 'summitpath', tx: 9, ty: 1, dir: 'down' },
       { x: 9, y: 17, to: 'summitpath', tx: 10, ty: 1, dir: 'down' },
       { x: 10, y: 17, to: 'summitpath', tx: 10, ty: 1, dir: 'down' },
-      { x: 11, y: 17, to: 'summitpath', tx: 11, ty: 1, dir: 'down' },
+      { x: 11, y: 17, to: 'summitpath', tx: 10, ty: 1, dir: 'down' },
       { x: 9, y: 6, to: 'championhall', tx: 4, ty: 12, dir: 'up' },
       { x: 10, y: 6, to: 'championhall', tx: 5, ty: 12, dir: 'up' },
       { x: 5, y: 12, to: 'heal_summit', tx: 4, ty: 7, dir: 'up' },

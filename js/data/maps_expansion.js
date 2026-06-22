@@ -228,7 +228,7 @@
   town('sootopolis', {
     name: 'Sootopolis City', bg: 'water', gymId: 'gym8', healId: 'heal_sootopolis', shopId: 'shop_sootopolis', gymType: 'water',
     gymSign: "Leader Wallace. 'The art of water.'",
-    west: { to: 'route8', tx: 22, ty: 5 }, east: { to: 'summitpath', tx: 1, ty: 26 },
+    west: { to: 'route8', tx: 22, ty: 5 }, east: { to: 'summitpath', tx: 1, ty: 27 },
     npcs: [
       { x: 10, y: 10, sprite: 'prof', dir: 'down', dialog: ['Beyond Wallace lies Victory Road, then the League itself.', 'Grass and Electric moves wash out his Water-types.'] },
       // Team Aqua's final stand — they've seized the crater to wake Kyogre (endgame)

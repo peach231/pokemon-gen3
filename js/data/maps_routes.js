@@ -187,11 +187,11 @@
     ground: pad([
       'tututututututututututututututututu',
       'vxvxvxvxvxvxvxvxvxvxvxvxvxvxvxvxvx',
-      'tu....,.....ggg.......f.........tu',
-      'vx..........ggg.....ggg.........vx',
-      'tu..f.......ggg.....ggg....,....tu',
-      'vx..................ggg.........vx',
-      'tu...........*..................tu',
+      'tu..gggg................gggg....tu',
+      'vx..gggg.....ggg......gggg......vx',
+      'tu..ggg..........llllll.........tu',
+      'vx..ggg....................*...vx',
+      'tu..f......................*...tu',
       'vxnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnvx',
       'pppppppppppppppppppppppppppppppppp',
       'pppppppppppppppppppppppppppppppppp',
@@ -363,7 +363,7 @@
       '###..ggg.pp.ggg..###',
       '###..ggg.pp.ggg..###',
       '###......pp......###',
-      '##....,..pp..*....##',
+      '##..lllllpp..*....##',
       '##.......pp.......##',
       '##..ggg..pp..ggg..##',
       '##..ggg..pp..ggg..##',
@@ -395,7 +395,7 @@
     trainers: [
       { id: 'sp_rex', trainer: 'sp_rex', x: 6, y: 20, sprite: 'boy', dir: 'right', sight: 4, after: 'Two more aces above me. Breathe between fights.' },
       { id: 'sp_isa', trainer: 'sp_isa', x: 14, y: 16, sprite: 'mom', dir: 'left', sight: 4, after: 'The wind carries you well.' },
-      { id: 'sp_olm', trainer: 'sp_olm', x: 5, y: 10, sprite: 'prof', dir: 'right', sight: 4, after: 'Ninety-one times the charm.' },
+      { id: 'sp_olm', trainer: 'sp_olm', x: 6, y: 10, sprite: 'prof', dir: 'right', sight: 4, after: 'Ninety-one times the charm.' },
       { id: 'sp_ada', trainer: 'sp_ada', x: 13, y: 5, sprite: 'boy', dir: 'left', sight: 4, after: 'Go on. Make the hall remember you.' }
     ],
     items: [
