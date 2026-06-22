@@ -21,13 +21,14 @@
   }
 
   function platform(ctx, cx, cy, rx, ry, base, dark, lite) {
-    // soft drop shadow
+    // soft drop shadow on the battlefield
     ctx.fillStyle = 'rgba(18,20,34,0.22)';
-    ellipse(ctx, cx, cy + 6, rx * 1.05, ry * 0.85);
-    // body: dark underside, base, light cap
-    ctx.fillStyle = dark; ellipse(ctx, cx, cy + 2, rx, ry);
-    ctx.fillStyle = base; ellipse(ctx, cx, cy, rx, ry);
-    ctx.fillStyle = lite; ellipse(ctx, cx - rx * 0.15, cy - 2, rx * 0.7, ry * 0.55);
+    ellipse(ctx, cx, cy + 6, rx * 1.08, ry * 0.9);
+    // a raised disc: thick dark side wall, lit top surface inset above it, then
+    // a sun-lit cap — the exposed rim gives the base a 3D Emerald-style edge.
+    ctx.fillStyle = dark; ellipse(ctx, cx, cy + 3, rx, ry);
+    ctx.fillStyle = base; ellipse(ctx, cx, cy, rx * 0.97, ry * 0.9);
+    ctx.fillStyle = lite; ellipse(ctx, cx - rx * 0.15, cy - 2, rx * 0.7, ry * 0.5);
     // speckle texture (deterministic)
     ctx.fillStyle = dark;
     for (var i = 0; i < 12; i++) {

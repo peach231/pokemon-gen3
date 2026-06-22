@@ -25,7 +25,7 @@
     // --- public remote source (Gen 3 Emerald sprites via jsDelivr CDN) ---
     remoteBase:  'https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/sprites/pokemon/versions/generation-iii/emerald/',
     remoteFront: '{dex}.png',
-    remoteBack:  'back/{dex}.png',   // not present in this Gen 3 set -> loader auto-flips the front
+    remoteBack:  '../ruby-sapphire/back/{dex}.png',   // Emerald set has no backs; borrow the same-era Ruby/Sapphire backs (real rear views, matching art generation) — jsDelivr resolves the '..'
     remoteIcon:  '{dex}.png',
     remoteShiny: 'shiny/{dex}.png',  // shiny variant (lazy-loaded on demand)
 

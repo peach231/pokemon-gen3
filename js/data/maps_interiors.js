@@ -83,29 +83,31 @@
       id: id, name: 'Pokémon Center', w: 13, h: 8,
       music: 'town', battleBg: 'indoor', base: 'ifloor',
       legend: G.LEG_INT,
-      // Classic Center ground floor: nurse healing counter (machine beside her)
-      // on the left, a PC station on the right, a seating/waiting area in the
-      // middle, plants framing it. Entrance stays at (4,7) so town warps hold.
+      // Iconic Center: the nurse stands behind a wide healing counter (a heal
+      // machine to either side) across the top-center, a storage-PC station sits
+      // top-right, a red-carpet runner leads from the door straight up to the
+      // counter, with padded seating + potted plants framing the lobby.
+      // Entrance stays at (4,7) so town warps hold.
       ground: pad([
         'IIIIIIIIIIIII',
-        '.E.......H.B.',
-        '.CCC.....CC..',
-        '.............',
+        '.B.E.E....HB.',
+        '..CCCCC..CC..',
         '.P.........P.',
-        '..TT.....TT..',
-        '.....o.o.....',
+        '....RRRR.....',
+        '.TT.RRRR.TT..',
+        '....RRRR.....',
         '....mm.......'
       ], 13, 8),
       warps: [{ x: 4, y: 7, to: exit.map, tx: exit.x, ty: exit.y, dir: 'down' }],
       signs: [
-        { x: 1, y: 1, text: 'The healing machine hums, ready to mend tired Pokémon.' },
-        { x: 11, y: 1, text: 'A shelf of regional guides for weary travelers.' }
+        { x: 1, y: 1, text: 'A shelf of regional travel guides for weary trainers.' },
+        { x: 11, y: 1, text: 'A storage PC hums quietly — deposit or withdraw Pokémon here.' }
       ],
       respawnPoint: { mapId: id, x: 4, y: 5 },
       npcs: [
-        { x: 2, y: 1, sprite: 'mom', dir: 'down', event: 'nurseHeal' },
-        { x: 10, y: 1, sprite: 'prof', dir: 'down', event: 'birchPC' },
-        { x: 6, y: 6, sprite: 'egglady', dir: 'down', event: 'nursery' }
+        { x: 4, y: 1, sprite: 'mom', dir: 'down', event: 'nurseHeal' },
+        { x: 9, y: 1, sprite: 'prof', dir: 'down', event: 'birchPC' },
+        { x: 8, y: 5, sprite: 'egglady', dir: 'down', event: 'nursery' }
       ]
     };
   }
@@ -129,19 +131,19 @@
       legend: G.LEG_INT,
       ground: pad([
         'IIIIIIIIIII',
-        '.B.......B.',
+        'BBBBB.BBBBB',
         '...CCCCC...',
         '...........',
-        'TT.......TT',
-        'TT.......TT',
-        '...........',
+        'B.........B',
+        'B.........B',
+        'B.........B',
         '....m......'
       ], 11, 8),
       warps: [{ x: 4, y: 7, to: exit.map, tx: exit.x, ty: exit.y, dir: 'down' }],
       signs: [
-        { x: 1, y: 1, text: 'Travel gear, neatly stocked behind the clerk.' },
-        { x: 0, y: 4, text: 'Shelves of Potions and Poké Balls.' },
-        { x: 10, y: 4, text: 'Shelves of candies and field gear.' }
+        { x: 1, y: 1, text: 'Shelves stocked with Potions and Poké Balls behind the clerk.' },
+        { x: 0, y: 4, text: 'A wall rack of field gear and candies.' },
+        { x: 10, y: 4, text: 'Repels, Revives, and travel sundries, neatly shelved.' }
       ],
       shopInventory: inventory,
       npcs: [
