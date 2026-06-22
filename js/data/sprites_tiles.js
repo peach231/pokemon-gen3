@@ -889,6 +889,15 @@
   G.ART.t_lroof_bl = { base: 't_roof_bl', pal: LRF };
   G.ART.t_lroof_bm = { base: 't_roof_bm', pal: LRF };
   G.ART.t_lroof_br = { base: 't_roof_br', pal: LRF };
+  // Devon Corp roof — teal/cyan, distinct from the stone gym/lab. Devon uses pale
+  // walls (W/N/D), so the building reads as a sleek corporate HQ, not a gym.
+  var DRF = { o: C.ink, q: C.ice2, R: C.ice1, r: C.ice0, s: C.blu0 };
+  G.ART.t_droof_tl = { base: 't_roof_tl', pal: DRF };
+  G.ART.t_droof_tm = { base: 't_roof_tm', pal: DRF };
+  G.ART.t_droof_tr = { base: 't_roof_tr', pal: DRF };
+  G.ART.t_droof_bl = { base: 't_roof_bl', pal: DRF };
+  G.ART.t_droof_bm = { base: 't_roof_bm', pal: DRF };
+  G.ART.t_droof_br = { base: 't_roof_br', pal: DRF };
   G.ART.t_lwall = { base: 't_wall', pal: { o: C.ink, w: C.stn3, l: C.stn2, g: C.stn1 } };
   G.ART.t_lwindow = { base: 't_window', pal: { o: C.ink, w: C.stn3, l: C.stn2, g: C.blu2, G: C.blu3, s: C.stn1 } };
   T('t_ldoor', { o: C.ink, w: C.stn3, l: C.stn2, g: C.blu3, G: C.ice3, s: C.stn1 }, [
@@ -1631,6 +1640,9 @@
     lroof_tl: { img: 't_lroof_tl', solid: true }, lroof_tm: { img: 't_lroof_tm', solid: true },
     lroof_tr: { img: 't_lroof_tr', solid: true }, lroof_bl: { img: 't_lroof_bl', solid: true },
     lroof_bm: { img: 't_lroof_bm', solid: true }, lroof_br: { img: 't_lroof_br', solid: true },
+    droof_tl: { img: 't_droof_tl', solid: true }, droof_tm: { img: 't_droof_tm', solid: true },
+    droof_tr: { img: 't_droof_tr', solid: true }, droof_bl: { img: 't_droof_bl', solid: true },
+    droof_bm: { img: 't_droof_bm', solid: true }, droof_br: { img: 't_droof_br', solid: true },
     lwall:    { img: 't_lwall', solid: true },    lwindow: { img: 't_lwindow', solid: true },
     ldoor:    { img: 't_ldoor' },
 

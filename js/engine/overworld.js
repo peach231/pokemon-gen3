@@ -605,7 +605,6 @@
 
       this._drawLayer(ctx, 'ground', x0, y0, x1, y1, cam);
       this._drawLayer(ctx, 'deco', x0, y0, x1, y1, cam);
-      this._drawShadows(ctx, x0, y0, x1, y1, cam);
 
       // gym interiors are tinted their specialty type's color
       if (map.gymTint) {
@@ -679,25 +678,6 @@
       G.text(ctx, hl2, 3, G.SCREEN_H - 8, G.C.lgry);
     },
 
-    // Soft contact shadows: any solid object (building, tree, cliff, fence, sign)
-    // casts a short shadow onto the open tile to its south and east — light is
-    // upper-left — so things sit ON the ground instead of being pasted onto it.
-    _drawShadows: function (ctx, x0, y0, x1, y1, cam) {
-      var w = G.world;
-      ctx.fillStyle = 'rgba(18,20,34,0.20)';
-      for (var y = y0; y <= y1; y++) {
-        for (var x = x0; x <= x1; x++) {
-          var here = w.tileDefAt(x, y);
-          if (here && here.solid) continue;            // shadow only falls on open ground
-          var px = x * TILE - cam.x, py = y * TILE - cam.y;
-          var north = w.tileDefAt(x, y - 1);
-          var west = w.tileDefAt(x - 1, y);
-          if (north && north.solid) ctx.fillRect(px, py, TILE, 3);
-          if (west && west.solid) ctx.fillRect(px, py, 3, TILE);
-        }
-      }
-    },
-
     _drawLayer: function (ctx, layer, x0, y0, x1, y1, cam) {
       var map = G.world.map;
       var rows = map[layer];
@@ -738,14 +718,6 @@
 
       // SWIMMING: body submerged — only head shows, arms stroke, legs kick.
       if (a === w.player && a.vehicle === 'swim') { this._drawSwimmer(ctx, img, sx, sy); return; }
-
-      // static ground shadow (grounds the sprite, removes the floating look)
-      if (a.hop === 0) {
-        ctx.fillStyle = 'rgba(18,20,34,0.30)';
-        ctx.fillRect(sx + 5, sy + 11, 6, 1);
-        ctx.fillRect(sx + 4, sy + 12, 8, 2);
-        ctx.fillRect(sx + 5, sy + 14, 6, 1);
-      }
 
       var yoff = -8; // 8px head overhang
       if (a === w.player && a.vehicle === 'boat') {

@@ -11,7 +11,7 @@
   // ------------------------------------------------------------- rival -----
   tr('rival1', {
     name: 'Kai', cls: 'Rival', sprite: 'trainer_kai', ai: 'basic', money: 200,
-    party: [{ sp: '_starter', level: 3 }],
+    party: [{ sp: '_starter', level: 4 }],
     intro: "Heading out already? Let's see what that starter can do!",
     defeat: 'Not bad. Mine just needs more training.', music: 'battle'
   });
@@ -35,7 +35,7 @@
   });
 
   // ------------------------------------------------------- early routes ----
-  tr('r1_tom', { name: 'Youngster Tom', sprite: 'trainer_youngster', ai: 'basic', money: 60, party: [{ sp: 'poochyena', level: 3 }], intro: 'My shorts are comfy and my team is MIGHTY!', defeat: 'Mighty-ish. Mighty-adjacent.', music: 'battle' });
+  tr('r1_tom', { name: 'Youngster Tom', sprite: 'trainer_youngster', ai: 'basic', money: 60, party: [{ sp: 'poochyena', level: 4 }], intro: 'My shorts are comfy and my team is MIGHTY!', defeat: 'Mighty-ish. Mighty-adjacent.', music: 'battle' });
   tr('r1_ana', { name: 'Lass Ana', sprite: 'trainer_lass', ai: 'basic', money: 70, party: [{ sp: 'zigzagoon', level: 4 }], intro: 'We have been practicing all week!', defeat: 'Back to practice, I suppose.', music: 'battle' });
 
   tr('r2_ben', { name: 'Youngster Ben', sprite: 'trainer_youngster', ai: 'basic', money: 120, party: [{ sp: 'poochyena', level: 8 }, { sp: 'taillow', level: 8 }], intro: 'This route is MY turf!', defeat: 'Turf under renovation.', music: 'battle' });

@@ -429,8 +429,10 @@
   // the player) so you can heal any time without trekking back to him.
   G.EVENTS.remyGreet = function* () {
     yield { t: 'fn', fn: function () { G.flags.remyGreetSeen = 1; if (G.attachFollower) G.attachFollower('boy', 'friendHeal', 'Remy'); } };
-    yield { t: 'text', s: 'Remy: There you are! Told you I would catch up with you out on Route 1.' };
-    yield { t: 'text', s: "Remy: I'll tag right along and patch up your team whenever you need — just turn and talk to me. Let's go!" };
+    yield { t: 'text', s: '???: Hey — wait up! Wait for meee!' };
+    yield { t: 'text', s: "Remy: *huff*... made it. It's me — REMY, your neighbour from Hearthvale!" };
+    yield { t: 'text', s: "Remy: We both just got our first partners, so I figured we should set out together. I'll travel Route 1 right at your side." };
+    yield { t: 'text', s: "Remy: Oh — and if your team ever gets worn down out here, just turn and talk to me. I'll patch them up, no charge. Let's go!" };
   };
   G.EVENTS.friendFarewell = function* () {
     yield { t: 'text', s: 'Remy: Hey — you made it to Cobblemarch! Your very first gym town. Nice going.' };
