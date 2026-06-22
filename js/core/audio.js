@@ -17,6 +17,31 @@
   var pendingMusic = null;
   var jinglePlaying = false;
 
+  // optional external (streamed) music — see js/data/audio_config.js. When a
+  // track is configured for a context the synth tracker is silenced and this
+  // looping <audio> element plays instead; otherwise the synth plays as before.
+  var streamEl = null, streamId = null;
+  function streamSrc(id) {
+    var cfg = G.AUDIO_CFG;
+    if (!cfg || !cfg.base || !cfg.music || !cfg.music[id]) return null;
+    return cfg.base + cfg.music[id] + '.' + (cfg.ext || 'mp3');
+  }
+  function streamVol() {
+    var cfg = G.AUDIO_CFG;
+    return G.audio.muted ? 0 : (cfg && cfg.volume != null ? cfg.volume : 0.6);
+  }
+  function playStream(id) {
+    var src = streamSrc(id);
+    if (!src) return false;
+    if (!streamEl) { streamEl = new Audio(); streamEl.loop = true; }
+    if (streamId !== id) { streamEl.src = src; streamId = id; }
+    streamEl.volume = streamVol();
+    var p = streamEl.play();
+    if (p && p.catch) p.catch(function () {}); // autoplay blocked -> retried on unlock()
+    return true;
+  }
+  function stopStream() { if (streamEl) streamEl.pause(); streamId = null; }
+
   var NOTE_IDX = { C: 0, 'C#': 1, D: 2, 'D#': 3, E: 4, F: 5, 'F#': 6, G: 7, 'G#': 8, A: 9, 'A#': 10, B: 11 };
 
   function noteFreq(token) {
@@ -172,23 +197,33 @@
     init: function () {},
 
     unlock: function () {
-      if (!ensureCtx()) return;
-      if (actx.state === 'suspended') actx.resume();
-      if (pendingMusic && !current) {
+      var hasCtx = ensureCtx();
+      if (hasCtx && actx.state === 'suspended') actx.resume();
+      if (pendingMusic && !current && streamId !== pendingMusic) {
         var id = pendingMusic;
         pendingMusic = null;
         G.audio.playMusic(id);
+      } else if (streamEl && streamEl.paused && streamId) {
+        var p = streamEl.play(); if (p && p.catch) p.catch(function () {});
       }
     },
 
     toggleMute: function () {
       this.muted = !this.muted;
       if (master) master.gain.value = this.muted ? 0 : 0.7;
+      if (streamEl) streamEl.volume = streamVol();
     },
 
     playMusic: function (id) {
-      if (this.currentSong === id && current) return;
+      if (this.currentSong === id && (current || streamId === id)) return;
       this.currentSong = id;
+      // external track configured for this context? stream it, silence the synth.
+      if (streamSrc(id)) {
+        stopSongTimer();
+        if (!playStream(id)) pendingMusic = id;
+        return;
+      }
+      stopStream();
       if (!actx) { pendingMusic = id; return; }
       startSong(id);
     },
@@ -196,6 +231,7 @@
     stopMusic: function () {
       this.currentSong = null;
       stopSongTimer();
+      stopStream();
     },
 
     playJingle: function (id, onDone) {

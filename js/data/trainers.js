@@ -11,7 +11,7 @@
   // ------------------------------------------------------------- rival -----
   tr('rival1', {
     name: 'Brendan', cls: 'Rival', sprite: 'trainer_kai', ai: 'basic', money: 200,
-    party: [{ sp: '_starter', level: 5 }],
+    party: [{ sp: '_starter', level: 3 }],
     intro: "Heading out already? Let's see what that starter can do!",
     defeat: 'Not bad. Mine just needs more training.', music: 'battle'
   });

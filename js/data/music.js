@@ -99,6 +99,20 @@
     perc: '-:8 h:2 -:6 -:16 -:8 h:2 -:6 -:16 -:8 h:2 -:6 -:16 -:8 h:2 -:6 -:14 h:2'
   };
 
+  // ---------------------------------------------------------------- forest --
+  // Gentle and a little mysterious — a flowing E-minor melody over a soft walking
+  // bass and light hats, for wooded areas (Verdant Forest). Distinct from the
+  // brighter overland 'route' and the sparse 'cave'.
+  S.forest = {
+    bpm: 118, loopBar: 0,
+    pulse1: 'E5:4 G5:4 B5:4 A5:4 G5:6 E5:2 F#5:8 D5:4 E5:4 G5:4 A5:4 B5:8 -:8 ' +
+            'A5:4 B5:4 C6:4 B5:4 A5:6 F#5:2 G5:8 E5:4 D5:4 E5:4 G5:4 E5:8 -:8',
+    pulse2: 'E4:8 G4:8 A4:8 B4:8 C5:8 A4:8 B4:8 G4:8 A4:8 B4:8 C5:8 B4:8 A4:8 G4:8 E4:8 E4:8',
+    bass: 'E2:8 E2:8 G2:8 G2:8 A2:8 A2:8 B2:8 B2:8 C3:8 C3:8 A2:8 A2:8 G2:8 G2:8 E2:8 E2:8',
+    perc: 'k:4 h:4 h:4 h:4 k:4 h:4 h:4 h:4 k:4 h:4 h:4 h:4 k:4 h:4 h:4 h:4 ' +
+          'k:4 h:4 h:4 h:4 k:4 h:4 h:4 h:4 k:4 h:4 h:4 h:4 k:4 h:4 s:4 h:4'
+  };
+
   // --------------------------------------------------------------- evolve --
   S.evolve = {
     bpm: 130, loopBar: 0,

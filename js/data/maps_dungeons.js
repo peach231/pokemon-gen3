@@ -17,7 +17,7 @@
   // ------------------------------------------------------------------------
   G.MAPS.verdantforest = {
     id: 'verdantforest', name: 'Petalburg Woods', w: 28, h: 26,
-    music: 'cave', battleBg: 'forest', base: 'grass',
+    music: 'forest', battleBg: 'forest', base: 'grass',
     legend: G.LEG_EXT,
     ground: pad([
       'tutututututututututututututu',

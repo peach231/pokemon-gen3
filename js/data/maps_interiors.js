@@ -309,6 +309,12 @@
   G.EVENTS.pick_emberynx = starterEvent('torchic', 'The ball holds TORCHIC, the chick. A warm little furnace with a fighting heart.');
 
   G.EVENTS.momHeal = function* () {
+    // before you have a partner, Mom won't let you wander off — she points you
+    // to the lab first (the route north is blocked until you have a starter).
+    if (!G.flags.starter) {
+      yield* G.EVENTS.momGuide();
+      return;
+    }
     yield { t: 'text', s: 'Mom: Off on an adventure already? Let me patch your team up first.' };
     yield {
       t: 'fn',
@@ -319,6 +325,44 @@
       }
     };
     yield { t: 'text', s: 'Everyone is rested and ready. Do be careful in the tall grass, dear.' };
+  };
+
+  // Mom's opening guidance: get a partner from Prof. Birch before heading out.
+  G.EVENTS.momGuide = function* () {
+    yield { t: 'text', s: "Mom: Wait, wait — you're not off to Route 1 already, are you?" };
+    yield { t: 'text', s: "Mom: You can't step into the tall grass without a partner to look after you. It's far too dangerous alone!" };
+    yield { t: 'text', s: "Mom: Prof. Birch keeps her Pokémon at the lab, just south of here. Go choose one, sweetheart — then the road north is all yours." };
+  };
+
+  // ------------------------------------------------------------------------
+  // YOUR FRIEND, REMY
+  // Blocks the north gate until you have a starter, tags along to heal you on
+  // Route 1 (so you never get stranded broke), then sets off on their own
+  // journey once you reach the first gym town (Cobblemarch).
+  // ------------------------------------------------------------------------
+  G.EVENTS.friendBlock = function* () {
+    yield { t: 'text', s: 'Remy: Whoa there! You were about to march into the grass with NO Pokémon?' };
+    yield { t: 'text', s: "Remy: I just picked mine up from Prof. Birch — you should too! The lab's the big building to the south." };
+    yield { t: 'text', s: "Remy: Grab a partner and I'll meet you out on Route 1. I'll keep your team patched up the whole way, promise!" };
+  };
+  G.EVENTS.friendHeal = function* () {
+    yield { t: 'text', s: "Remy: Hey, friend! Want me to freshen up your team? Can't have you fainting before you reach a shop." };
+    var ans = { v: 0 };
+    yield { t: 'custom', run: function (done) {
+      G.pushScene(G.Chooser({ items: ['Yes, please', 'No thanks'], onPick: function (i) { ans.v = i; done(); } }));
+    } };
+    if (ans.v !== 0) { yield { t: 'text', s: "Remy: Suit yourself! I'll be right here if you change your mind." }; return; }
+    yield { t: 'fn', fn: function () {
+      for (var i = 0; i < G.player.party.length; i++) G.healMon(G.player.party[i]);
+      if (G.audio.playJingle) G.audio.playJingle('jingle_heal'); else G.audio.sfx('heal');
+    } };
+    yield { t: 'text', s: "Remy: There — good as new! Find me right here whenever your team needs a rest." };
+  };
+  G.EVENTS.friendFarewell = function* () {
+    yield { t: 'text', s: 'Remy: Hey — you made it to Cobblemarch! Your very first gym town. Nice going.' };
+    yield { t: 'text', s: "Remy: This is where I peel off, though. I want to take on the gyms my own way, y'know?" };
+    yield { t: 'text', s: "Remy: You've got this. Next time we cross paths, let's see how strong we've both gotten!" };
+    yield { t: 'fn', fn: function () { G.flags.friendGone = 1; } };
   };
 
   // generic heal-center nurse: full heal + set respawn to this center

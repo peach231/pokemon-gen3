@@ -95,9 +95,16 @@
     npcs: [
       { x: 4, y: 7, sprite: 'mom', dir: 'down', event: 'momHeal' },
       { x: 16, y: 9, sprite: 'boy', dir: 'down', dialog: ['Prof. Maple keeps four creatures in her lab.', 'FOUR! And one of them gets to be yours. So unfair!'] },
-      { x: 13, y: 9, sprite: 'prof', dir: 'down', event: 'giftCandy' }
+      { x: 13, y: 9, sprite: 'prof', dir: 'down', event: 'giftCandy' },
+      // your friend Remy + a neighbor stand in the north gate until you have a
+      // partner of your own; both step aside once `starter` is set.
+      { x: 10, y: 2, sprite: 'boy', dir: 'down', unlessFlag: 'starter', event: 'friendBlock' },
+      { x: 11, y: 2, sprite: 'mom', dir: 'down', unlessFlag: 'starter', dialog: ['The tall grass out there is full of wild Pokémon.', "Best not to wander out without a partner of your own!"] }
     ],
-    scripts: []
+    // heading up the path toward Route 1 with no starter? Mom calls you back once.
+    scripts: [
+      { x: [10, 11], y: 6, unlessFlag: 'starter', once: 'momIntroSeen', run: 'momGuide' }
+    ]
   };
 
   // ------------------------------------------------------------------------
@@ -150,7 +157,11 @@
       { x: 21, y: 8, sprite: 'boy', dir: 'left', unlessFlag: 'badge1', dialog: ['The route east is closed until you earn the Bedrock Badge.', "Gym's the big stone building northwest. Good luck!"] },
       { x: 13, y: 10, sprite: 'mom', dir: 'down', dialog: ['The heal house has the pink roof — they patch up creatures free of charge.', 'The shop has the green roof. Stock up on orbs, dear.'] }
     ],
-    scripts: []
+    // your friend Remy catches up the first time you walk in, then heads off
+    // on their own journey (which retires their Route 1 healing for good).
+    scripts: [
+      { x: [10, 11], y: 16, once: 'friendFarewellSeen', run: 'friendFarewell' }
+    ]
   };
 
   // ------------------------------------------------------------------------

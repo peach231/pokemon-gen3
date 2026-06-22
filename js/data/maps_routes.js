@@ -49,7 +49,11 @@
     signs: [
       { x: 10, y: 20, text: 'ROUTE 1 — South: Hearthvale. North: Cobblemarch.' }
     ],
-    npcs: [],
+    // your friend Remy waits near the entrance and will heal your team on
+    // request the whole way to Cobblemarch, so a rough patch never strands you.
+    npcs: [
+      { x: 10, y: 21, sprite: 'boy', dir: 'left', unlessFlag: 'friendGone', event: 'friendHeal' }
+    ],
     trainers: [
       { id: 'r1_tom', trainer: 'r1_tom', x: 5, y: 8, sprite: 'boy', dir: 'right', sight: 3, after: 'The gym in Cobblemarch is way tougher than me. Way, WAY tougher.' },
       { id: 'r1_ana', trainer: 'r1_ana', x: 12, y: 16, sprite: 'mom', dir: 'left', sight: 3, after: 'Your team has good manners. Mostly.' }
