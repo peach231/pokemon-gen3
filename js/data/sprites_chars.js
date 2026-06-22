@@ -450,6 +450,26 @@
   S('ch_egglady_u0', MO, G.ART.ch_mom_u0.px);
   S('ch_egglady_s0', MO, G.ART.ch_mom_s0.px, true);
 
+  // ----------------------------------------------------- gym leaders -------
+  // Eight distinct, type-themed overworld leaders. Original art: each pairs a
+  // proven body shape (prof coat / mom dress / boy tee) with a unique element-
+  // colored palette, so the leader waiting on the gym floor reads as their
+  // badge's type instead of a generic Birch/Mom/Boy clone.
+  function leader(name, base, pal) {
+    S('ch_' + name + '_d0', pal, G.ART['ch_' + base + '_d0'].px);
+    S('ch_' + name + '_u0', pal, G.ART['ch_' + base + '_u0'].px);
+    S('ch_' + name + '_s0', pal, G.ART['ch_' + base + '_s0'].px, true);
+  }
+  //       leader      shape   type-themed palette
+  leader('bram',   'prof', { o: C.ink, h: C.brn0, i: C.brn1, s: C.skn2, t: C.skn1, w: C.stn2,  l: C.stn1, p: C.stn0, e: C.brn0 }); // rock  — stone gray
+  leader('maris',  'mom',  { o: C.ink, h: C.dgry, i: C.gry,  s: C.skn2, t: C.skn1, w: C.red3,  r: C.red0, R: C.red1, e: C.brn0 }); // fight — crimson
+  leader('tess',   'mom',  { o: C.ink, h: C.yel1, i: C.yel2, s: C.skn2, t: C.skn1, w: C.white, r: C.yel0, R: C.yel1, e: C.brn1 }); // elec  — yellow
+  leader('vesper', 'mom',  { o: C.ink, h: C.org1, i: C.org2, s: C.skn2, t: C.skn1, w: C.org3,  r: C.org0, R: C.org1, e: C.brn0 }); // fire  — orange
+  leader('norman', 'prof', { o: C.ink, h: C.brn1, i: C.brn2, s: C.skn2, t: C.skn1, w: C.blu0,  l: C.stn0, p: C.stn0, e: C.ink  }); // norm  — navy
+  leader('winona', 'mom',  { o: C.ink, h: C.pur2, i: C.pur3, s: C.skn2, t: C.skn1, w: C.sky1,  r: C.blu1, R: C.blu2, e: C.stn0 }); // fly   — sky
+  leader('tate',   'boy',  { o: C.ink, h: C.pur1, i: C.pur2, s: C.skn2, t: C.skn1, y: C.pur2,  Y: C.pur3, g: C.pur0, e: C.dgry }); // psy   — purple
+  leader('wallace','prof', { o: C.ink, h: C.ice0, i: C.ice1, s: C.skn2, t: C.skn1, w: C.ice2,  l: C.ice0, p: C.blu0, e: C.ink  }); // water — cyan
+
   // -------------------------------------------------------- starter orb -----
   // A capture orb resting on a stand (interactable in the lab).
   G.ART.orb_stand = {

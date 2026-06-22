@@ -261,14 +261,14 @@
       ]
     };
   }
-  gym('gym1', { map: 'cobblemarch', x: 5, y: 6 }, 'gym1_bram', 'prof', 'STONE BADGE — Roxanne, the Rock-type Leader.', 'rock');
-  gym('gym2', { map: 'brinehollow', x: 5, y: 12 }, 'gym2_maris', 'mom', 'KNUCKLE BADGE — Brawly, the Fighting-type Leader.', 'fighting');
-  gym('gym3', { map: 'coilgate', x: 5, y: 6 }, 'gym3_tess', 'boy', 'DYNAMO BADGE — Wattson, the Electric-type Leader.', 'electric');
-  gym('gym4', { map: 'aurelune', x: 14, y: 6 }, 'gym4_vesper', 'mom', 'HEAT BADGE — Flannery, the Fire-type Leader.', 'fire');
-  gym('gym5', { map: 'petalburg', x: 5, y: 6 }, 'gym5_norman', 'prof', 'STAMINA BADGE — Norman, the Normal-type Leader.', 'normal');
-  gym('gym6', { map: 'fortree', x: 5, y: 6 }, 'gym6_winona', 'mom', 'FEATHER BADGE — Winona, the Flying-type Leader.', 'flying');
-  gym('gym7', { map: 'mossdeep', x: 5, y: 6 }, 'gym7_tate', 'boy', 'MIND BADGE — Tate & Liza, the Psychic-type Leaders.', 'psychic');
-  gym('gym8', { map: 'sootopolis', x: 5, y: 6 }, 'gym8_wallace', 'prof', 'RAIN BADGE — Wallace, the Water-type Leader.', 'water');
+  gym('gym1', { map: 'cobblemarch', x: 5, y: 6 }, 'gym1_bram', 'bram', 'STONE BADGE — Roxanne, the Rock-type Leader.', 'rock');
+  gym('gym2', { map: 'brinehollow', x: 5, y: 12 }, 'gym2_maris', 'maris', 'KNUCKLE BADGE — Brawly, the Fighting-type Leader.', 'fighting');
+  gym('gym3', { map: 'coilgate', x: 5, y: 6 }, 'gym3_tess', 'tess', 'DYNAMO BADGE — Wattson, the Electric-type Leader.', 'electric');
+  gym('gym4', { map: 'aurelune', x: 14, y: 6 }, 'gym4_vesper', 'vesper', 'HEAT BADGE — Flannery, the Fire-type Leader.', 'fire');
+  gym('gym5', { map: 'petalburg', x: 5, y: 6 }, 'gym5_norman', 'norman', 'STAMINA BADGE — Norman, the Normal-type Leader.', 'normal');
+  gym('gym6', { map: 'fortree', x: 5, y: 6 }, 'gym6_winona', 'winona', 'FEATHER BADGE — Winona, the Flying-type Leader.', 'flying');
+  gym('gym7', { map: 'mossdeep', x: 5, y: 6 }, 'gym7_tate', 'tate', 'MIND BADGE — Tate & Liza, the Psychic-type Leaders.', 'psychic');
+  gym('gym8', { map: 'sootopolis', x: 5, y: 6 }, 'gym8_wallace', 'wallace', 'RAIN BADGE — Wallace, the Water-type Leader.', 'water');
 
   // ------------------------------------------------------------------------
   // CHAMPION HALL
