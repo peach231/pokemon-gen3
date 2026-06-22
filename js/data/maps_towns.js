@@ -254,16 +254,16 @@
       'vx.AB&BBC...pp...7!89...vx',
       'tu.abbbbc...pp...dmmh...tu',
       'vx.LMYYML...pp...W+DW...vx',
-      'tu..........pp..........tu',
-      'vxnnnnnnnnnnppnnnnnnnnnnvx',
-      'tussssssssssppsssssssssstu',
-      'vx..........pp..........pp',
+      'tu...pp.....pp.....p....tu',
+      'vx...ppppppppppppppp....vx',
+      'tu...ppppppppppppppp....tu',
+      'vx..........pp....pppppppp',
       'tu...q@rz...pp..1223....pp',
       'vx...ijjk...pp..4556....tu',
       'tu...W$DW...pp..WNDW....vx',
       'vx..........pp..........tu',
-      'tu...,......pp......f...vx',
-      'vx..........pp..........tu',
+      'tuFFF.......pp.......FFFvx',
+      'vxFyF.......pp.......FyFtu',
       'tu..........pp..........vx',
       'vx..........pp..........tu',
       'tutututututuppvxtutututtuu',
@@ -284,8 +284,8 @@
       { x: 18, y: 12, to: 'house_coil', tx: 4, ty: 6, dir: 'up' }
     ],
     signs: [
-      { x: 14, y: 7, text: 'COILGATE CITY — Powered by ambition (and several thousand Voltail).' },
-      { x: 8, y: 5, text: "COILGATE GYM — Leader Tess. 'Keep up with the current.'" }
+      { x: 15, y: 9, text: 'COILGATE CITY — Powered by ambition (and several thousand Voltail).' },
+      { x: 8, y: 6, text: "COILGATE GYM — Leader Tess. 'Keep up with the current.'" }
     ],
     npcs: [
       { x: 14, y: 2, sprite: 'boy', dir: 'down', unlessFlag: 'badge3', dialog: ['Route 4 is storm-locked until you hold the Dynamo Badge.', 'Tess keeps the gate key. Well. Metaphorically.'] },
