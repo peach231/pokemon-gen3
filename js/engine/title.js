@@ -15,6 +15,26 @@
     return c;
   }
 
+  // Opening cinematic backdrop: a night sky with Prof. Birch presenting, behind
+  // his welcome monologue (the series' iconic intro). Pure backdrop — the text
+  // and flow are driven by the Textbox pushed over it.
+  function introScene() {
+    return {
+      opaque: true,
+      enter: function () { G.audio.playMusic('title'); },
+      update: function () {},
+      render: function (ctx) {
+        ctx.fillStyle = '#241b3a'; ctx.fillRect(0, 0, W, H);
+        for (var i = 0; i < 50; i++) {
+          ctx.fillStyle = (i % 5) ? '#3e3660' : '#9a9ad0';
+          ctx.fillRect((i * 71 + 13) % W, (i * 37) % 92, 1, 1);
+        }
+        var pim = G.IMG.ch_prof_d0;
+        if (pim) ctx.drawImage(pim, (W >> 1) - 24, 34, 48, 72);
+      }
+    };
+  }
+
   G.TitleScene = function () {
     var logo = null;
     var phase = 'press'; // press | menu
@@ -58,8 +78,20 @@
                 '(Arrows to move, Z to talk and confirm, X to cancel, Enter for the menu. M mutes.)'
               ]));
             };
-            if (G.CharSelectScene) G.replaceScene(G.CharSelectScene(startGame));
-            else startGame();
+            var toChar = function () {
+              if (G.CharSelectScene) G.replaceScene(G.CharSelectScene(startGame));
+              else startGame();
+            };
+            // Prof. Birch's welcome — the series' opening monologue — then you
+            // choose your trainer and name.
+            G.replaceScene(introScene());
+            G.pushScene(G.Textbox([
+              'Hi! Sorry to keep you waiting!',
+              'Welcome to the world of Pokémon! My name is Birch — though folks call me the Pokémon Professor.',
+              'This world is widely inhabited by creatures we call Pokémon. Some keep them as partners; others battle at their side. I study them.',
+              'And now your own adventure is about to unfold. A world of dreams and discovery awaits!',
+              'But first — tell me a little about yourself.'
+            ], { onDone: toChar }));
           }
         }
       },

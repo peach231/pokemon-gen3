@@ -455,8 +455,9 @@
       return;
     }
 
-    // damaging move — a type-themed projectile (special) or impact (physical)
-    yield { t: 'anim', kind: 'moveFx', side: side, type: move.type, category: physical ? 'phys' : 'spec' };
+    // damaging move — a type-themed projectile (special) or impact (physical),
+    // or a per-move signature animation when the move defines `anim`.
+    yield { t: 'anim', kind: 'moveFx', side: side, type: move.type, category: physical ? 'phys' : 'spec', anim: move.anim };
     var foe = this.active(other);
     var hits = 1;
     if (move.effect && move.effect.kind === 'multiHit') {

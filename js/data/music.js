@@ -123,6 +123,60 @@
     perc: 'h:4 h:4 h:4 h:4 h:4 h:4 h:4 h:4 h:4 h:4 h:4 h:4 h:4 h:4 h:4 h:4'
   };
 
+  // --------------------------------------------------------------- seaside --
+  // Bright, breezy F-major lilt for coastal towns (Brinehollow, Mossdeep,
+  // Sootopolis) — softer and airier than the brisk inland 'town' theme.
+  S.seaside = {
+    bpm: 96, loopBar: 0,
+    pulse1: 'F5:4 A5:4 C6:6 -:2 A5:4 G5:4 F5:8 G5:4 A5:4 C6:6 -:2 D6:8 C6:4 ' +
+            'A5:4 C6:4 D6:6 -:2 C6:4 A5:4 G5:8 F5:4 G5:4 A5:4 G5:4 F5:12 -:4',
+    pulse2: 'A4:8 C5:8 G4:8 A4:8 F4:8 A4:8 C5:8 C5:8 F4:8 A4:8 C5:8 A4:8 G4:8 C5:8 A4:8 A4:8',
+    bass: 'F2:8 C3:8 G2:8 G2:8 D2:8 A2:8 F2:8 C3:8 F2:8 C3:8 A2:8 F2:8 G2:8 C3:8 F2:8 F2:8',
+    perc: 'k:8 s:8 k:8 s:8 k:8 s:8 k:8 s:8 k:8 s:8 k:8 s:8 k:8 s:8 k:8 s:4 h:4'
+  };
+
+  // ------------------------------------------------------------------ city --
+  // Peppy, busy G-major bounce for the big city (Coilgate).
+  S.city = {
+    bpm: 124, loopBar: 0,
+    pulse1: 'G5:2 -:2 B5:2 G5:2 D5:2 G5:2 B5:4 A5:2 -:2 D6:2 B5:2 G5:2 A5:2 B5:4 ' +
+            'C6:2 -:2 C6:2 B5:2 A5:2 G5:2 E5:4 D5:2 E5:2 G5:2 A5:2 B5:8 ' +
+            'G5:2 -:2 B5:2 D6:2 B5:2 A5:2 G5:4 D5:2 G5:2 B5:2 A5:2 G5:2 D5:2 B4:2 ' +
+            'C5:2 D5:2 E5:2 G5:2 A5:2 B5:2 D6:4 B5:4 A5:2 G5:2 G5:8',
+    pulse2: 'D4:8 G4:8 B3:8 D4:8 C4:8 E4:8 D4:8 D4:8 E4:8 G4:8 D4:8 G4:8 A4:8 D4:8 G4:8 G4:8',
+    bass: 'G2:4 G2:4 D2:4 D2:4 C3:4 C3:4 G2:4 G2:4 E2:4 E2:4 D3:4 D3:4 G2:4 D2:4 G2:4 G2:4 ' +
+          'C3:4 C3:4 G2:4 G2:4 A2:4 A2:4 E2:4 E2:4 D3:4 D3:4 G2:4 G2:4 G2:4 D2:4 G2:4 G2:4',
+    perc: 'k:2 h:2 s:2 h:2 k:2 h:2 s:2 h:2 k:2 h:2 s:2 h:2 k:2 h:2 s:2 h:2 ' +
+          'k:2 h:2 s:2 h:2 k:2 h:2 s:2 h:2 k:2 h:2 s:2 h:2 k:2 s:2 k:2 s:2'
+  };
+
+  // --------------------------------------------------------------- volcano --
+  // Warm, faintly tense A-minor theme for the volcano town (Aurelune).
+  S.volcano = {
+    bpm: 108, loopBar: 0,
+    pulse1: 'A4:4 C5:4 E5:6 -:2 D5:4 C5:4 A4:8 E5:4 G5:4 A5:6 -:2 G5:4 E5:4 D5:8 ' +
+            'F5:4 E5:4 D5:6 -:2 C5:4 A4:4 G4:8 A4:4 C5:4 E5:4 D5:4 A4:12 -:4',
+    pulse2: 'A3:8 E4:8 C4:8 E4:8 D4:8 A3:8 A3:8 E4:8 C4:8 E4:8 A3:8 C4:8 D4:8 E4:8 A3:8 A3:8',
+    bass: 'A2:8 A2:8 E2:8 E2:8 D2:8 D2:8 A2:8 E2:8 F2:8 F2:8 C2:8 C2:8 D2:8 E2:8 A2:8 A2:8',
+    perc: 'k:4 h:4 s:4 h:4 k:4 h:4 s:4 h:4 k:4 h:4 s:4 h:4 k:4 h:4 s:4 h:4 ' +
+          'k:4 h:4 s:4 h:4 k:4 h:4 s:4 h:4 k:4 h:4 s:4 h:4 k:4 s:4 s:4 s:4'
+  };
+
+  // -------------------------------------------------------------- route 2 --
+  // A brighter, marchier G-major route theme for the later overland routes.
+  S.route2 = {
+    bpm: 138, loopBar: 0,
+    pulse1: 'G5:2 A5:2 B5:4 D6:2 B5:2 A5:4 G5:2 A5:2 B5:4 A5:2 G5:2 E5:4 ' +
+            'D5:2 E5:2 G5:4 A5:2 B5:2 D6:4 B5:2 A5:2 G5:4 A5:2 B5:2 G5:8 ' +
+            'B5:2 D6:2 G6:4 D6:2 B5:2 A5:4 G5:2 B5:2 D6:4 B5:2 G5:2 A5:4 ' +
+            'B5:2 A5:2 G5:4 E5:2 D5:2 E5:4 G5:2 A5:2 B5:4 A5:2 G5:2 G5:8',
+    pulse2: 'D4:8 G4:8 D4:8 B3:8 C4:8 E4:8 D4:8 G4:8 B3:8 D4:8 G4:8 D4:8 E4:8 D4:8 G4:8 G4:8',
+    bass: 'G2:4 D3:4 G2:4 D3:4 C3:4 G2:4 C3:4 G2:4 E2:4 B2:4 E2:4 B2:4 D3:4 D2:4 G2:4 G2:4 ' +
+          'G2:4 D3:4 G2:4 D3:4 C3:4 G2:4 C3:4 G2:4 E2:4 B2:4 D3:4 D2:4 G2:4 D3:4 G2:4 G2:4',
+    perc: 'k:4 h:4 s:4 h:4 k:4 h:4 s:4 h:4 k:4 h:4 s:4 h:4 k:4 h:4 s:4 h:4 ' +
+          'k:4 h:4 s:4 h:4 k:4 h:4 s:4 h:4 k:4 h:4 s:4 h:4 k:4 s:4 k:4 s:4'
+  };
+
   // -------------------------------------------------------------- jingles --
   S.jingle_catch = { bpm: 140, pulse1: 'G5:2 G5:2 A5:2 B5:2 C6:10' };
   S.jingle_level = { bpm: 150, pulse1: 'C5:2 E5:2 G5:2 C6:8' };

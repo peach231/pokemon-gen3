@@ -185,4 +185,13 @@
   mv('yawn',        'Yawn',          'normal', 0, 100, 10, 0, { kind: 'status', status: 'slp' });
   mv('armthrust',   'Arm Thrust',    'fighting', 15, 100, 20, 0, { kind: 'multiHit' });
   mv('skyuppercut', 'Sky Uppercut',  'fighting', 85, 90, 15);
+
+  // Signature on-screen animations — these override the generic type/category
+  // FX in battle_ui so iconic moves read as themselves (a lightning strike, a
+  // quaking ground, a charged beam, spinning leaves) instead of a colored blob.
+  function tagAnim(anim, ids) { for (var i = 0; i < ids.length; i++) if (M[ids[i]]) M[ids[i]].anim = anim; }
+  tagAnim('bolt',  ['thundershock', 'spark', 'shockwave', 'thunderbolt', 'thunder']);
+  tagAnim('quake', ['earthquake', 'magnitude']);
+  tagAnim('beam',  ['hyperbeam', 'hydropump', 'solarbeam', 'aurorabeam', 'icebeam', 'bubblebeam', 'psybeam', 'signalbeam', 'psychic']);
+  tagAnim('leaf',  ['razorleaf', 'leafblade']);
 })();

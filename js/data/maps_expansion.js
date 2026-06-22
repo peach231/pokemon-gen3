@@ -61,7 +61,7 @@
   function route(id, cfg) {
     G.MAPS[id] = {
       id: id, name: cfg.name, w: 24, h: 12,
-      music: 'route', battleBg: cfg.bg || 'meadow', base: 'grass', legend: G.LEG_EXT,
+      music: cfg.music || 'route', battleBg: cfg.bg || 'meadow', base: 'grass', legend: G.LEG_EXT,
       weather: cfg.weather,
       ground: pad([
         'tutututututututututututu',
@@ -133,7 +133,7 @@
 
   // ===== Route 5: Lavaridge -> Petalburg =================================
   route('route5', {
-    name: 'Route 117', bg: 'meadow',
+    name: 'Route 117', music: 'route2', bg: 'meadow',
     west: { to: 'aurelune', tx: 21, ty: 8 },
     east: { to: 'petalburg', tx: 1, ty: 8 },
     trainers: [tr('r5_a', 7, 3, 'boy', 'down', 'The towns ahead don\'t go easy on you.'), tr('r5_b', 16, 8, 'mom', 'left', 'Keep your team evolving!')],
@@ -158,7 +158,7 @@
 
   // ===== Route 6: Petalburg -> Fortree ==================================
   route('route6', {
-    name: 'Route 119', bg: 'forest', weather: 'rain',
+    name: 'Route 119', music: 'route2', bg: 'forest', weather: 'rain',
     west: { to: 'petalburg', tx: 18, ty: 8 },
     east: { to: 'fortree', tx: 1, ty: 8 },
     trainers: [tr('r6_a', 8, 2, 'prof', 'down', 'Rain keeps the Water-types happy.'), tr('r6_b', 17, 7, 'boy', 'left', 'Fortree is up in the trees!')],
@@ -199,7 +199,7 @@
   });
 
   town('mossdeep', {
-    name: 'Mossdeep City', bg: 'water', gymId: 'gym7', healId: 'heal_mossdeep', shopId: 'shop_mossdeep', gymType: 'psychic',
+    name: 'Mossdeep City', music: 'seaside', bg: 'water', gymId: 'gym7', healId: 'heal_mossdeep', shopId: 'shop_mossdeep', gymType: 'psychic',
     gymSign: "Leaders Tate & Liza. 'Two minds, one will.'",
     west: { to: 'route7', tx: 22, ty: 5 }, east: { to: 'route8', tx: 1, ty: 5 },
     npcs: [
@@ -226,7 +226,7 @@
   });
 
   town('sootopolis', {
-    name: 'Sootopolis City', bg: 'water', gymId: 'gym8', healId: 'heal_sootopolis', shopId: 'shop_sootopolis', gymType: 'water',
+    name: 'Sootopolis City', music: 'seaside', bg: 'water', gymId: 'gym8', healId: 'heal_sootopolis', shopId: 'shop_sootopolis', gymType: 'water',
     gymSign: "Leader Wallace. 'The art of water.'",
     west: { to: 'route8', tx: 22, ty: 5 }, east: { to: 'summitpath', tx: 1, ty: 27 },
     npcs: [

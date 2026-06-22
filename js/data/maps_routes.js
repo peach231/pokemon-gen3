@@ -257,7 +257,7 @@
   // ------------------------------------------------------------------------
   G.MAPS.route4 = {
     id: 'route4', name: 'Route 111', w: 20, h: 28, weather: 'sand', volcano: true,
-    music: 'route', battleBg: 'meadow', base: 'grass',
+    music: 'route2', battleBg: 'meadow', base: 'grass',
     legend: G.LEG_EXT,
     // Winding sandstorm route: the path snakes between the south (Coilgate) and
     // north (Aurelune) gates, threading staggered tall-grass and a one-way ledge

@@ -277,6 +277,51 @@
         case 'ledgeHop': sweep('square', 400, 700, 0.08, 0.4, t); break;
         case 'lowHp': sweep('square', 1000, 1000, 0.05, 0.4, t); break;
         case 'bump': sweep('square', 120, 90, 0.06, 0.6, t); break;
+        case 'sendout': sweep('square', 300, 760, 0.06, 0.5, t); break;
+      }
+    },
+
+    // ---- Pokémon cry --------------------------------------------------------
+    // A short synthesized call, deterministic per species key, so every creature
+    // has its own consistent "voice" (pitch / sweep / vibrato / waveform / grit)
+    // the way the originals faked hundreds of cries from a tiny synth. `down`
+    // gives a lower, slurred faint-cry variant.
+    cry: function (key, down) {
+      if (!actx || this.muted) return;
+      var s = 2166136261; key = String(key);
+      for (var ci = 0; ci < key.length; ci++) { s ^= key.charCodeAt(ci); s = (s * 16777619) >>> 0; }
+      function rnd() { s = (s * 1103515245 + 12345) & 0x7fffffff; return s / 0x7fffffff; }
+      var t = actx.currentTime + 0.01;
+      var base = (180 + rnd() * 520) * (down ? 0.6 : 1);
+      var dur = (0.26 + rnd() * 0.34) * (down ? 1.4 : 1);
+      var dir = down ? -1 : (rnd() < 0.5 ? -1 : 1);
+      var amt = 0.25 + rnd() * 0.8;
+      var vibR = 12 + rnd() * 30, vibD = base * (0.015 + rnd() * 0.06);
+      var wave = ['square', 'sawtooth', 'triangle'][Math.floor(rnd() * 3)];
+      var two = !down && rnd() < 0.4;          // some calls warble between two notes
+      var osc = actx.createOscillator();
+      osc.type = wave;
+      osc.frequency.setValueAtTime(base, t);
+      if (two) osc.frequency.setValueAtTime(base * (1 + dir * amt * 0.5), t + dur * 0.45);
+      osc.frequency.exponentialRampToValueAtTime(Math.max(55, base * (1 + dir * amt)), t + dur);
+      var lfo = actx.createOscillator(); lfo.type = 'sine'; lfo.frequency.value = vibR;
+      var lg = actx.createGain(); lg.gain.value = vibD;
+      lfo.connect(lg); lg.connect(osc.frequency);
+      var g = actx.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.linearRampToValueAtTime(0.12, t + 0.018);
+      g.gain.setValueAtTime(0.11, t + dur * 0.6);
+      g.gain.linearRampToValueAtTime(0.0001, t + dur);
+      osc.connect(g); g.connect(master);
+      osc.start(t); osc.stop(t + dur + 0.03);
+      lfo.start(t); lfo.stop(t + dur + 0.03);
+      if (rnd() < 0.45) {                       // a little noisy grit for growls
+        var src = actx.createBufferSource(); src.buffer = noiseBuf;
+        var nf = actx.createBiquadFilter(); nf.type = 'bandpass'; nf.frequency.value = base * (1.5 + rnd()); nf.Q.value = 1.4;
+        var ng = actx.createGain();
+        ng.gain.setValueAtTime(0.035, t); ng.gain.linearRampToValueAtTime(0.0001, t + dur * 0.7);
+        src.connect(nf); nf.connect(ng); ng.connect(master);
+        src.start(t, Math.random() * 0.3, dur);
       }
     }
   };

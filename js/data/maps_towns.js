@@ -190,7 +190,7 @@
   // ------------------------------------------------------------------------
   G.MAPS.brinehollow = {
     id: 'brinehollow', name: 'Dewford Town', w: 26, h: 20, gymEmblem: { x: 5, y: 10, type: 'fighting' },
-    music: 'town', battleBg: 'water', base: 'grass',
+    music: 'seaside', battleBg: 'water', base: 'grass',
     legend: G.LEG_EXT,
     ground: pad([
       'tututututututututututututu',
@@ -245,7 +245,7 @@
   // ------------------------------------------------------------------------
   G.MAPS.coilgate = {
     id: 'coilgate', name: 'Mauville City', w: 26, h: 20, gymEmblem: { x: 5, y: 4, type: 'electric' },
-    music: 'town', battleBg: 'indoor', base: 'grass',
+    music: 'city', battleBg: 'indoor', base: 'grass',
     legend: G.LEG_EXT,
     ground: pad([
       'tutututututuppvxtututututu',
@@ -301,7 +301,7 @@
   // ------------------------------------------------------------------------
   G.MAPS.aurelune = {
     id: 'aurelune', name: 'Lavaridge Town', w: 24, h: 20, volcano: true, gymEmblem: { x: 14, y: 4, type: 'fire' },
-    music: 'town', battleBg: 'indoor', base: 'grass',
+    music: 'volcano', battleBg: 'indoor', base: 'grass',
     legend: G.LEG_EXT,
     ground: pad([
       'tutututututututututututu',

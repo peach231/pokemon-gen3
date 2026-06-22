@@ -200,12 +200,13 @@
             sprites[step.side].flicker = 14;
             task = { kind: 'wait', t: 0, frames: 14 };
           } else if (step.kind === 'faint') {
+            if (sprites[step.side].mon) G.audio.cry(sprites[step.side].mon.sp, true);
             task = { kind: 'faint', side: step.side, t: 0, frames: 22 };
           } else if (step.kind === 'orbThrow') {
             orb.visible = true; orb.mode = 'throw'; orb.t = 0;
             task = { kind: 'orbThrow', t: 0, frames: 26 };
           } else if (step.kind === 'moveFx') {
-            spawnMoveFx(step.side, step.type, step.category);
+            spawnMoveFx(step.side, step.type, step.category, step.anim);
             var fr = step.category === 'spec' ? 34 : step.category === 'buff' ? 24 : 18;
             task = { kind: 'wait', t: 0, frames: fr };
           } else {
@@ -241,6 +242,7 @@
           } else {
             if (step.side === 'f') trainerShown = false;
             so.visible = true;
+            G.audio.cry(step.mon.sp);
             task = { kind: 'sendOut', side: step.side, phase: 'grow', t: 0 };
           }
           break;
@@ -404,7 +406,8 @@
               ss.visible = true;
               var anc = task.side === 'p' ? PLY : FOE;
               releaseBurst(anc.x, anc.y - 10);
-              G.audio.sfx('confirm');
+              G.audio.sfx('sendout');
+              G.audio.cry(ss.mon.sp);
               task.phase = 'grow'; task.t = 0;
             }
             return false;
@@ -668,11 +671,48 @@
       }
     }
     // a type-themed effect from attacker -> target (projectile / impact / aura)
-    function spawnMoveFx(side, type, category) {
+    function spawnMoveFx(side, type, category, anim) {
       var self = side === 'p' ? PLY : FOE;
       var foe = side === 'p' ? FOE : PLY;
       var col = (G.TYPE_COLORS && G.TYPE_COLORS[type]) || G.C.white;
       var sx = self.x, sy = self.y - 20, tx = foe.x, ty = foe.y - 20;
+      // ---- per-move signature animations (override the type/category FX) ----
+      if (anim === 'bolt') {                          // lightning strikes down
+        for (var li = 0; li <= 7; li++) {
+          var lf = li / 7;
+          particles.push({ x: tx + (li % 2 ? 7 : -7) * (1 - lf), y: -6 + (ty + 6) * lf, vx: 0, vy: 0, life: 13, maxLife: 13, grav: false, col: li % 2 ? G.C.yel2 : G.C.white, size: 3, delay: li * 0.7 });
+        }
+        burstAt(tx, ty, G.C.yel1, 14, 2, 16);
+        return;
+      }
+      if (anim === 'quake') {                         // ground erupts under the foe
+        for (var qi = 0; qi < 18; qi++) {
+          particles.push({ x: tx + (qi % 9 - 4) * 6, y: ty + 14, vx: (qi % 3 - 1) * 0.35, vy: -1.3 - (qi % 4) * 0.4, life: 24, maxLife: 24, grav: true, col: qi % 2 ? G.C.brn2 : G.C.brn1, size: 3, delay: (qi % 6) * 1.6 });
+        }
+        burstAt(tx, ty + 8, G.C.brn1, 10, 1.4, 18);
+        return;
+      }
+      if (anim === 'beam') {                          // a thick charged beam
+        var bdx = tx - sx, bdy = ty - sy, bd = Math.max(1, Math.sqrt(bdx * bdx + bdy * bdy));
+        var bux = bdx / bd, buy = bdy / bd;
+        for (var bi = 0; bi < 26; bi++) {
+          var bf = bi / 26;
+          for (var bw = -1; bw <= 1; bw++) {
+            particles.push({ x: sx + bdx * bf - buy * bw * 2, y: sy + bdy * bf + bux * bw * 2, vx: 0, vy: 0, life: 16, maxLife: 16, grav: false, col: bw ? col : G.C.white, size: 3, delay: bi * 0.5 });
+          }
+        }
+        burstAt(tx, ty, col, 16, 2, 18);
+        return;
+      }
+      if (anim === 'leaf') {                           // spinning leaves arc over
+        var ldx = tx - sx, ldy = ty - sy, ld = Math.max(1, Math.sqrt(ldx * ldx + ldy * ldy));
+        var lsp = ld / 20;
+        for (var le = 0; le < 11; le++) {
+          particles.push({ x: sx, y: sy, vx: ldx / ld * lsp + (le % 3 - 1) * 0.35, vy: ldy / ld * lsp - 0.35, life: 22, maxLife: 22, grav: false, col: le % 2 ? G.C.grn2 : G.C.grn3, size: 2, delay: le * 1.4 });
+        }
+        burstAt(tx, ty, G.C.grn2, 10, 1.5, 14);
+        return;
+      }
       if (category === 'spec') {
         var dx = tx - sx, dy = ty - sy, dist = Math.max(1, Math.sqrt(dx * dx + dy * dy));
         var ux = dx / dist, uy = dy / dist, speed = dist / 22;   // slower so the stream reads as it crosses
@@ -787,6 +827,11 @@
       },
 
       update: function () {
+        // low-HP warning beep: pulses while your active Pokémon is in the red
+        var lpm = battle.active('p');
+        if (!battle.over && lpm && lpm.curHp > 0 && lpm.curHp <= G.monStats(lpm).hp * 0.2 && (G.frame % 48) === 0) {
+          G.audio.sfx('lowHp');
+        }
         if (phase === 'menu' && opts.autoPlay) {
           // debug: drive the player with the foe AI (visual soak test)
           var mon = battle.active('p');
