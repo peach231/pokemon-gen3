@@ -342,7 +342,7 @@
   function starterEvent(key, blurb) {
     return function* () {
       if (G.flags.starter) {
-        yield { t: 'text', s: "Prof. Maple: Ah-ah! One partner per trainer. Yours is waiting on you!" };
+        yield { t: 'text', s: "Prof. Birch: Ah-ah! One partner per trainer. Yours is waiting on you!" };
         return;
       }
       yield { t: 'text', s: blurb };
@@ -398,7 +398,7 @@
   G.EVENTS.momGuide = function* () {
     yield { t: 'text', s: "Mom: Wait, wait — you're not off to Route 1 already, are you?" };
     yield { t: 'text', s: "Mom: You can't step into the tall grass without a partner to look after you. It's far too dangerous alone!" };
-    yield { t: 'text', s: "Mom: Prof. Birch keeps her Pokémon at the lab, just south of here. Go choose one, sweetheart — then the road north is all yours." };
+    yield { t: 'text', s: "Mom: Prof. Birch keeps his Pokémon at the lab, just south of here. Go choose one, sweetheart — then the road north is all yours." };
   };
 
   // ------------------------------------------------------------------------
@@ -647,7 +647,7 @@
     };
   }
   G.EVENTS.rival1 = rivalEvent('rival1', 'ev_rival1',
-    'Kai: There you are! Maple gave me a creature too — the one that beats yours, obviously.',
+    'Kai: There you are! Birch gave me a creature too — the one that beats yours, obviously.',
     'Kai: Beginner luck has a smell, you know. See you in Cobblemarch!');
   G.EVENTS.rival2 = rivalEvent('rival2', 'ev_rival2',
     'Kai: The port is THAT way. The loss you are about to take is THIS way.',

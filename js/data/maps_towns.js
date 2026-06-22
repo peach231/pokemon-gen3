@@ -57,7 +57,7 @@
     id: 'hearthvale', name: 'Littleroot Town', w: 22, h: 20,
     music: 'town', battleBg: 'meadow', base: 'grass',
     legend: G.LEG_EXT,
-    // Littleroot-style: two homes (NW/NE) with flower beds, Prof. Maple's lab a
+    // Littleroot-style: two homes (NW/NE) with flower beds, Prof. Birch's lab a
     // big emblemed building across the south, a path network wrapping around it,
     // and organic tree clumps. Plain grass auto-decorates via decorateMap.
     ground: pad([
@@ -92,12 +92,12 @@
     ],
     signs: [
       { x: 12, y: 2, text: 'HEARTHVALE — Where every journey takes its first step.' },
-      { x: 7, y: 15, text: "PROF. MAPLE'S CREATURE LAB" },
+      { x: 7, y: 15, text: "PROF. BIRCH'S LAB" },
       { x: 17, y: 5, text: "It's locked. The neighbors must be out on the routes." }
     ],
     npcs: [
       { x: 4, y: 7, sprite: 'mom', dir: 'down', event: 'momHeal' },
-      { x: 16, y: 9, sprite: 'boy', dir: 'down', dialog: ['Prof. Maple keeps four creatures in her lab.', 'FOUR! And one of them gets to be yours. So unfair!'] },
+      { x: 16, y: 9, sprite: 'boy', dir: 'down', dialog: ['Prof. Birch keeps three creatures in his lab.', 'THREE! And one of them gets to be yours. So unfair!'] },
       { x: 13, y: 9, sprite: 'prof', dir: 'down', event: 'giftCandy' },
       // your friend Remy + a neighbor stand in the north gate until you have a
       // partner of your own; both step aside once `starter` is set.
@@ -174,7 +174,7 @@
       { x: 15, y: 22, text: "TRAINERS' SCHOOL — Lessons daily. New trainers welcome!" }
     ],
     npcs: [
-      { x: 21, y: 8, sprite: 'boy', dir: 'left', unlessFlag: 'badge1', dialog: ['The route east is closed until you earn the Bedrock Badge.', "Gym's the big stone building northwest. Good luck!"] },
+      { x: 21, y: 8, sprite: 'boy', dir: 'left', dialog: ['Route 2 east leads to Petalburg Woods.', "But the port town beyond is closed off until you've got the Bedrock Badge."] },
       { x: 13, y: 10, sprite: 'mom', dir: 'down', dialog: ['The heal house has the pink roof — they patch up creatures free of charge.', 'The shop has the green roof. Stock up on orbs, dear.'] },
       { x: 9, y: 22, sprite: 'prof', dir: 'right', dialog: ['Welcome to the modern district! Devon HQ employs half the city.', 'They say Devon is developing a device that maps the whole region.'] }
     ],

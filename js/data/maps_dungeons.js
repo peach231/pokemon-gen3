@@ -58,7 +58,11 @@
       { x: 12, y: 20, text: 'VERDANT FOREST — Keep to the clearings. The old trees keep to themselves.' }
     ],
     npcs: [
-      { x: 24, y: 2, sprite: 'mon_jirachi', obj: true, ifFlag: 'champion', event: 'meetLumifae' }
+      { x: 24, y: 2, sprite: 'mon_jirachi', obj: true, ifFlag: 'champion', event: 'meetLumifae' },
+      // Gate to the second town (Brinehollow): you may roam Route 2 and the Woods
+      // without the first badge, but the port town stays closed until you earn it.
+      { x: 2, y: 12, sprite: 'boy', dir: 'left', unlessFlag: 'badge1', dialog: ['Hold up — the path west to Brinehollow Port is roped off.', 'Earn the Bedrock Badge at the Cobblemarch Gym first, and this way opens right up!'] },
+      { x: 2, y: 13, sprite: 'mom', dir: 'left', unlessFlag: 'badge1', dialog: ['No Bedrock Badge, no passage to the port. Leader Bram makes the rules!', 'Cobblemarch Gym is back the way you came — northwest of the city.'] }
     ],
     trainers: [
       { id: 'vf_iggy', trainer: 'vf_iggy', x: 8, y: 6, sprite: 'boy', dir: 'down', sight: 3, after: 'Bugs forever. BUGS FOREVER!' },

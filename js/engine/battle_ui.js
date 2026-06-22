@@ -149,6 +149,7 @@
     var expShown = 0, expTarget = 0;
     var orb = { visible: false, x: 0, y: 0, t: 0, mode: null }; // throw/shake/rest
     var sendBall = { visible: false, side: null, t: 0 };       // send-out ball toss
+    var throwLean = 0, throwSide = null;                       // thrower wind-up offset
     var particles = [];                  // {x,y,vx,vy,life,col?,size?,delay?,grav?}
     var weatherFx = battle.weather || null;  // 'rain' | 'sun' | 'sand' | null
 
@@ -193,7 +194,7 @@
           break;
         case 'anim':
           if (step.kind === 'attack') {
-            task = { kind: 'lunge', side: step.side, t: 0, frames: 14 };
+            task = { kind: 'lunge', side: step.side, t: 0, frames: 16 };
           } else if (step.kind === 'hit') {
             sprites[step.side].flicker = 14;
             task = { kind: 'wait', t: 0, frames: 14 };
@@ -204,7 +205,7 @@
             task = { kind: 'orbThrow', t: 0, frames: 26 };
           } else if (step.kind === 'moveFx') {
             spawnMoveFx(step.side, step.type, step.category);
-            var fr = step.category === 'spec' ? 20 : step.category === 'buff' ? 22 : 14;
+            var fr = step.category === 'spec' ? 34 : step.category === 'buff' ? 24 : 18;
             task = { kind: 'wait', t: 0, frames: fr };
           } else {
             task = null;
@@ -368,8 +369,9 @@
         case 'lunge': {
           task.t++;
           var s = sprites[task.side];
-          var amp = task.t < 7 ? task.t : 14 - task.t;
-          s.offX = (task.side === 'p' ? 1 : -1) * amp * 1.5;
+          var half = task.frames / 2;
+          var amp = task.t < half ? task.t : task.frames - task.t;
+          s.offX = (task.side === 'p' ? 1 : -1) * amp * 3;   // bigger forward lunge
           if (task.t >= task.frames) { s.offX = 0; return true; }
           return false;
         }
@@ -389,11 +391,15 @@
           var ss = sprites[task.side];
           if (task.phase === 'toss') {
             sendBall.t = task.t;
+            // thrower winds up and leans toward the field as the ball flies
+            throwSide = task.side;
+            throwLean = Math.sin(Math.min(1, task.t / 16) * Math.PI) * 7;
             if (task.t >= 16) {
               // the ball lands and bursts open — thrower steps off, mon rises
               if (task.side === 'f') trainerShown = false;
               if (task.side === 'p') playerShown = false;
               sendBall.visible = false;
+              throwLean = 0; throwSide = null;
               ss.visible = true;
               var anc = task.side === 'p' ? PLY : FOE;
               releaseBurst(anc.x, anc.y - 10);
@@ -402,8 +408,11 @@
             }
             return false;
           }
-          ss.scale = Math.min(1, task.t / 14);
-          return task.t >= 14;
+          // mon pops out of the ball with a little overshoot bounce
+          var gp = task.t / 16;
+          if (gp >= 1) { ss.scale = 1; return true; }
+          ss.scale = gp < 0.7 ? (gp / 0.7) * 1.12 : 1.12 - ((gp - 0.7) / 0.3) * 0.12;
+          return false;
         }
         case 'levelstats':
           task.t++;
@@ -652,9 +661,9 @@
       }
     }
     function releaseBurst(x, y) {
-      for (var i = 0; i < 10; i++) {
-        var a = (i / 10) * Math.PI * 2;
-        particles.push({ x: x, y: y, vx: Math.cos(a) * 1.3, vy: Math.sin(a) * 1.3 - 0.3, life: 12, maxLife: 12, grav: false, col: i % 2 ? G.C.white : G.C.red3, size: 2 });
+      for (var i = 0; i < 16; i++) {
+        var a = (i / 16) * Math.PI * 2;
+        particles.push({ x: x, y: y, vx: Math.cos(a) * 1.8, vy: Math.sin(a) * 1.8 - 0.3, life: 16, maxLife: 16, grav: false, col: i % 2 ? G.C.white : G.C.red3, size: 3 });
       }
     }
     // a type-themed effect from attacker -> target (projectile / impact / aura)
@@ -665,14 +674,16 @@
       var sx = self.x, sy = self.y - 20, tx = foe.x, ty = foe.y - 20;
       if (category === 'spec') {
         var dx = tx - sx, dy = ty - sy, dist = Math.max(1, Math.sqrt(dx * dx + dy * dy));
-        var ux = dx / dist, uy = dy / dist, speed = dist / 12;
-        for (var i = 0; i < 12; i++) {
-          var spread = (i % 3 - 1);
-          particles.push({ x: sx - uy * spread * 5, y: sy + ux * spread * 5, vx: ux * speed, vy: uy * speed, life: 14, maxLife: 14, grav: false, col: col, size: 2, delay: i });
+        var ux = dx / dist, uy = dy / dist, speed = dist / 22;   // slower so the stream reads as it crosses
+        // a thick, staggered stream of blobs (water/energy) travels to the target
+        for (var i = 0; i < 22; i++) {
+          var spread = (i % 5 - 2);
+          particles.push({ x: sx - uy * spread * 4, y: sy + ux * spread * 4, vx: ux * speed, vy: uy * speed, life: 24, maxLife: 24, grav: false, col: col, size: 3, delay: i * 1.2 });
         }
-        for (var k = 0; k < 6; k++) {
-          var a = (k / 6) * Math.PI * 2;
-          particles.push({ x: tx, y: ty, vx: Math.cos(a) * 1.1, vy: Math.sin(a) * 1.1, life: 10, maxLife: 10, grav: false, col: col, size: 2, delay: 12 });
+        // splash/burst when it lands
+        for (var k = 0; k < 14; k++) {
+          var a = (k / 14) * Math.PI * 2;
+          particles.push({ x: tx, y: ty, vx: Math.cos(a) * 1.7, vy: Math.sin(a) * 1.7 - 0.4, life: 18, maxLife: 18, grav: true, col: col, size: 3, delay: 20 });
         }
       } else if (category === 'phys') {
         burstAt(tx, ty, col, 9, 1.5, 12);
@@ -831,12 +842,14 @@
         // opposing trainer stands on the platform until their first send-out
         if (trainerShown && battle.trainer) {
           var tImg = G.IMG[battle.trainer.sprite];
-          if (tImg) ctx.drawImage(tImg, FOE.x - tImg.width / 2, FOE.y - tImg.height + 4);
+          var tlean = throwSide === 'f' ? -throwLean : 0;  // foe leans toward the field as it throws
+          if (tImg) ctx.drawImage(tImg, FOE.x - tImg.width / 2 + tlean, FOE.y - tImg.height + 4);
         }
         // player's back sprite stands ready until they send out their lead
         if (playerShown) {
           var pImg = G.IMG.trainer_player_back;
-          if (pImg) ctx.drawImage(pImg, PLY.x - pImg.width / 2, PLY.y - pImg.height + 6);
+          var plean = throwSide === 'p' ? throwLean : 0;   // player leans toward the field as they throw
+          if (pImg) ctx.drawImage(pImg, PLY.x - pImg.width / 2 + plean, PLY.y - pImg.height + 6);
         }
         // foe drawn first (behind its panel), then player
         drawSprite(ctx, 'f');
