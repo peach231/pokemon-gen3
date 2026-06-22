@@ -64,12 +64,12 @@
     mark(map.warps); mark(map.signs); mark(map.items); mark(map.npcs); mark(map.trainers);
     // tropical region: palms everywhere, heavier on the coast; cinders at the volcano
     var bg = map.battleBg || 'meadow';
-    // kept sparse so it reads as a subtle GBA ground pattern, not clutter
-    var palette = map.volcano ? [['Z', 0.05], ['o', 0.03], ['Q', 0.01]]
-      : bg === 'water' ? [['P', 0.045], ['H', 0.025], ['Q', 0.02], [',', 0.03]]
-      : bg === 'cave' ? [['o', 0.05], ['Q', 0.02]]
-      : bg === 'indoor' ? [['f', 0.04], ['y', 0.03], [',', 0.04]]
-      : [['P', 0.02], ['f', 0.035], ['y', 0.025], [',', 0.04], ['Q', 0.02]]; // meadow/forest
+    // moderate density so towns/routes read as lived-in places, not bare fields
+    var palette = map.volcano ? [['Z', 0.08], ['o', 0.05], ['Q', 0.02]]
+      : bg === 'water' ? [['P', 0.07], ['H', 0.04], ['Q', 0.03], [',', 0.05]]
+      : bg === 'cave' ? [['o', 0.07], ['Q', 0.03]]
+      : bg === 'indoor' ? [['f', 0.06], ['y', 0.05], [',', 0.06]]
+      : [['P', 0.03], ['f', 0.06], ['y', 0.045], [',', 0.06], ['Q', 0.03]]; // meadow/forest
     var rng = mulberry32(strHash(map.id));
     var deco = map.deco.map(function (r) { return r.split(''); });
     for (var y = 0; y < map.h; y++) {
