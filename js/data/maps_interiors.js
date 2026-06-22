@@ -158,6 +158,64 @@
   shop('shop_sootopolis', { map: 'sootopolis', x: 4, y: 14 }, ['hyperpotion', 'greatorb', 'ultraorb', 'diveorb', 'netorb', 'cureall', 'revivedust', 'candyl', 'fishingrod', 'skates']);
 
   // ------------------------------------------------------------------------
+  // DEVON CORP HQ + TRAINERS' SCHOOL — Cobblemarch's modern district.
+  // ------------------------------------------------------------------------
+  G.MAPS.devonhq = {
+    id: 'devonhq', name: 'Devon Corp', w: 11, h: 8,
+    music: 'town', battleBg: 'indoor', base: 'ifloor',
+    legend: G.LEG_INT,
+    ground: pad([
+      'IIIIIIIIIII',
+      '.B..H.H..B.',
+      '.CCC...CCC.',
+      '...........',
+      '.P.......P.',
+      '...........',
+      '...........',
+      '....mm.....'
+    ], 11, 8),
+    warps: [
+      { x: 4, y: 7, to: 'cobblemarch', tx: 6, ty: 22, dir: 'down' },
+      { x: 5, y: 7, to: 'cobblemarch', tx: 7, ty: 22, dir: 'down' }
+    ],
+    signs: [
+      { x: 5, y: 5, text: "A glass cabinet shows off Devon's newest gadgets, still under wraps." }
+    ],
+    npcs: [
+      { x: 2, y: 1, sprite: 'mom', dir: 'down', dialog: ['Welcome to Devon Corporation!', 'We craft Poké Balls, medicines, and the finest field devices in the region.'] },
+      { x: 8, y: 1, sprite: 'prof', dir: 'down', dialog: ['Our researchers are building a region-wide map device.', 'Imagine never losing your way on a route again!'] },
+      { x: 3, y: 4, sprite: 'boy', dir: 'right', dialog: ['First week in the mailroom. Big dreams, small desk.'] }
+    ]
+  };
+
+  G.MAPS.trainerschool_cobble = {
+    id: 'trainerschool_cobble', name: "Trainers' School", w: 9, h: 8,
+    music: 'town', battleBg: 'indoor', base: 'ifloor',
+    legend: G.LEG_INT,
+    ground: pad([
+      'IIIIIIIII',
+      '.BBBBBBB.',
+      '.........',
+      '.T.T.T.T.',
+      '.........',
+      '.T.T.T.T.',
+      '.........',
+      '....m....'
+    ], 9, 8),
+    warps: [{ x: 4, y: 7, to: 'cobblemarch', tx: 16, ty: 22, dir: 'down' }],
+    signs: [
+      { x: 4, y: 1, text: 'TYPE LESSON: Water and Grass moves hit Rock for SUPER damage. Fighting tops Normal.' },
+      { x: 3, y: 3, text: 'STATUS LESSON: Burn saps Attack and HP. Paralysis can freeze you up. Sleep wears off.' },
+      { x: 5, y: 5, text: 'CATCHING LESSON: Weaken the wild and land a status — your catch odds climb fast.' }
+    ],
+    npcs: [
+      { x: 4, y: 2, sprite: 'prof', dir: 'down', dialog: ['Welcome, student! Read the board and the desk notes.', 'Know your type matchups and no Leader will catch you off guard.'] },
+      { x: 2, y: 4, sprite: 'boy', dir: 'down', dialog: ['Wait — is it Water that cracks Rock? ...Yes. Yes it is. I knew that.'] },
+      { x: 6, y: 4, sprite: 'mom', dir: 'down', dialog: ['Pop quiz: what stops a Normal-type cold? A Ghost — nothing else even touches it!'] }
+    ]
+  };
+
+  // ------------------------------------------------------------------------
   // GYMS — one leader each, waiting at the far end of the hall.
   // ------------------------------------------------------------------------
   function gym(id, exit, leaderId, leaderSprite, statueText, type) {

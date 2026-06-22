@@ -115,9 +115,13 @@
   // Route 2 east (gate guard until badge 1).
   // ------------------------------------------------------------------------
   G.MAPS.cobblemarch = {
-    id: 'cobblemarch', name: 'Rustboro City', w: 24, h: 20, gymEmblem: { x: 5, y: 4, type: 'rock' },
+    id: 'cobblemarch', name: 'Rustboro City', w: 24, h: 28, gymEmblem: { x: 5, y: 4, type: 'rock' },
     music: 'town', battleBg: 'meadow', base: 'grass',
     legend: G.LEG_EXT,
+    // North half = the original old-town core (gym NW, Center + Mart, a house);
+    // south half = the modern district added below: Devon Corp HQ (big stone
+    // building, left) and the Trainers' School (right) flanking a plaza street,
+    // with the main avenue running down to the Route 1 gate.
     ground: pad([
       'tutututututututututututu',
       'vxvxvxvxvxvxvxvxvxvxvxvx',
@@ -137,28 +141,42 @@
       'vx........pp..........vx',
       'tu........pp..........tu',
       'vx........pp..........vx',
-      'tututututuppvxtututututu',
+      'tu..pppppppppppppppp..tu',
+      'vx.ABB&BBC....12223...vx',
+      'tu.abbbbbc....45556...tu',
+      'vx.LMMOOML....WNDNW...vx',
+      'tu..pppppppppppppppp..tu',
+      'vx........pp..........vx',
+      'tu...f....pp......,...tu',
+      'vx........pp..........vx',
+      'tututututupptutututututu',
       'vxvxvxvxvxppvxvxvxvxvxvx'
-    ], 24, 20),
-    deco: blankDeco(24, 20),
+    ], 24, 28),
+    deco: blankDeco(24, 28),
     warps: [
-      { x: 10, y: 19, to: 'route1', tx: 8, ty: 1, dir: 'down' },
-      { x: 11, y: 19, to: 'route1', tx: 9, ty: 1, dir: 'down' },
+      { x: 10, y: 27, to: 'route1', tx: 8, ty: 1, dir: 'down' },
+      { x: 11, y: 27, to: 'route1', tx: 9, ty: 1, dir: 'down' },
       { x: 23, y: 8, to: 'route2', tx: 1, ty: 8, dir: 'right' },
       { x: 23, y: 9, to: 'route2', tx: 1, ty: 9, dir: 'right' },
       { x: 5, y: 5, to: 'gym1', tx: 5, ty: 10, dir: 'up' },
       { x: 6, y: 5, to: 'gym1', tx: 5, ty: 10, dir: 'up' },
       { x: 14, y: 6, to: 'heal_cobblemarch', tx: 4, ty: 7, dir: 'up' },
       { x: 19, y: 6, to: 'shop_cobblemarch', tx: 4, ty: 7, dir: 'up' },
-      { x: 7, y: 12, to: 'house_cobble', tx: 4, ty: 6, dir: 'up' }
+      { x: 7, y: 12, to: 'house_cobble', tx: 4, ty: 6, dir: 'up' },
+      { x: 6, y: 21, to: 'devonhq', tx: 4, ty: 7, dir: 'up' },
+      { x: 7, y: 21, to: 'devonhq', tx: 4, ty: 7, dir: 'up' },
+      { x: 16, y: 21, to: 'trainerschool_cobble', tx: 4, ty: 7, dir: 'up' }
     ],
     signs: [
       { x: 13, y: 7, text: 'COBBLEMARCH — Old stones, new beginnings.' },
-      { x: 8, y: 5, text: "COBBLEMARCH GYM — Leader Bram. 'Steady as bedrock.'" }
+      { x: 8, y: 5, text: "COBBLEMARCH GYM — Leader Bram. 'Steady as bedrock.'" },
+      { x: 5, y: 22, text: 'DEVON CORPORATION — Makers of Poké Balls and fine devices.' },
+      { x: 15, y: 22, text: "TRAINERS' SCHOOL — Lessons daily. New trainers welcome!" }
     ],
     npcs: [
       { x: 21, y: 8, sprite: 'boy', dir: 'left', unlessFlag: 'badge1', dialog: ['The route east is closed until you earn the Bedrock Badge.', "Gym's the big stone building northwest. Good luck!"] },
-      { x: 13, y: 10, sprite: 'mom', dir: 'down', dialog: ['The heal house has the pink roof — they patch up creatures free of charge.', 'The shop has the green roof. Stock up on orbs, dear.'] }
+      { x: 13, y: 10, sprite: 'mom', dir: 'down', dialog: ['The heal house has the pink roof — they patch up creatures free of charge.', 'The shop has the green roof. Stock up on orbs, dear.'] },
+      { x: 9, y: 22, sprite: 'prof', dir: 'right', dialog: ['Welcome to the modern district! Devon HQ employs half the city.', 'They say Devon is developing a device that maps the whole region.'] }
     ],
     // your friend Remy catches up the first time you walk in, then heads off
     // on their own journey (which retires their Route 1 healing for good).

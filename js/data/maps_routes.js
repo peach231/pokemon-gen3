@@ -47,8 +47,8 @@
     warps: [
       { x: 8, y: 23, to: 'hearthvale', tx: 10, ty: 2, dir: 'down' },
       { x: 9, y: 23, to: 'hearthvale', tx: 11, ty: 2, dir: 'down' },
-      { x: 8, y: 0, to: 'cobblemarch', tx: 10, ty: 17, dir: 'up' },
-      { x: 9, y: 0, to: 'cobblemarch', tx: 11, ty: 17, dir: 'up' }
+      { x: 8, y: 0, to: 'cobblemarch', tx: 10, ty: 25, dir: 'up' },
+      { x: 9, y: 0, to: 'cobblemarch', tx: 11, ty: 25, dir: 'up' }
     ],
     signs: [
       { x: 10, y: 20, text: 'ROUTE 1 — South: Hearthvale. North: Cobblemarch.' }
