@@ -601,6 +601,20 @@
         }
         return;
       }
+
+      // Forgiving follower chat: if there's nothing to interact with in the way
+      // you're facing but your tag-along (Mom / Remy) is right beside you, turn
+      // and talk to them. This means you never have to line up on a moving
+      // follower — just press A while they're adjacent.
+      if (w.follower && w.follower.onTalkEvent) {
+        var fol = w.follower;
+        if (Math.abs(fol.x - p.x) + Math.abs(fol.y - p.y) === 1) {
+          p.dir = fol.x > p.x ? 'right' : fol.x < p.x ? 'left' : fol.y > p.y ? 'down' : 'up';
+          fol.dir = G.OPPOSITE_DIR[p.dir];
+          G.runEvent(w.follower.onTalkEvent);
+          return;
+        }
+      }
     },
 
     draw: function (ctx) {
