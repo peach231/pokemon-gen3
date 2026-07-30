@@ -651,7 +651,9 @@
    ['trainer_steven', 'trainer_aldric'], ['trainer_winona', 'trainer_maris'],
    ['trainer_tate', 'trainer_vesper'], ['trainer_sidney', 'trainer_ace'],
    ['trainer_phoebe', 'trainer_ace'], ['trainer_glacia', 'trainer_hiker'],
-   ['trainer_drake', 'trainer_ace'], ['trainer_archie', 'trainer_aqua']
+   ['trainer_drake', 'trainer_ace'], ['trainer_archie', 'trainer_aqua'],
+   // Hall of Fame arena champions — own keys so each loads its own real sprite
+   ['trainer_eonia', 'trainer_maris'], ['trainer_orin', 'trainer_vesper']
   ].forEach(function (m) {
     var s = G.ART[m[1]];
     G.ART[m[0]] = { w: s.w, h: s.h, px: s.px, pal: s.pal };

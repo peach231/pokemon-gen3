@@ -68,7 +68,9 @@
       trainer_tate: 'tate', trainer_wallace: 'wallace', trainer_steven: 'steven',
       trainer_sidney: 'sidney', trainer_phoebe: 'phoebe-gen3', trainer_glacia: 'glacia',
       trainer_drake: 'drake-gen3', trainer_kai: 'brendan',
-      trainer_aqua: 'aquagrunt', trainer_archie: 'archie-gen6'
+      trainer_aqua: 'aquagrunt', trainer_archie: 'archie-gen6',
+      // Hall of Fame arena champions (were showing baked / borrowed art)
+      trainer_aldric: 'sage', trainer_eonia: 'clair', trainer_orin: 'lance-gen3'
     },
     box: 64,                   // portraits fit into a 64-tall box, bottom-anchored
     crossOrigin: ''            // host has no CORS; load uncredentialed (no trim)

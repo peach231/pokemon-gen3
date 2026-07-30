@@ -285,8 +285,8 @@
     npcs: [],
     trainers: [
       { id: 'arena1', trainer: 'arena1', x: 5, y: 10, sprite: 'trainer_aldric', dir: 'down', sight: 6, after: 'Hah! The Regis answer to you now too. Climb on.' },
-      { id: 'arena2', trainer: 'arena2', x: 5, y: 5, sprite: 'trainer_maris', dir: 'down', sight: 6, after: 'The Eon dragons chose well. One more remains above.' },
-      { id: 'arena3', trainer: 'arena3', x: 5, y: 1, sprite: 'trainer_vesper', dir: 'down', sight: 6, after: 'You hold the sky AND a titan. You are the finest this hall has seen.' }
+      { id: 'arena2', trainer: 'arena2', x: 5, y: 5, sprite: 'trainer_eonia', dir: 'down', sight: 6, after: 'The Eon dragons chose well. One more remains above.' },
+      { id: 'arena3', trainer: 'arena3', x: 5, y: 1, sprite: 'trainer_orin', dir: 'down', sight: 6, after: 'You hold the sky AND a titan. You are the finest this hall has seen.' }
     ],
     scripts: []
   };

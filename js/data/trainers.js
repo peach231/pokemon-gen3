@@ -239,13 +239,13 @@
     defeat: 'The golems bow. Climb higher, Champion.', music: 'champion'
   });
   tr('arena2', {
-    name: 'Lady Eonia', cls: 'Hall of Fame', sprite: 'trainer_maris', ai: 'smart', money: 13000,
+    name: 'Lady Eonia', cls: 'Hall of Fame', sprite: 'trainer_eonia', ai: 'smart', money: 13000,
     party: [{ sp: 'altaria', level: 61 }, { sp: 'flygon', level: 62 }, { sp: 'kingdra', level: 63 }, { sp: 'latias', level: 64 }, { sp: 'latios', level: 65 }, { sp: 'deoxys', level: 66 }],
     intro: 'Eonia, rider of the Eon dragons. Latias and Latios fly with me — and a visitor from beyond the stars. Can your bond fly higher?',
     defeat: 'The dragons accept you. One champion yet remains.', music: 'champion'
   });
   tr('arena3', {
-    name: 'Grandmaster Orin', cls: 'Hall of Fame', sprite: 'trainer_vesper', ai: 'smart', money: 16000,
+    name: 'Grandmaster Orin', cls: 'Hall of Fame', sprite: 'trainer_orin', ai: 'smart', money: 16000,
     party: [{ sp: 'gardevoir', level: 64 }, { sp: 'milotic', level: 65 }, { sp: 'salamence', level: 66 }, { sp: 'metagross', level: 68 }, { sp: '_weathertrio', level: 69 }, { sp: '_otherlegend', level: 70 }],
     intro: 'I am Orin, the first Champion. I hold the titan you let slip away. Prove you were the worthier vessel!',
     defeat: 'Astonishing. Sea, land, and sky — all yours. You are the finest this Hall has ever seen.',
